@@ -1,0 +1,8 @@
+First CoreOS Test Cluster 
+
+Setup:
+- 3 CoreOS etcd nodes with static IPs: docker011, docker012, docker013
+- 1 frontend worker machine (dhcp)
+- Worker machines (dhcp), dynamically addible
+
+

@@ -1,0 +1,28 @@
+#cloud-config
+
+hostname: worker
+
+coreos:
+  fleet:
+    etcd_servers: "http://127.0.0.1:2379"
+    metadata: "hw=metal,disk=hdd,role=worker"
+  locksmith:
+      endpoint: 127.0.0.1:2379
+  units:
+    - name: etcd2.service
+      content: |
+        [Unit]
+        After=network.target network-online.target docker.service
+
+        [Service]
+        ExecStart=/usr/bin/etcd2	-proxy
+						on 
+					-listen-client-urls 
+						http://127.0.0.1:2379,
+						http://172.17.42.1:2379
+					-initial-cluster 
+						docker011=http://10.232.251.161:2380,
+						docker012=http://10.232.251.162:2380,
+						docker013=http://10.232.251.163:2380
+					-data-dir=/var/lib/etcd
+

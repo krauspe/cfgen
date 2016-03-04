@@ -1,0 +1,46 @@
+#cloud-config
+
+hostname: docker011
+
+coreos:
+  fleet:
+    etcd_servers: "http://10.232.251.161:2379"
+    metadata: "hw=virtual,disk=virtual,role=etcd"
+  locksmith:
+      endpoint: 10.232.251.161:2379
+  units:
+    - name: etcd2.service
+        [Unit]
+        After=network.target network-online.target
+
+        [Service]
+        ExecStart=/usr/bin/etcd2	-name docker011 
+					-advertise-client-urls 	    
+						http://10.232.251.161:2379 
+					-listen-peer-urls 	     
+						http://10.232.251.161:2380 
+					-initial-advertise-peer-urls 
+						http://10.232.251.161:2380 
+					-listen-client-urls 
+						http://10.232.251.161:2379,
+						http://127.0.0.1:2379
+					-initial-cluster 
+						docker011=http://10.232.251.161:2380,
+						docker012=http://10.232.251.162:2380,
+						docker013=http://10.232.251.163:2380 
+					-initial-cluster-token etcd-opt 
+					-initial-cluster-state new 
+					-data-dir=/var/lib/etcd 
+    - name: static.network
+      content: |
+        [Network]
+        DNS=10.232.250.190
+        Address=10.232.251.161/23
+        Gateway=10.232.250.253
+
+write_files:
+    - path: /etc/profile.d/etcdctl.sh
+      content: |
+         export ETCDCTL_PEERS=http://10.232.251.161:2379
+
+

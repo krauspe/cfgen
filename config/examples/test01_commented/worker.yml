@@ -1,0 +1,93 @@
+#cloud-config
+
+hostname: worker
+
+coreos:
+  fleet:
+    etcd_servers: "http://127.0.0.1:2379"
+    metadata: "hw=metal,disk=hdd,role=worker"
+  update:
+    reboot-strategy: etcd-lock
+  locksmith:
+      endpoint: 127.0.0.1:2379
+
+  units:
+    - name: etcd2.service
+      command: start
+      content: |
+        [Unit]
+        Description=etcd2
+        Requires=network.target network-online.target
+        After=network.target network-online.target docker.service
+        Conflicts=etcd.service
+
+        [Service]
+        User=etcd
+        MemoryLimit=1G
+        ExecStart=/usr/bin/etcd2
+					-proxy
+						on 
+					-listen-client-urls 
+						http://127.0.0.1:2379,
+						http://172.17.42.1:2379
+					-initial-cluster 
+						docker011=http://10.232.251.161:2380,
+						docker012=http://10.232.251.162:2380,
+						docker013=http://10.232.251.163:2380
+					-data-dir=/var/lib/etcd
+        Restart=always
+        RestartSec=10s
+        LimitNOFILE=40000
+
+    - name: fleet.service
+      command: start
+    - name: docker.service
+      command: restart
+    - name: update-engine.service
+      command: restart
+    - name: systemd-timesyncd.service
+      command: start
+    - name: settimezone.service
+      command: start
+      content: |
+        [Unit]
+        Description=Set the timezone
+
+        [Service]
+        ExecStart=/usr/bin/timedatectl set-timezone Europe/Berlin
+        RemainAfterExit=yes
+        Type=oneshot
+
+
+users:
+   - name: core
+     passwd: $1$17tYvTBd$RrkLVIogkO6D.C7HEhSAV.
+     groups:
+       - sudo
+       - docker
+     ssh-authorized-keys:
+       - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAzAbxQKDJlZ5RbvMgD9UNKJCUYt/mboMjMgzBGhJXI3pyFBoc76Mhv8fKe45niX4Ecg3z6Q57eyX+7DnwYWi41LqkM48+b8rjymt0s/eYKaoOYnYUxCIqQUlXuQtxzlWP26RbW9cTLQ8EFTnvXjG2D8W34IMxnOzDlXQfwP91FRSEs0jsA/0zHN3YxIh6lDmgnuFcq0XLG16WyYPjTRa6L1iDXwEgziw6G6TRfrlE4AywnPq5SwhRBNNChGxyrj56N/JEhyx0e6i+6EAQipD5pq+mtIN102spwLhjy8g+qlpgR+fwIUF/Q9D1H11vdzQxIJ0rdvk4RW+KDJao8KVsAw==
+
+write_files:
+    - path: /etc/systemd/system/docker.service.d/http-proxy.conf
+      owner: core:core
+      permissions: 0644
+      content: |
+        [Service]
+        Environment="HTTP_PROXY=http://bremen.se.dfs.de:80" "NO_PROXY=localhost,127.0.0.0/8,10.232.0.0/23,se.dfs.de"
+    - path: /etc/systemd/system/update-engine.service.d/proxy.conf
+      permissions: 0644
+      content: |
+        [Service]
+        Environment="ALL_PROXY=http://bremen:80" "HTTP_PROXY=http://bremen.se.dfs.de:80"
+    - path: /etc/systemd/system/docker.service.d/insecure-registry.conf
+      permissions: 0644
+      content: |
+        [Service]
+        Environment=DOCKER_OPTS='--insecure-registry="dreg01.se.dfs.de:5000"'
+    - path: /etc/systemd/timesyncd.conf
+      content: |
+         [Time]
+         NTP=timesrv.se.dfs.de
+
+

@@ -1,0 +1,74 @@
+#cloud-config
+
+hostname: @@hn@@
+
+coreos:
+  fleet:
+    etcd_servers: "http://@@ip@@:2379"
+    metadata: "hw=virtual,disk=virtual,role=etcd"
+  update:
+    reboot-strategy: etcd-lock
+  locksmith:
+      endpoint: @@ip@@:2379
+
+  units:
+    - name: etcd2.service
+      command: start
+      content: |
+        [Unit]
+        Description=etcd2
+        Requires=network.target network-online.target
+        After=network.target network-online.target
+        Conflicts=etcd.service
+
+        [Service]
+        User=etcd
+        ExecStart=/usr/bin/etcd2	-name @@hn@@ -advertise-client-urls 	    http://@@ip@@:2379 -listen-peer-urls 	     http://@@ip@@:2380 -initial-advertise-peer-urls http://@@ip@@:2380 -listen-client-urls http://@@ip@@:2379,http://127.0.0.1:2379 -initial-cluster @@initial-cluster-string@@ -initial-cluster-token etcd-opt -initial-cluster-state new -data-dir=/var/lib/etcd 
+        Restart=always
+        RestartSec=10s
+        LimitNOFILE=40000
+
+    - name: fleet.service
+      command: start
+    - name: docker.service
+      command: restart
+    - name: update-engine.service
+      command: restart
+    - name: systemd-timesyncd.service
+      command: start
+    - name: settimezone.service
+      command: start
+      content: |
+        [Unit]
+        Description=Set the timezone
+
+        [Service]
+        ExecStart=/usr/bin/timedatectl set-timezone Europe/Berlin
+        RemainAfterExit=yes
+        Type=oneshot
+
+
+users:
+   - name: core
+     passwd: $1$17tYvTBd$RrkLVIogkO6D.C7HEhSAV.
+     groups:
+       - sudo
+       - docker
+     ssh-authorized-keys:
+       - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAzAbxQKDJlZ5RbvMgD9UNKJCUYt/mboMjMgzBGhJXI3pyFBoc76Mhv8fKe45niX4Ecg3z6Q57eyX+7DnwYWi41LqkM48+b8rjymt0s/eYKaoOYnYUxCIqQUlXuQtxzlWP26RbW9cTLQ8EFTnvXjG2D8W34IMxnOzDlXQfwP91FRSEs0jsA/0zHN3YxIh6lDmgnuFcq0XLG16WyYPjTRa6L1iDXwEgziw6G6TRfrlE4AywnPq5SwhRBNNChGxyrj56N/JEhyx0e6i+6EAQipD5pq+mtIN102spwLhjy8g+qlpgR+fwIUF/Q9D1H11vdzQxIJ0rdvk4RW+KDJao8KVsAw==
+
+write_files:
+    - path: /etc/systemd/system/docker.service.d/insecure-registry.conf
+      permissions: 0644
+      content: |
+        [Service]
+        Environment=DOCKER_OPTS='--insecure-registry="dreg01.se.dfs.de:5000"'
+    - path: /etc/systemd/timesyncd.conf
+      content: |
+         [Time]
+         NTP=timesrv.se.dfs.de
+    - path: /etc/profile.d/etcdctl.sh
+      content: |
+         export ETCDCTL_PEERS=http://@@ip@@:2379
+
+
