@@ -22,3 +22,5 @@ subnet @@subnet@@ netmask @@sn@@ {
   next-server @@is@@;
   filename "pxelinux.0";
 }
+
+@@dhcpd-host-entrys@@

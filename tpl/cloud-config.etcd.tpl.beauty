@@ -28,7 +28,7 @@ coreos:
 					-listen-peer-urls 	     http://@@ip@@:2380 
 					-initial-advertise-peer-urls http://@@ip@@:2380 
 					-listen-client-urls http://@@ip@@:2379,http://127.0.0.1:2379
-					-initial-cluster etcd-01=http://@@ip-etcd-01@@:2380,etcd-02=http://@@ip-etcd-02@@:2380,etcd-03=http://@@ip-etcd-03@@:2380
+					-initial-cluster etcd-01=@@initial-cluster-string@@    # example: http://<ip-etcd-01>:2380,etcd-02=http://<ip-etcd-02>:2380,etcd-03=http://<ip-etcd-03>:2380
 					-initial-cluster-token etcd-opt 
 					-initial-cluster-state new 
 					-data-dir=/var/lib/etcd 
