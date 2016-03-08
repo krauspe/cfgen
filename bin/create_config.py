@@ -63,22 +63,31 @@ kernel = os.path.join(tftp_dir,"coreos_production_pxe.vmlinuz")
 # vm settings
 
 host_defaults = {
-    'disk':'/dev/xvda',
-    'img-name':'disk0.qcow2',
-    'img-format':'qcow2',
+    'install-tpl':'xen',
+    'cloud-config-server':'is01',
     'ram':'1024',
     'vcpus':'1',
-    'disk-size':'4G',
-    'dv':'eth0',
-    'bridge':'virbr2',
-    'dn':'nw1.lgn.dfs.de',
-    'ns':'192.169.42.10',
-    'is':'192.169.42.10',
-    'gw':'192.169.42.1',
-    'sn':'255.255.255.0',
-    'netconf-type':'dhcp',
-    'cloud-config-server':'is01',
-    'install-tpl':'xen'
+    'disks':{
+        'disk0':{
+            'device':'/dev/xvda',
+            'img-name':'disk0.qcow2',
+            'img-format':'qcow2',
+            'disk-size':'4G',
+        }
+    },
+    'nics':{
+        'nic0':{
+            'dv':'eth0',
+            'bridge':'virbr2',
+            'dn':'nw1.lgn.dfs.de',
+            'ns':'192.169.42.10',
+            'is':'192.169.42.10',
+            'gw':'192.169.42.1',
+            'sn':'255.255.255.0',
+            'netconf-type':'dhcp',
+
+        }
+    },
 }
 
 config_defaults = {
@@ -86,36 +95,64 @@ config_defaults = {
         'subnet':'192.169.42.10',
         'range_from':'192.169.42.100',
         'range_to':'192.169.42.200',
-        'bc':'192.168.24.255'
+        'bc':'192.168.24.255',
     }
 }
 
 hosts = {
     'etcd-01':{
         'vm-name':'etcd-01',
-        'ip':'192.168.42.11',
-         'mac':'00:00:00:00:00:01',
         'type':'etcd',
+        'nics':{
+            'nic0':{
+                'dv':'ens3',
+                'ip':'192.168.42.11',
+                'mac':'00:00:00:00:00:01',
+                },
+            },
         },
     'etcd-02':{
         'vm-name':'etcd-01',
-        'ip':'192.168.42.12',
-        'mac':'00:00:00:00:00:02',
         'type':'etcd',
+        'nics':{
+            'nic0':{
+                'dv':'ens3',
+                'ip':'192.168.42.12',
+                'mac':'00:00:00:00:00:02',
+                },
+            },
         },
     'etcd-03':{
         'vm-name':'etcd-01',
-        'ip':'192.168.42.13',
-        'mac':'00:00:00:00:00:03',
         'type':'etcd',
+        'nics':{
+            'nic0':{
+                'dv':'ens3',
+                'ip':'192.168.42.13',
+                'mac':'00:00:00:00:00:03',
+                },
+            },
         },
     'is01':{
         'vm-name':'inw1',
-        'ip':'192.168.42.10',
-        'mac':'00:16:3e:02:3d:c3',
         'type':'is',
-        'netconf-type':'static',
-        }
+        'nics':{
+            'nic0':{
+                'dv':'eth0',
+                'ip':'192.168.42.10',
+                'mac':'00:16:3e:02:3d:c3',
+                'netconf-type':'static',
+                },
+            'nic1':{
+                'dv':'eth1',
+                'ip':'10.232.250.14',
+                'sn':'255.255.254.0',
+                'gw':'10.232.250.253',
+                'mac':'00:16:3e:02:3d:c3',
+                'netconf-type':'static',
+                },
+            },
+        },
 }
 
 struct = {
@@ -181,8 +218,10 @@ def getAllDhcpHostEntrys():
 #TODO: "getCoreosInitialClusterString" und "getAllDhcpHostEntrys" anwenden um 'initial-cluster-string' und 'dhcpd-host-entrys' zu erzeugen ,oder
 #TODO: globalgalaktischgenerischen Ansatz entwickeln :-)
 
-def createObject(hn):
-    settings['hn'] = hn
+def createObject(item):
+
+    # TODO: hier unterscheidung: hn nur eine Moeglichkeit....
+    settings['hn'] = item
     settings.update(hosts[hn])
 
     settings['target-yml'] = hn+'.yml'
@@ -191,6 +230,8 @@ def createObject(hn):
     with open(tpl_file,'r+') as f:
         contens = f.read()
 
+
+    # TODO: nicht mehr ueber settings iterieren (weil komplex) sondern alle "@@...@@@ items finden und diese aufloesen
     for seStr,repStr in settings.iteritems():
         if repStr != '':
             contens = contens.replace('@@'+seStr+'@@',repStr)
