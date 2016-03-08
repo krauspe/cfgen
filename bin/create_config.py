@@ -73,8 +73,8 @@ host_defaults = {
             'img-name':'disk0.qcow2',
             'img-format':'qcow2',
             'disk-size':'4G',
-        }
-    },
+            }
+        },
     'nics':{
         'nic0':{
             'dv':'eth0',
@@ -86,9 +86,9 @@ host_defaults = {
             'sn':'255.255.255.0',
             'netconf-type':'dhcp',
 
-        }
-    },
-}
+            }
+        },
+    }
 
 config_defaults = {
     'dhcpd':{
@@ -96,8 +96,8 @@ config_defaults = {
         'range_from':'192.169.42.100',
         'range_to':'192.169.42.200',
         'bc':'192.168.24.255',
+        }
     }
-}
 
 hosts = {
     'etcd-01':{
@@ -153,7 +153,7 @@ hosts = {
                 },
             },
         },
-}
+    }
 
 struct = {
     'cloud-config':{
@@ -187,7 +187,7 @@ struct = {
                 },
             },
         }
-}
+    }
 
 
 def get_ip(hn):
@@ -220,19 +220,21 @@ def getAllDhcpHostEntrys():
 
 def createObject(item):
 
-    # TODO: hier unterscheidung: hn nur eine Moeglichkeit....
-    settings['hn'] = item
-    settings.update(hosts[hn])
+    cfg['hn'] = item
+    cfg.update(hosts[hn])  # rekursuv wg hierachie in der cfg ?
 
-    settings['target-yml'] = hn+'.yml'
-    settings['img-path'] = os.path.join(img_basedir,settings['vm-name'],settings['img-name'])
+    cfg['target-yml'] = hn + '.yml'
+    cfg['install-img-path'] = os.path.join(img_basedir,cfg['vm-name'],cfg['disks']['disk0']['img-name'])
+    cfg['install-img-format'] = cfg['disks']['disk0']['img-format']
+    cfg['install-bridge'] = cfg['nics']['nic0']['bridge']
+    cfg['install-mac'] = cfg['nics']['nic0']['mac']
 
     with open(tpl_file,'r+') as f:
         contens = f.read()
 
 
     # TODO: nicht mehr ueber settings iterieren (weil komplex) sondern alle "@@...@@@ items finden und diese aufloesen
-    for seStr,repStr in settings.iteritems():
+    for seStr,repStr in cfg.iteritems():
         if repStr != '':
             contens = contens.replace('@@'+seStr+'@@',repStr)
     return contens
@@ -253,7 +255,7 @@ def writeFile(hn,contens):
 
 # main
 
-settings = host_defaults.copy()
+cfg = host_defaults.copy()
 contens = createObject(hn)
 
 writeFile(hn,contens)
