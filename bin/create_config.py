@@ -168,11 +168,14 @@ getFunction = {
 
 def update_nested_dict(d, u):
     for k, v in u.iteritems():
-        if isinstance(v, collections.Mapping):
-            r = update_nested_dict(d.get(k, {}), v)
-            d[k] = r
+        if isinstance(d, collections.Mapping):
+            if isinstance(v, collections.Mapping):
+                r = update_nested_dict(d.get(k, {}), v)
+                d[k] = r
+            else:
+                d[k] = u[k]
         else:
-            d[k] = u[k]
+            d = {k: u[k]}
     return d
 
 # hostlist functions
