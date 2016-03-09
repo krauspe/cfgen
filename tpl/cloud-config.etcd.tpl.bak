@@ -6,7 +6,7 @@ coreos:
   fleet:
     etcd_servers: "http://@@ip@@:2379"
     metadata: "hw=virtual,disk=virtual,role=etcd"
-  update:
+  update_nested_dict2:
     reboot-strategy: etcd-lock
   locksmith:
       endpoint: @@ip@@:2379
@@ -32,7 +32,7 @@ coreos:
       command: start
     - name: docker.service
       command: restart
-    - name: update-engine.service
+    - name: update_nested_dict2-engine.service
       command: restart
     - name: systemd-timesyncd.service
       command: start

@@ -29,7 +29,7 @@ coreos:
 
         [Service]
         ExecStartPre=/media/configdrive/agent/xe-linux-distribution /var/cache/xe-linux-distribution
-        Environment="XE_UPDATE_GUEST_ATTRS=/media/configdrive/agent/xe-update-guest-attrs"
+        Environment="XE_UPDATE_GUEST_ATTRS=/media/configdrive/agent/xe-update_nested_dict2-guest-attrs"
         ExecStart=/media/configdrive/agent/xe-daemon
   etcd:
     name: %XSVMNAMETOHOSTNAME%
@@ -53,7 +53,7 @@ write_files:
       content: |
         [Service]
         Environment="HTTP_PROXY=http://bremen.se.dfs.de:80" "NO_PROXY=localhost,127.0.0.0/8,10.232.0.0/23,se.dfs.de"
-    - path: /etc/systemd/system/update-engine.service.d/proxy.conf
+    - path: /etc/systemd/system/update_nested_dict2-engine.service.d/proxy.conf
       permissions: 0644
       content: |
         [Service]

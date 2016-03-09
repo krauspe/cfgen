@@ -6,7 +6,7 @@
 default-lease-time 300;
 #max-lease-time 172800; # suse orig
 max-lease-time 600;
-ddns-update-style none; ddns-updates off;
+ddns-update_nested_dict2-style none; ddns-updates off;
 #log-facility local7;
 server-name newsimweb;
 

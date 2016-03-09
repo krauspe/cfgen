@@ -19,7 +19,7 @@ coreos:
       command: start
     - name: docker.service
       command: restart
-    - name: update-engine.service
+    - name: update_nested_dict2-engine.service
       command: restart
     - name: systemd-timesyncd.service
       command: start
@@ -34,7 +34,7 @@ coreos:
         RemainAfterExit=yes
         Type=oneshot
 
-  update:
+  update_nested_dict2:
     reboot-strategy: off
 
 users:
@@ -71,7 +71,7 @@ write_files:
       content: |
         [Service]
         Environment="HTTP_PROXY=http://bremen.se.dfs.de:80" "NO_PROXY=localhost,127.0.0.0/8,10.232.0.0/23,se.dfs.de"
-    - path: /etc/systemd/system/update-engine.service.d/proxy.conf
+    - path: /etc/systemd/system/update_nested_dict2-engine.service.d/proxy.conf
       permissions: 0644
       content: |
         [Service]
