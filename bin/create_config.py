@@ -5,6 +5,7 @@
 #
 import os
 import socket
+import collections
 import argparse
 #import re
 #from sys import argv,exit
@@ -20,13 +21,13 @@ import argparse
 # args = parser.parse_args()
 #
 # hn = args.hn
-# tpl_type = args.type
+# tpl_class = args.type
 # tpl = args.tpl
 
 hn = 'etcd-02'
-tpl_type = 'cloud-config'
-#tpl_type = 'dhcpd'
-#tpl_type = 'virt-install'
+tpl_class = 'cloud-config'
+#tpl_class = 'dhcpd'
+#tpl_class = 'virt-install-cmd'
 #tpl = 'auto-install'
 #tpl = 'xen'
 #tpl = 'entry'
@@ -41,7 +42,7 @@ out_filename = {
 
 
 # print "hn = %s" % (hn)
-# print "tpl_type = %s" % (tpl_type)
+# print "tpl_class = %s" % (tpl_class)
 # print "tpl = %s" % (tpl)
 
 pydir =  os.path.dirname(os.path.abspath(__file__))
@@ -50,7 +51,7 @@ confdir = os.path.join(basedir,"config")
 tpldir = os.path.join(basedir,"tpl")
 deploydir = os.path.join(basedir,"deployment")
 
-tpl_file = os.path.join(tpldir,tpl_type + '.' + tpl + '.tpl')
+tpl_file = os.path.join(tpldir, tpl_class + '.' + tpl + '.tpl')
 
 
 # vmhost settings
@@ -63,39 +64,38 @@ kernel = os.path.join(tftp_dir,"coreos_production_pxe.vmlinuz")
 # vm settings
 
 host_defaults = {
-    'install-tpl':'xen',
-    'cloud-config-server':'is01',
-    'ram':'1024',
-    'vcpus':'1',
-    'disks':{
-        'disk0':{
-            'device':'/dev/xvda',
-            'img-name':'disk0.qcow2',
-            'img-format':'qcow2',
-            'disk-size':'4G',
-            }
-        },
-    'nics':{
-        'nic0':{
-            'dv':'eth0',
-            'bridge':'virbr2',
-            'dn':'nw1.lgn.dfs.de',
-            'ns':'192.169.42.10',
-            'is':'192.169.42.10',
-            'gw':'192.169.42.1',
-            'sn':'255.255.255.0',
-            'netconf-type':'dhcp',
-
-            }
-        },
     }
 
-config_defaults = {
-    'dhcpd':{
-        'subnet':'192.169.42.10',
-        'range_from':'192.169.42.100',
-        'range_to':'192.169.42.200',
+cfg_defaults = {
+    'net':{
+        'bridge':'virbr2',
+        'dn':'nw1.lgn.dfs.de',
+        'ns':'192.169.42.10',
+        'is':'192.169.42.10',
+        'gw':'192.169.42.1',
+        'sn':'255.255.255.0',
         'bc':'192.168.24.255',
+        'subnet':'192.169.42.0',
+        'dhcp-range-from':'192.169.42.100',
+        'dhcp-range-to':'192.169.42.200',
+        'netconf-type':'dhcp',
+        'nic':'nic0',
+        },
+    'vm'
+        'install-tpl':'xen',
+        'ram':'1024',
+        'vcpus':'1',
+        'disks':{
+            'disk0':{
+                'device':'/dev/xvda',
+                'img-name':'disk0.qcow2',
+                'img-format':'qcow2',
+                'disk-size':'4G',
+                },
+            },
+        'disk':'disk0',
+    'app':{
+        'cloud-config-server':'is01',
         }
     }
 
@@ -155,40 +155,36 @@ hosts = {
         },
     }
 
-struct = {
+getFunction = {
     'cloud-config':{
-        'auto-install':{
-            'vars':['cloud-config-server','target-yml','disk'],
-            'generator':{
-                },
-            },
-        'etcd':{
-            'vars':['ip','hn','initial-cluster-string'],
-             'generator':{
-                 'initial-cluster-string':'getCoreosInitialClusterString',
-                },
-            },
-        'default-static-ip':{
-            'vars':['hn','dv','ip','hn','gw','ns'],
-             'generator':{
-                }
+        'initial-cluster-string':'getCoreosInitialClusterString',
         },
-        'default':{
-            'vars':['hn'],
-             'generators':{
-                },
-            }
-    },
     'dhcpd':{
-        'conf':{
-            'vars':['dn','ns','subnet','range_from','range_to','bc','is','dhcpd-host-entrys'],
-             'generator':{
-                 'dhcpd-host-entrys':'getAllDhcpHostEntrys',
-                },
-            },
+        'dhcpd-host-entrys':'getAllDhcpHostEntrys',
         }
     }
 
+# common functions
+
+def update_nested_dict(d, u):
+    for k, v in u.iteritems():
+        if isinstance(v, collections.Mapping):
+            r = update_nested_dict(d.get(k, {}), v)
+            d[k] = r
+        else:
+            d[k] = u[k]
+    return d
+
+# hostlist functions
+
+def getHostlistFromType(type):
+    hostlist = []
+    for hn in hosts.iterkeys():
+        if hosts[hn]['type'] == type:
+            hostlist.append()
+    return hostlist
+
+# network functions
 
 def get_ip(hn):
     ip = ''
@@ -198,6 +194,7 @@ def get_ip(hn):
         ip = '0.0.0.0'
     return ip
 
+# coreos functions
 
 def getCoreosInitialClusterString():
     string = ''
@@ -208,23 +205,20 @@ def getCoreosInitialClusterString():
     string = string.rstrip(',')
     return string
 
-def getAllDhcpHostEntrys():
-    hostlist = []
-    for hn in hosts.iterkeys():
-        if hosts[hn]['netconf-type'] == 'dhcp':
-            hostlist.append()
 
-#TODO: createObject muesste eigentlich als params noch tpl oder / und tpl_type mitbekomen und nur die relevanten settings erzeugen
-#TODO: "getCoreosInitialClusterString" und "getAllDhcpHostEntrys" anwenden um 'initial-cluster-string' und 'dhcpd-host-entrys' zu erzeugen ,oder
-#TODO: globalgalaktischgenerischen Ansatz entwickeln :-)
+def getInstallImgPath():
+    return os.path.join(img_basedir,cfg['vm-name'],cfg['disks']['disk0']['img-name'])
 
-def createObject(item):
 
-    cfg['hn'] = item
+def createObjectFromHostCfg(hn):
+
+    cfg['hn'] = hn
     cfg.update(hosts[hn])  # rekursuv wg hierachie in der cfg ?
+    #TODO: use update_nested_dict !!1
 
     cfg['target-yml'] = hn + '.yml'
-    cfg['install-img-path'] = os.path.join(img_basedir,cfg['vm-name'],cfg['disks']['disk0']['img-name'])
+    cfg['initial-cluster-string'] = getCoreosInitialClusterString()
+    cfg['install-img-path'] = getInstallImgPath()
     cfg['install-img-format'] = cfg['disks']['disk0']['img-format']
     cfg['install-bridge'] = cfg['nics']['nic0']['bridge']
     cfg['install-mac'] = cfg['nics']['nic0']['mac']
@@ -232,8 +226,6 @@ def createObject(item):
     with open(tpl_file,'r+') as f:
         contens = f.read()
 
-
-    # TODO: nicht mehr ueber settings iterieren (weil komplex) sondern alle "@@...@@@ items finden und diese aufloesen
     for seStr,repStr in cfg.iteritems():
         if repStr != '':
             contens = contens.replace('@@'+seStr+'@@',repStr)
@@ -245,7 +237,7 @@ def createObject(item):
 def writeFile(hn,contens):
     if tpl == 'auto-install':
         out_filename['cloud-config'] = 'auto-install'+'.@@hn@@.yml'
-    filename = out_filename[tpl_type].replace('@@hn@@',hn)
+    filename = out_filename[tpl_class].replace('@@hn@@', hn)
     out_file = os.path.join(deploydir,filename)
 
     print "create " + out_file
@@ -256,7 +248,7 @@ def writeFile(hn,contens):
 # main
 
 cfg = host_defaults.copy()
-contens = createObject(hn)
+contens = createObjectFromHostCfg(hn)
 
 writeFile(hn,contens)
 

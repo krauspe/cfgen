@@ -21,11 +21,11 @@ initrd = os.path.join(tftp_dir,"coreos_production_pxe_image.cpio.gz")
 kernel = os.path.join(tftp_dir,"coreos_production_pxe.vmlinuz")
 
 
-#tpl_type = 'cloud-config'
-#tpl_type = 'dhcpd'
-tpl_type = 'virt-install'
+#tpl_class = 'cloud-config'
+#tpl_class = 'dhcpd'
+tpl_type = 'virt-install-cmd'
 #tpl = 'auto-install'
-tpl = 'xen_new2'
+tpl = 'xen'
 #tpl = 'entry'
 #tpl = 'etcd'
 
