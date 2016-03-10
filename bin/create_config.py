@@ -7,13 +7,20 @@ import os
 import socket
 import collections
 import argparse
+import json
 #import re
 #from sys import argv,exit
 
-# command line handling
-#TODO: get possible choices for variants from files in tpl dir :-)
-#TODO: add values for dhcpd.conf in hosts and/or host_default
 
+# data handling
+# TODO: use json.load config/config.json instead of hard coded dict for config
+# TODO: create a corresponding json file foor each tpl file for defining short cuts to use in tpls
+# TODO: read in json short cut and tpl files and build flat cfg dict for replacement
+
+# command line handling
+# TODO: get possible choices for variants from files in tpl dir :-)
+# TODO: add values for dhcpd.conf in hosts and/or host_default
+# TODO: complete and activate when everything else works
 # parser = argparse.ArgumentParser(description="create various config files from host atributes")
 # parser.add_argument("--hn", type=str, required=True, help="hostname")
 # parser.add_argument("-t", "--type", type=str, required=True, choices=['cloud-config','dhcpd','virt-install'], help="config file to create")
@@ -35,7 +42,7 @@ tpl = 'etcd'
 
 
 out_filename = {
-    'cloud-config':'cloud-config'+'.@@hn@@.yml',
+    'cloud-config':'@@hn@@.yml',
     'dhcpd':'dhcpd'+'.@@hn@@.conf.entry',    
     'virt-install':'virt-install'+'.@@hn@@.sh',    
 }
@@ -63,28 +70,36 @@ kernel = os.path.join(tftp_dir,"coreos_production_pxe.vmlinuz")
 
 # vm settings
 
-host_defaults = {
-    }
 
 cfg_defaults = {
+    'descr':'Host definitions',
+    'classes':[],
+    'hardware':'virtual',
     'net':{
-        'bridge':'virbr2',
         'dn':'nw1.lgn.dfs.de',
         'ns':'192.169.42.10',
-        'is':'192.169.42.10',
         'gw':'192.169.42.1',
-        'sn':'255.255.255.0',
-        'bc':'192.168.24.255',
+        'is':'192.169.42.10',
         'subnet':'192.169.42.0',
         'dhcp-range-from':'192.169.42.100',
         'dhcp-range-to':'192.169.42.200',
         'netconf-type':'dhcp',
         'nic':'nic0',
+        'nics':{
+            'nic0':{
+                'dv':'eth0',
+                'ip':'',
+                'sn':'255.255.255.0',
+                'mac':'',
+                'options':''
+                }
+            }
         },
-    'vm'
+    'vm':{
         'install-tpl':'xen',
         'ram':'1024',
         'vcpus':'1',
+        'bridge':'virbr2',
         'disks':{
             'disk0':{
                 'device':'/dev/xvda',
@@ -94,66 +109,150 @@ cfg_defaults = {
                 },
             },
         'disk':'disk0',
+    },
     'app':{
         'cloud-config-server':'is01',
-        }
+        },
     }
 
 hosts = {
     'etcd-01':{
-        'vm-name':'etcd-01',
-        'type':'etcd',
-        'nics':{
-            'nic0':{
-                'dv':'ens3',
-                'ip':'192.168.42.11',
-                'mac':'00:00:00:00:00:01',
+        'classes':['etcd'],
+        'vm':{
+            'vm-name':'etcd-01',
+        },
+        'net':{
+            'nics':{
+                'nic0':{
+                    'dv':'ens3',
+                    'ip':'192.168.42.11',
+                    'mac':'00:00:00:00:00:01',
+                    },
                 },
-            },
+            }
         },
     'etcd-02':{
-        'vm-name':'etcd-01',
-        'type':'etcd',
-        'nics':{
-            'nic0':{
-                'dv':'ens3',
-                'ip':'192.168.42.12',
-                'mac':'00:00:00:00:00:02',
+        'classes':['etcd'],
+        'vm':{
+            'vm-name':'etcd-02',
+        },
+        'net':{
+            'nics':{
+                'nic0':{
+                    'dv':'ens3',
+                    'ip':'192.168.42.12',
+                    'mac':'00:00:00:00:00:02',
+                    },
                 },
             },
         },
     'etcd-03':{
-        'vm-name':'etcd-01',
-        'type':'etcd',
-        'nics':{
-            'nic0':{
-                'dv':'ens3',
-                'ip':'192.168.42.13',
-                'mac':'00:00:00:00:00:03',
+        'classes':['etcd'],
+        'vm':{
+            'vm-name':'etcd-03',
+        },
+        'net':{
+            'nics':{
+                'nic0':{
+                    'dv':'ens3',
+                    'ip':'192.168.42.13',
+                    'mac':'00:00:00:00:00:03',
+                    },
                 },
             },
         },
-    'is01':{
-        'vm-name':'inw1',
-        'type':'is',
-        'nics':{
-            'nic0':{
-                'dv':'eth0',
-                'ip':'192.168.42.10',
-                'mac':'00:16:3e:02:3d:c3',
-                'netconf-type':'static',
+    'cwp1-s1':{
+        'classes':['nsc.cwp.s1'],
+        'hardware':'physical',
+        'vm':{
+            'vm-name':'cwp1-s1',
+        },
+        'net':{
+            'nics':{
+                'nic0':{
+                    'dv':'eth0',
+                    'ip':'192.168.96.20',
+                    'mac':'01:e4:d3:ac:bd:03',
+                    },
                 },
-            'nic1':{
-                'dv':'eth1',
-                'ip':'10.232.250.14',
-                'sn':'255.255.254.0',
-                'gw':'10.232.250.253',
-                'mac':'00:16:3e:02:3d:c3',
-                'netconf-type':'static',
+            },
+        },
+    'nss':{
+        'classes':['nss','is'],
+        'hardware':'physical',
+        'vm':{
+            'vm-name':'nss-lx3',
+        },
+        'net':{
+            'subnet':'192.168.33.0',
+            'dn':'lx3.lgn.dfs.de',
+            'sn':'255.255.255.0',
+            'gw':'10.232.250.253',
+            'ns':'192.168.33.10',
+            'is':'10.232.250.190',
+            'netconf-type':'static',
+            'nic':'nic0',
+            'nics':{
+                'nic0':{
+                    'dv':['eth0','is09'],
+                    'ip':['192.168.33.10','192.168.33.9'],
+                    'mac':'00:30:48:b8:f8:80',
+                    'options':'speed 100 duplex ful wol g',
+                    },
+                'nic1':{
+                    'dv':'eth1',
+                    'ip':'10.232.250.232',
+                    'sn':'255.255.254.0',
+                    'mac':'00:30:48:b8:f8:81',
+                    },
+                },
+            },
+        },
+
+    'sim1-s1':{
+        'classes':['nsc.sim.s1','failover-nss'],
+        'hardware':'physical',
+        'vm':{
+            'vm-name':'sim1-s1',
+        },
+        'net':{
+            'nics':{
+                'nic0':{
+                    'dv':'eth0',
+                    'ip':'192.168.96.20',
+                    'mac':'01:e4:d3:ac:bd:03',
+                    },
+                },
+            },
+        },
+
+    'is01':{
+        'classes':['is'],
+        'vm':{
+            'vm-name':'inw1',
+            },
+        'net':{
+            'nics':{
+                'nic0':{
+                    'dv':'eth0',
+                    'ip':'192.168.42.10',
+                    'mac':'00:16:3e:02:3d:c3',
+                    'netconf-type':'static',
+                    },
+                'nic1':{
+                    'dv':'eth1',
+                    'dn':'se.dfs.de',
+                    'ip':'10.232.250.14',
+                    'sn':'255.255.254.0',
+                    'gw':'10.232.250.253',
+                    'mac':'00:16:3e:02:3d:c3',
+                    'netconf-type':'static',
+                    },
                 },
             },
         },
     }
+
 
 getFunction = {
     'cloud-config':{
@@ -204,7 +303,7 @@ def getCoreosInitialClusterString():
     for hn in hosts.iterkeys():
         if hosts[hn]['type'] == 'etcd':
             ip = hosts[hn]['ip']
-            string += hn+"=http://"+ip+":2380,"
+            string += hn+"=http://"+str(ip)+":2380,"
     string = string.rstrip(',')
     return string
 
@@ -216,23 +315,25 @@ def getInstallImgPath():
 def createObjectFromHostCfg(hn):
 
     cfg['hn'] = hn
-    cfg.update(hosts[hn])  # rekursuv wg hierachie in der cfg ?
-    #TODO: use update_nested_dict !!1
+    update_nested_dict(cfg,hosts[hn])  # rekursuv wg hierachie in der cfg ?
 
-    cfg['target-yml'] = hn + '.yml'
-    cfg['initial-cluster-string'] = getCoreosInitialClusterString()
-    cfg['install-img-path'] = getInstallImgPath()
-    cfg['install-img-format'] = cfg['disks']['disk0']['img-format']
-    cfg['install-bridge'] = cfg['nics']['nic0']['bridge']
-    cfg['install-mac'] = cfg['nics']['nic0']['mac']
+    print json.dumps(cfg,indent=4)
 
-    with open(tpl_file,'r+') as f:
-        contens = f.read()
+    # cfg['target-yml'] = hn + '.yml'
+    # cfg['initial-cluster-string'] = getCoreosInitialClusterString()
+    # cfg['install-img-path'] = getInstallImgPath()
+    # cfg['install-img-format'] = cfg['disks']['disk0']['img-format']
+    # cfg['install-bridge'] = cfg['nics']['nic0']['bridge']
+    # cfg['install-mac'] = cfg['nics']['nic0']['mac']
 
-    for seStr,repStr in cfg.iteritems():
-        if repStr != '':
-            contens = contens.replace('@@'+seStr+'@@',repStr)
-    return contens
+
+    # with open(tpl_file,'r+') as f:
+    #     contens = f.read()
+    #
+    # for seStr,repStr in cfg.iteritems():
+    #     if repStr != '':
+    #         contens = contens.replace('@@'+seStr+'@@',repStr)
+    # return contens
 
 #TODO: filenem/(path ?) generation in eigene Struktur mit unterscheidung ob host-bezogen (yml Files) oder liste (dhcpd.con) etc
 #TODO ggfs hn aus writeFile hearusnehmen und abghaengig vom tpl/tpl-type anderen parameter uebergeben ?!
@@ -250,8 +351,8 @@ def writeFile(hn,contens):
 
 # main
 
-cfg = host_defaults.copy()
+cfg = cfg_defaults.copy()
 contens = createObjectFromHostCfg(hn)
 
-writeFile(hn,contens)
+#writeFile(hn,contens)
 
