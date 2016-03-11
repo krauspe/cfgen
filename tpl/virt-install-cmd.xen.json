@@ -1,0 +1,8 @@
+{
+  "cfg": {
+    "@@install-img-path@@": "getInstallImgPath()",
+    "@@install-img-format@@": "cfg['disks']['disk0']['img-format']",
+    "@@install-bridge@@": "cfg['nics']['nic0']['bridge']",
+    "@@install-mac@@": "cfg['nics']['nic0']['mac']"
+  }
+}

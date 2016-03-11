@@ -1,0 +1,22 @@
+"cfg": {
+"@@install-img-path@@": "getInstallImgPath()",
+"@@install-img-format@@": "cfg['disks']['disk0']['img-format']",
+"@@install-bridge@@": "cfg['nics']['nic0']['bridge']",
+"@@install-mac@@": "cfg['nics']['nic0']['mac']"
+}
+
+"tpl-text":
+'''
+virt-install \
+    --connect xen+ssh:///system \
+    --pxe \
+    --hvm \
+    --os-type=linux \
+    --os-variant=sles12 \
+    --disk path="@@install-img-path@@",format=@@install-img-format@@ \
+    --network bridge=@@install-bridge@@,mac=@@install-mac@@ \
+    --vnc
+'''
+
+
+
