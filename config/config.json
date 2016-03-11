@@ -5,7 +5,10 @@
       "cloud-config-server": "is01"
     }, 
     "vm": {
-      "bridge": "virbr2", 
+      "disk": "disk0", 
+      "install-tpl": "xen", 
+      "vcpus": "1", 
+      "ram": "1024", 
       "disks": {
         "disk0": {
           "device": "/dev/xvda", 
@@ -13,11 +16,7 @@
           "img-format": "qcow2", 
           "img-name": "disk0.qcow2"
         }
-      }, 
-      "install-tpl": "xen", 
-      "ram": "1024", 
-      "vcpus": "1", 
-      "disk": "disk0"
+      }
     }, 
     "hardware": "virtual", 
     "classes": [], 
@@ -26,10 +25,11 @@
       "gw": "192.169.42.1", 
       "nics": {
         "nic0": {
-          "dv": "eth0", 
+          "bridge": "br0", 
           "ip": "", 
           "mac": "", 
           "sn": "255.255.255.0", 
+          "dv": "eth0", 
           "options": ""
         }
       }, 
@@ -50,16 +50,18 @@
             "dv": "eth0", 
             "ip": "192.168.42.10", 
             "mac": "00:16:3e:02:3d:c3", 
-            "netconf-type": "static"
+            "netconf-type": "static", 
+            "bridge": "virbr2"
           }, 
           "nic1": {
             "dn": "se.dfs.de", 
             "gw": "10.232.250.253", 
-            "ip": "10.232.250.14", 
-            "netconf-type": "static", 
             "mac": "00:16:3e:02:3d:c3", 
             "sn": "255.255.254.0", 
-            "dv": "eth1"
+            "bridge": "br0", 
+            "dv": "eth1", 
+            "ip": "10.232.250.14", 
+            "netconf-type": "static"
           }
         }
       }, 
@@ -94,7 +96,8 @@
           "nic0": {
             "dv": "ens3", 
             "ip": "192.168.42.11", 
-            "mac": "00:00:00:00:00:01"
+            "mac": "00:00:00:00:00:01", 
+            "bridge": "virbr2"
           }
         }
       }, 
@@ -111,7 +114,8 @@
           "nic0": {
             "dv": "ens3", 
             "ip": "192.168.42.12", 
-            "mac": "00:00:00:00:00:02"
+            "mac": "00:00:00:00:00:02", 
+            "bridge": "virbr2"
           }
         }
       }, 
@@ -128,7 +132,8 @@
           "nic0": {
             "dv": "ens3", 
             "ip": "192.168.42.13", 
-            "mac": "00:00:00:00:00:03"
+            "mac": "00:00:00:00:00:03", 
+            "bridge": "virbr2"
           }
         }
       }, 
