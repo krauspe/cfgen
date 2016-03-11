@@ -36,13 +36,13 @@ from prettyprint import pp
 # tpl = args.tpl
 
 hn = 'etcd-02'
-#tpl_class = 'cloud-config'
+tpl_class = 'cloud-config'
 #tpl_class = 'dhcpd'
-tpl_class = 'virt-install-cmd'
+#tpl_class = 'virt-install-cmd'
 #tpl = 'auto-install'
-tpl = 'xen'
+#tpl = 'xen'
 #tpl = 'entry'
-#tpl = 'etcd'
+tpl = 'etcd'
 
 
 out_filename = {
@@ -341,8 +341,8 @@ def get_ip(hn):
 def getCoreosInitialClusterString():
     string = ''
     for hn in hosts.iterkeys():
-        if hosts[hn]['type'] == 'etcd':
-            ip = hosts[hn]['ip']
+        if hosts[hn]['classes'][0] == 'etcd':
+            ip = hosts[hn]['net']['nics']['nic0']['ip']
             string += hn+"=http://"+str(ip)+":2380,"
     string = string.rstrip(',')
     return string
