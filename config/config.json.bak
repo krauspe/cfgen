@@ -1,0 +1,207 @@
+{
+  "cfg_defaults": {
+    "descr": "Host definitions", 
+    "app": {
+      "cloud-config-server": "is01"
+    }, 
+    "vm": {
+      "disk": "disk0", 
+      "install-tpl": "xen", 
+      "vcpus": "1", 
+      "ram": "1024", 
+      "disks": {
+        "disk0": {
+          "device": "/dev/xvda", 
+          "disk-size": "4G", 
+          "img-format": "qcow2", 
+          "img-name": "disk0.qcow2"
+        }
+      }
+    }, 
+    "hardware": "virtual", 
+    "classes": [], 
+    "net": {
+      "dn": "nw1.lgn.dfs.de", 
+      "gw": "192.169.42.1", 
+      "nics": {
+        "nic0": {
+          "bridge": "br0", 
+          "ip": "", 
+          "mac": "", 
+          "sn": "255.255.255.0", 
+          "dv": "eth0", 
+          "options": ""
+        }
+      }, 
+      "subnet": "192.169.42.0", 
+      "dhcp-range-to": "192.169.42.200", 
+      "nic": "nic0", 
+      "is": "192.169.42.10", 
+      "ns": "192.169.42.10", 
+      "netconf-type": "dhcp", 
+      "dhcp-range-from": "192.169.42.100"
+    }
+  }, 
+  "hosts": {
+    "is01": {
+      "net": {
+        "nics": {
+          "nic0": {
+            "dv": "eth0", 
+            "ip": "192.168.42.10", 
+            "mac": "00:16:3e:02:3d:c3", 
+            "netconf-type": "static", 
+            "bridge": "virbr2"
+          }, 
+          "nic1": {
+            "dn": "se.dfs.de", 
+            "gw": "10.232.250.253", 
+            "mac": "00:16:3e:02:3d:c3", 
+            "sn": "255.255.254.0", 
+            "bridge": "br0", 
+            "dv": "eth1", 
+            "ip": "10.232.250.14", 
+            "netconf-type": "static"
+          }
+        }
+      }, 
+      "classes": [
+        "is"
+      ], 
+      "vm": {
+        "vm-name": "inw1"
+      }
+    }, 
+    "cwp1-s1": {
+      "hardware": "physical", 
+      "net": {
+        "nics": {
+          "nic0": {
+            "dv": "eth0", 
+            "ip": "192.168.96.20", 
+            "mac": "01:e4:d3:ac:bd:03"
+          }
+        }
+      }, 
+      "classes": [
+        "nsc.cwp.s1"
+      ], 
+      "vm": {
+        "vm-name": "cwp1-s1"
+      }
+    }, 
+    "etcd-01": {
+      "net": {
+        "nics": {
+          "nic0": {
+            "dv": "ens3", 
+            "ip": "192.168.42.11", 
+            "mac": "00:00:00:00:00:01", 
+            "bridge": "virbr2"
+          }
+        }
+      }, 
+      "classes": [
+        "etcd"
+      ], 
+      "vm": {
+        "vm-name": "etcd-01"
+      }
+    }, 
+    "etcd-02": {
+      "net": {
+        "nics": {
+          "nic0": {
+            "dv": "ens3", 
+            "ip": "192.168.42.12", 
+            "mac": "00:00:00:00:00:02", 
+            "bridge": "virbr2"
+          }
+        }
+      }, 
+      "classes": [
+        "etcd"
+      ], 
+      "vm": {
+        "vm-name": "etcd-02"
+      }
+    }, 
+    "etcd-03": {
+      "net": {
+        "nics": {
+          "nic0": {
+            "dv": "ens3", 
+            "ip": "192.168.42.13", 
+            "mac": "00:00:00:00:00:03", 
+            "bridge": "virbr2"
+          }
+        }
+      }, 
+      "classes": [
+        "etcd"
+      ], 
+      "vm": {
+        "vm-name": "etcd-03"
+      }
+    }, 
+    "nss": {
+      "hardware": "physical", 
+      "net": {
+        "dn": "lx3.lgn.dfs.de", 
+        "subnet": "192.168.33.0", 
+        "sn": "255.255.255.0", 
+        "gw": "10.232.250.253", 
+        "nics": {
+          "nic0": {
+            "dv": [
+              "eth0", 
+              "is09"
+            ], 
+            "ip": [
+              "192.168.33.10", 
+              "192.168.33.9"
+            ], 
+            "mac": "00:30:48:b8:f8:80", 
+            "options": "speed 100 duplex ful wol g"
+          }, 
+          "nic1": {
+            "dv": "eth1", 
+            "ip": "10.232.250.232", 
+            "mac": "00:30:48:b8:f8:81", 
+            "sn": "255.255.254.0"
+          }
+        }, 
+        "nic": "nic0", 
+        "is": "10.232.250.190", 
+        "ns": "192.168.33.10", 
+        "netconf-type": "static"
+      }, 
+      "classes": [
+        "nss", 
+        "is"
+      ], 
+      "vm": {
+        "vm-name": "nss-lx3"
+      }
+    }, 
+    "sim1-s1": {
+      "hardware": "physical", 
+      "net": {
+        "nics": {
+          "nic0": {
+            "dv": "eth0", 
+            "ip": "192.168.96.20", 
+            "mac": "01:e4:d3:ac:bd:03"
+          }
+        }
+      }, 
+      "classes": [
+        "nsc.sim.s1", 
+        "failover-nss"
+      ], 
+      "vm": {
+        "vm-name": "sim1-s1"
+      }
+    }
+  }
+}
