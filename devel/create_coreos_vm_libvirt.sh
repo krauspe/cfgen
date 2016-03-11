@@ -27,7 +27,7 @@ if [[ $2 == "-u" ]]; then
   echo
   echo "updating ${coreos_img}.."
   wget http://stable.release.core-os.net/amd64-usr/current/coreos_production_qemu_image.img.bz2 -O - | bzcat > ${coreos_img}
-  echo "update done."
+  echo "update_nested_dict2 done."
 fi
 
 if [[ -d $vm_dir && -f $coreos_img ]] ; then
