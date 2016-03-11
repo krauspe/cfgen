@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 #
-# Create json from dict
+# Create hjson file from dict
 # (c) Peter Krauspe 3/2016
 #
 import os
-import collections
 import json
+import hjson
 from prettyprint import pp
 
 pydir =  os.path.dirname(os.path.abspath(__file__))
@@ -17,14 +17,14 @@ tpldir = os.path.join(basedir,"tpl")
 cfg_defaults = {}
 hosts = {}
 
-
-filename = "config.json"
-in_file = os.path.join(confdir,filename)
+filename = "virt-install-cmd.xen.hjson"
+in_file = os.path.join(tpldir,filename)
 print "read " + in_file
 with open(in_file,'r') as f:
-    dict =  json.load(f)
+    dict =  hjson.load(f)
 
 
-pp(dict)
+for k in dict.keys():
+    pp(dict[k])
 
 

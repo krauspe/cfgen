@@ -8,14 +8,16 @@ import socket
 import collections
 import argparse
 import json
+import hjson
 #import re
 #from sys import argv,exit
 
 
 # data handling
 # TODO: use json.load config/config.json instead of hard coded dict for config
-# TODO: create a corresponding json file foor each tpl file for defining short cuts to use in tpls
-# TODO: read in json short cut and tpl files and build flat cfg dict for replacement
+# TODO: use hjson for templates (supports multiline strings)
+# TODO: create hjson files from tpl files and define short cuts to use in the template strings
+# TODO: read hjson tpl files and build flat cfg dict as database for replacements
 
 # command line handling
 # TODO: get possible choices for variants from files in tpl dir :-)
