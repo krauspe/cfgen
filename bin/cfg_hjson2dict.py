@@ -19,12 +19,21 @@ hosts = {}
 
 filename = "virt-install-cmd.xen.hjson"
 in_file = os.path.join(tpldir,filename)
-print "read " + in_file
+
+#print "read " + in_file
+
 with open(in_file,'r') as f:
     dict =  hjson.load(f)
 
 
-for k in dict.keys():
-    pp(dict[k])
+for k in dict['cfg'].keys():
+    #print "key=%s\n" % k
+    pp(dict['cfg'][k])
 
+
+    # cfg['initial-cluster-string'] = getCoreosInitialClusterString()
+    # cfg['install-img-path'] = getInstallImgPath()
+    # cfg['install-img-format'] = cfg['disks']['disk0']['img-format']
+    # cfg['install-bridge'] = cfg['nics']['nic0']['bridge']
+    # cfg['install-mac'] = cfg['nics']['nic0']['mac']
 
