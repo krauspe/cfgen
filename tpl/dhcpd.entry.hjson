@@ -1,0 +1,14 @@
+"cfg": {
+"@@hn@@":  "hn",
+"@@ip@@":  "cfg['net']['nics']['nic0']['ip']",
+"@@mac@@": "cfg['net']['nics']['nic0']['mac']"
+}
+
+"tpl-text":
+'''
+host @@hn@@ {
+  hardware ethernet @@mac@@;
+  option host-name "@@hn@@";
+  fixed-address @@ip@@;
+}
+'''

@@ -1,0 +1,41 @@
+"cfg": {
+"@@dn@@":        "cfg['net']['dn']",
+"@@ns@@":        "cfg['net']['ns']",
+"@@subnet@@":    "cfg['net']['nics']['nic0']['subnet']",
+"@@sn@@":        "cfg['net']['nics']['nic0']['sn']",
+"@@bc@@":        "cfg['net']['nics']['nic0']['bc']",
+"@@is@@":        "cfg['net']['is']",
+"@@range-from@@":"fill-me-out!1",
+"@@range-to@@"  :"fill-me-out!1",
+"@@dhcpd-host-entrys@@": "getDhcpHostEntrys()"
+}
+
+"tpl-text":
+'''
+# /etc/dhcpd.conf
+#
+# Peter Krauspe DFS, 03/2016
+#
+#default-lease-time 14400; # suse orig
+default-lease-time 300;
+#max-lease-time 172800; # suse orig
+max-lease-time 600;
+ddns-update_nested_dict2-style none; ddns-updates off;
+#log-facility local7;
+server-name newsimweb;
+
+option domain-name "@@dn@@";
+option domain-name-servers @@ns@@;
+
+#allow bootp;
+
+subnet @@subnet@@ netmask @@sn@@ {
+  range dynamic-bootp @@range-from@@ @@range-to@@;
+  option subnet-mask @@sn@@;
+  option broadcast-address @@bc@@;
+  next-server @@is@@;
+  filename "pxelinux.0";
+}
+
+@@dhcpd-host-entrys@@
+'''

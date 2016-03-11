@@ -1,0 +1,27 @@
+"cfg": {
+"@@hn@@":        "hn",
+"@@ip@@":        "cfg['net']['nics']['nic0']['ip']",
+"@@dv@@":        "cfg['net']['nics']['nic0']['dv']",
+"@@gw@@":        "cfg['net']['gw']",
+"@@ns@@":        "cfg['net']['ns']"
+}
+
+"tpl-text":
+'''
+#cloud-config
+
+hostname: @@hn@@
+
+write_files:
+    - path: /etc/systemd/network/static.network
+      owner: core:core
+      permissions: 0644
+      content: |
+        [Match]
+        Name=@@dv@@
+
+        [Network]
+        Address=@@ip@@
+        Gateway=@@gw@@
+        DNS=@@ns@@
+'''
