@@ -19,6 +19,7 @@ from prettyprint import pp
 # DONEse hjson for templates (supports multiline strings)
 # TODO: create hjson files from tpl files and define short cuts to use in the template strings
 # DONEead hjson tpl files and build flat cfg dict as database for replacements
+# TODO: import network module, create funcs to calculate bc,subnet from ip,sn  or so, then change templates
 
 # command line handling
 # TODO: get possible choices for variants from files in tpl dir :-)
@@ -322,6 +323,9 @@ def getHostlistFromType(type):
             hostlist.append()
     return hostlist
 
+def getDhcpHostEntrys(): # TODO: awake to live :-)
+    pass
+
 # network functions
 
 def get_ip(hn):
@@ -347,6 +351,8 @@ def getCoreosInitialClusterString():
 def getInstallImgPath():
     return os.path.join(img_basedir,cfg['vm-name'],cfg['disks']['disk0']['img-name'])
 
+def getTargetYaml(hn):
+    return hn+".yml"
 
 def createObjectFromHostCfg(hn):
 
