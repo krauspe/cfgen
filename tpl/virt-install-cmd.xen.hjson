@@ -1,8 +1,8 @@
 "cfg": {
-"@@install-img-path@@": "getInstallImgPath()",
-"@@install-img-format@@": "cfg['disks']['disk0']['img-format']",
-"@@install-bridge@@": "cfg['nics']['nic0']['bridge']",
-"@@install-mac@@": "cfg['nics']['nic0']['mac']"
+"@@install-img-path@@": "os.path.join(img_basedir,cfg['vm']['vm-name'],cfg['vm']['disks']['disk0']['img-name'])",
+"@@install-img-format@@": "cfg['vm']['disks']['disk0']['img-format']",
+"@@install-bridge@@": "cfg['net']['nics']['nic0']['bridge']",
+"@@install-mac@@": "cfg['net']['nics']['nic0']['mac']"
 }
 
 "tpl-text":
