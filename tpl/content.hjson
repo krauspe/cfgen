@@ -1,0 +1,8 @@
+"cfg": {
+"@@content@@":        "content"
+}
+
+"tpl-text":
+'''
+@@content@@
+'''

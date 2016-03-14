@@ -1,0 +1,11 @@
+"cfg": {
+"@hn@":"hn",
+"@@install-img-path@@": "os.path.join(img_basedir,cfg['vm']['vm-name'],cfg['vm']['disks']['disk0']['img-name'])",
+"@@install-img-format@@": "cfg['vm']['disks']['disk0']['img-format']",
+"@@img-size@@":"cfg['vm']['disks']['disk0']['img-size']"
+}
+
+"tpl-text":
+'''
+qemu-img create -f @@install-img-format@@ @@install-img-path@@ 10G
+'''
