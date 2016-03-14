@@ -32,17 +32,19 @@ from prettyprint import pp
 # args = parser.parse_args()
 #
 # hn = args.hn
-# tpl_class = args.type
+# tpl_type = args.type
 # tpl = args.tpl
 
 hn = 'etcd-02'
-tpl_class = 'cloud-config'
-#tpl_class = 'dhcpd'
-#tpl_class = 'virt-install-cmd'
+hn = 'gitsrv2'
+#tpl_type = 'cloud-config'
+#tpl_type = 'dhcpd'
+tpl_type = 'virt-install-cmd'
 #tpl = 'auto-install'
-#tpl = 'xen'
+tpl = 'xen'
 #tpl = 'entry'
-tpl = 'etcd'
+#tpl = 'etcd'
+#tpl = 'gitsrv'
 
 
 out_filename = {
@@ -53,7 +55,7 @@ out_filename = {
 
 
 # print "hn = %s" % (hn)
-# print "tpl_class = %s" % (tpl_class)
+# print "tpl_type = %s" % (tpl_type)
 # print "tpl = %s" % (tpl)
 
 pydir =  os.path.dirname(os.path.abspath(__file__))
@@ -62,8 +64,7 @@ confdir = os.path.join(basedir,"config")
 tpldir = os.path.join(basedir,"tpl")
 deploydir = os.path.join(basedir,"deployment")
 
-#tpl_file = os.path.join(tpldir, tpl_class + '.' + tpl + '.tpl')
-tpl_file = os.path.join(tpldir, tpl_class + '.' + tpl + '.hjson')
+#tpl_file = os.path.join(tpldir, tpl_type + '.' + tpl + '.tpl')
 
 
 # vmhost settings
@@ -72,211 +73,6 @@ img_basedir = "/var/lib/libvirt/images"
 tftp_dir = "/srv/inst/tftpboot"
 initrd = os.path.join(tftp_dir,"coreos_production_pxe_image.cpio.gz")
 kernel = os.path.join(tftp_dir,"coreos_production_pxe.vmlinuz")
-
-# vm settings
-
-#------ hard coded dicts from developement -------
-# cfg_defaults = {
-#     'descr':'Host definitions',
-#     'classes':[],
-#     'hardware':'virtual',
-#     'net':{
-#         'dn':'nw1.lgn.dfs.de',
-#         'ns':'192.169.42.10',
-#         'gw':'192.169.42.1',
-#         'is':'192.169.42.10',
-#         'subnet':'192.169.42.0',
-#         'dhcp-range-from':'192.169.42.100',
-#         'dhcp-range-to':'192.169.42.200',
-#         'netconf-type':'dhcp',
-#         'nic':'nic0',
-#         'nics':{
-#             'nic0':{
-#                 'dv':'eth0',
-#                 'ip':'',
-#                 'sn':'255.255.255.0',
-#                 'mac':'',
-#                 'bridge':'br0',
-#                 'options':''
-#                 }
-#             }
-#         },
-#     'vm':{
-#         'install-tpl':'xen',
-#         'ram':'1024',
-#         'vcpus':'1',
-#         'disks':{
-#             'disk0':{
-#                 'device':'/dev/xvda',
-#                 'img-name':'disk0.qcow2',
-#                 'img-format':'qcow2',
-#                 'disk-size':'4G',
-#                 },
-#             },
-#         'disk':'disk0',
-#     },
-#     'app':{
-#         'cloud-config-server':'is01',
-#         },
-#     }
-#
-# hosts = {
-#     'etcd-01':{
-#         'classes':['etcd'],
-#         'vm':{
-#             'vm-name':'etcd-01',
-#         },
-#         'net':{
-#             'nics':{
-#                 'nic0':{
-#                     'dv':'ens3',
-#                     'ip':'192.168.42.11',
-#                     'mac':'00:00:00:00:00:01',
-#                     'bridge':'virbr2',
-#                     },
-#                 },
-#             }
-#         },
-#     'etcd-02':{
-#         'classes':['etcd'],
-#         'vm':{
-#             'vm-name':'etcd-02',
-#         },
-#         'net':{
-#             'nics':{
-#                 'nic0':{
-#                     'dv':'ens3',
-#                     'ip':'192.168.42.12',
-#                     'mac':'00:00:00:00:00:02',
-#                     'bridge':'virbr2',
-#                     },
-#                 },
-#             },
-#         },
-#     'etcd-03':{
-#         'classes':['etcd'],
-#         'vm':{
-#             'vm-name':'etcd-03',
-#         },
-#         'net':{
-#             'nics':{
-#                 'nic0':{
-#                     'dv':'ens3',
-#                     'ip':'192.168.42.13',
-#                     'mac':'00:00:00:00:00:03',
-#                     'bridge':'virbr2',
-#                     },
-#                 },
-#             },
-#         },
-#     'cwp1-s1':{
-#         'classes':['nsc.cwp.s1'],
-#         'hardware':'physical',
-#         'vm':{
-#             'vm-name':'cwp1-s1',
-#         },
-#         'net':{
-#             'nics':{
-#                 'nic0':{
-#                     'dv':'eth0',
-#                     'ip':'192.168.96.20',
-#                     'mac':'01:e4:d3:ac:bd:03',
-#                     },
-#                 },
-#             },
-#         },
-#     'nss':{
-#         'classes':['nss','is'],
-#         'hardware':'physical',
-#         'vm':{
-#             'vm-name':'nss-lx3',
-#         },
-#         'net':{
-#             'subnet':'192.168.33.0',
-#             'dn':'lx3.lgn.dfs.de',
-#             'sn':'255.255.255.0',
-#             'gw':'10.232.250.253',
-#             'ns':'192.168.33.10',
-#             'is':'10.232.250.190',
-#             'netconf-type':'static',
-#             'nic':'nic0',
-#             'nics':{
-#                 'nic0':{
-#                     'dv':['eth0','is09'],
-#                     'ip':['192.168.33.10','192.168.33.9'],
-#                     'mac':'00:30:48:b8:f8:80',
-#                     'options':'speed 100 duplex ful wol g',
-#                     },
-#                 'nic1':{
-#                     'dv':'eth1',
-#                     'ip':'10.232.250.232',
-#                     'sn':'255.255.254.0',
-#                     'mac':'00:30:48:b8:f8:81',
-#                     },
-#                 },
-#             },
-#         },
-#
-#     'sim1-s1':{
-#         'classes':['nsc.sim.s1','failover-nss'],
-#         'hardware':'physical',
-#         'vm':{
-#             'vm-name':'sim1-s1',
-#         },
-#         'net':{
-#             'nics':{
-#                 'nic0':{
-#                     'dv':'eth0',
-#                     'ip':'192.168.96.20',
-#                     'mac':'01:e4:d3:ac:bd:03',
-#                     },
-#                 },
-#             },
-#         },
-#
-#     'is01':{
-#         'classes':['is'],
-#         'vm':{
-#             'vm-name':'inw1',
-#             },
-#         'net':{
-#             'nics':{
-#                 'nic0':{
-#                     'dv':'eth0',
-#                     'ip':'192.168.42.10',
-#                     'mac':'00:16:3e:02:3d:c3',
-#                     'bridge':'virbr2',
-#                     'netconf-type':'static',
-#                     },
-#                 'nic1':{
-#                     'dv':'eth1',
-#                     'dn':'se.dfs.de',
-#                     'ip':'10.232.250.14',
-#                     'sn':'255.255.254.0',
-#                     'gw':'10.232.250.253',
-#                     'mac':'00:16:3e:02:3d:c3',
-#                     'bridge':'br0',
-#                     'netconf-type':'static',
-#                     },
-#                 },
-#             },
-#         },
-#     }
-#
-# # only for debugging
-# # write hard coded dicts to config.json --------
-#
-# config_dict = {
-#     'cfg_defaults':cfg_defaults,
-#     'hosts':hosts,
-# }
-#
-# filename = "config.json"
-# out_file = os.path.join(confdir,filename)
-# print "create " + out_file
-# with open(out_file,'w') as f:
-#     json.dump(config_dict,f,indent=2)
-#----------------------------------------------------------
 
 
 # read config file config/config.json
@@ -323,6 +119,8 @@ def getHostlistFromType(type):
             hostlist.append()
     return hostlist
 
+
+
 def getDhcpHostEntrys(): # TODO: awake to live :-)
     pass
 
@@ -336,7 +134,9 @@ def get_ip(hn):
         ip = '0.0.0.0'
     return ip
 
-# coreos functions
+# application specific functions. The alternative to antlr :-)
+
+# coreos.fleet
 
 def getCoreosInitialClusterString():
     string = ''
@@ -347,39 +147,59 @@ def getCoreosInitialClusterString():
     string = string.rstrip(',')
     return string
 
-
-def getInstallImgPath():
-    return os.path.join(img_basedir,cfg['vm-name'],cfg['disks']['disk0']['img-name'])
-
 def getTargetYaml(hn):
     return hn+".yml"
 
-def createObjectFromHostCfg(hn):
+# vm creation
 
+def getInstallImgPath(vm_name,disk):
+    dir = getInstallImgDir(vm_name)
+    return os.path.join(dir,cfg['vm-name'],cfg['disks'][disk]['img-name'])
+
+def getInstallImgDir(vm_name):
+    return os.path.join(img_basedir,cfg[vm_name])
+
+
+def getCreateVmImagesCmd(hn):
+    pass
+
+
+    pass
+
+
+# "@@install-img-path@@": "os.path.join(img_basedir,cfg['vm']['vm-name'],cfg['vm']['disks']['disk0']['img-name'])",
+# "@@install-img-format@@": "cfg['vm']['disks']['disk0']['img-format']",
+# "@@img-size@@":"cfg['vm']['disks']['disk0']['img-size']"
+
+# "tpl-text":
+# '''
+# qemu-img create -f @@install-img-format@@ @@install-img-path@@ 10G
+# '''
+
+
+# UTIL
+
+def createObjectFromHostCfg(hn,tpl,tpl_type):
     cfg['hn'] = hn
-    update_nested_dict(cfg,hosts[hn])  # rekursuv wg hierachie in der cfg ?
+    update_nested_dict(cfg,hosts[hn])
+    return createObjectFromTemplate(tpl,tpl_type)
 
+def createObjectFromTemplate(tpl,tpl_type):
+    tpl_file = os.path.join(tpldir, tpl_type + '.' + tpl + '.hjson')
 
-    # with open(tpl_file,'r+') as f:
-    #     contens = f.read()
-    #
-
-
+    print "read tlp_file %s" % tpl_file
     with open(tpl_file,'r') as f:
         tpl_dict =  hjson.load(f)
 
-    #update_nested_dict(cfg,tpl_dict['cfg'])
-
-    contens = str(tpl_dict['tpl-text'])
-
+    content = str(tpl_dict['tpl-text'])
     for k,v in tpl_dict['cfg'].iteritems():
         if v != '':
             seStr = k
-            repStr = eval(v)
+            repStr = eval(v)  # implicit use of cfg
             print "replace(%s = %s)" % (k,repStr)
-            #ontens = contens.replace('@@'+seStr+'@@',repStr)
-            contens = contens.replace(seStr,repStr)
-    return contens
+            #conten = content.replace('@@'+seStr+'@@',repStr)
+            content = content.replace(seStr, repStr)
+    return content
 
     # pp(cfg)
 
@@ -389,7 +209,7 @@ def createObjectFromHostCfg(hn):
 def writeFile(hn,contens):
     if tpl == 'auto-install':
         out_filename['cloud-config'] = 'auto-install'+'.@@hn@@.yml'
-    filename = out_filename[tpl_class].replace('@@hn@@', hn)
+    filename = out_filename[tpl_type].replace('@@hn@@', hn)
     out_file = os.path.join(deploydir,filename)
 
     print "create " + out_file
@@ -400,11 +220,14 @@ def writeFile(hn,contens):
 # main
 
 cfg = cfg_defaults.copy()
-contens = createObjectFromHostCfg(hn)
+
+# for testing only one possibility: use given tpl and tpl_type
+# TODO: handle values/options from cmdline args and create singe host outputs as well as hostlist lie outputs....HIER
+content = createObjectFromHostCfg(hn,tpl,tpl_type)
 
 
 print "\nOUTPUT:\n"
-pp(contens)
+pp(content)
 
-writeFile(hn,contens)
+writeFile(hn, content)
 
