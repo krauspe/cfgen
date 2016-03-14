@@ -12,7 +12,7 @@
       "disks": {
         "disk0": {
           "device": "/dev/xvda", 
-          "disk-size": "4G", 
+          "img-size": "4G",
           "img-format": "qcow2", 
           "img-name": "disk0.qcow2"
         }
@@ -201,6 +201,51 @@
       ], 
       "vm": {
         "vm-name": "sim1-s1"
+      }
+    },
+    "gitsrv2": {
+      "hardware": "virtual",
+      "classes": [
+        "git-server"
+      ],
+      "net": {
+        "nics": {
+          "nic0": {
+            "dv": "ens3",
+            "ip": "10.232.251.142",
+            "mac": "00:00:00:00:00:00",
+            "dn": "se.dfs.de",
+            "gw": "10.232.250.253",
+            "sn": "255.255.254.0",
+            "bridge": "br0",
+            "netconf-type": "dhcp"
+         },
+        "is": "10.232.250.190",
+        "ns": "10.232.250.190"
+        }
+      },
+      "vm": {
+        "vm-name": "sim1-s1",
+           "disks": {
+             "disk0": {
+               "device": "/dev/xvda",
+               "img-size": "4G",
+               "img-format": "qcow2",
+               "img-name": "disk0.qcow2"
+             },
+             "disk1": {
+               "device": "/dev/xvdb",
+               "img-size": "50G",
+               "img-format": "qcow2",
+               "img-name": "disk1.qcow2"
+             },
+             "disk2": {
+               "device": "/dev/xvdc",
+               "img-size": "100G",
+               "img-format": "qcow2",
+               "img-name": "disk2.qcow2"
+           }
+         }
       }
     }
   }
