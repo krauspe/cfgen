@@ -21,8 +21,8 @@ initrd = os.path.join(tftp_dir,"coreos_production_pxe_image.cpio.gz")
 kernel = os.path.join(tftp_dir,"coreos_production_pxe.vmlinuz")
 
 
-#tpl_class = 'cloud-config'
-#tpl_class = 'dhcpd'
+#tpl_type = 'cloud-config'
+#tpl_type = 'dhcpd'
 tpl_type = 'virt-install-cmd'
 #tpl = 'auto-install'
 tpl = 'xen'
@@ -65,7 +65,7 @@ cfg['install-img-path'] = os.path.join(img_basedir,cfg['vm-name'],cfg['disks']['
 with open(tpl_file,'r+') as f:
     tpl_text = f.read()
 
-#print contens
+#print content
 
 for m in set(re.findall('@@([a-zA-Z0-9-_:()]+)@@',tpl_text)):
     print m
