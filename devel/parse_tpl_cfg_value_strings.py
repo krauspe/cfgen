@@ -56,3 +56,5 @@ value_strings  = [
 
 # TODO: USE obove outputs to find a strategy ....
 
+def evaluateValFromCfg():
+    pass
