@@ -17,7 +17,7 @@ from prettyprint import pp
 # data handling
 # DONEse json.load config/config.json instead of hard coded dict for config
 # DONEse hjson for templates (supports multiline strings)
-# TODO: create hjson files from tpl files and define short cuts to use in the template strings
+# DONE: create hjson files from tpl files and define short cuts to use in the template strings
 # DONEead hjson tpl files and build flat cfg dict as database for replacements
 # TODO: import network module, create funcs to calculate bc,subnet from ip,sn  or so, then change templates
 
@@ -36,14 +36,14 @@ from prettyprint import pp
 # tpl = args.tpl
 
 hn = 'etcd-02'
-hn = 'gitsrv2'
-#tpl_type = 'cloud-config'
+#hn = 'gitsrv2'
+tpl_type = 'cloud-config'
 #tpl_type = 'dhcpd'
-tpl_type = 'virt-install-cmd'
+#tpl_type = 'virt-install-cmd'
 #tpl = 'auto-install'
-tpl = 'xen'
+#tpl = 'xen'
 #tpl = 'entry'
-#tpl = 'etcd'
+tpl = 'etcd'
 #tpl = 'gitsrv'
 
 
@@ -87,14 +87,11 @@ cfg_defaults = config_dict['cfg_defaults'].copy()
 hosts = config_dict['hosts'].copy()
 
 
-getFunction = {
-    'cloud-config':{
-        'initial-cluster-string':'getCoreosInitialClusterString',
-        },
-    'dhcpd':{
-        'dhcpd-host-entrys':'getAllDhcpHostEntrys',
-        }
-    }
+# TODO: not used yet !!
+KnownFunctions = [
+    'getCoreosInitialClusterString',
+    'getAllDhcpHostEntrys',
+    ]
 
 # common functions
 
@@ -152,18 +149,17 @@ def getTargetYaml(hn):
 
 # vm creation
 
+# TODO: not yet used
 def getInstallImgPath(vm_name,disk):
     dir = getInstallImgDir(vm_name)
     return os.path.join(dir,cfg['vm-name'],cfg['disks'][disk]['img-name'])
 
+# TODO: not yet used
 def getInstallImgDir(vm_name):
     return os.path.join(img_basedir,cfg[vm_name])
 
-
+# TODO: not yet used
 def getCreateVmImagesCmd(hn):
-    pass
-
-
     pass
 
 
@@ -181,7 +177,7 @@ def getCreateVmImagesCmd(hn):
 
 def createObjectFromHostCfg(hn,tpl,tpl_type):
     cfg['hn'] = hn
-    update_nested_dict(cfg,hosts[hn])
+    update_nested_dict(cfg,hosts[hn]) # join the dicts
     return createObjectFromTemplate(tpl,tpl_type)
 
 def createObjectFromTemplate(tpl,tpl_type):
@@ -195,13 +191,19 @@ def createObjectFromTemplate(tpl,tpl_type):
     for k,v in tpl_dict['cfg'].iteritems():
         if v != '':
             seStr = k
-            repStr = eval(v)  # implicit use of cfg
+            #repStr = eval(v)  # implicit use of cfg,the mad solution :-)
+            repStr = getValFromCfg(v)  # implicit use of cfg,the mad solution :-)
+
             print "replace(%s = %s)" % (k,repStr)
             #conten = content.replace('@@'+seStr+'@@',repStr)
             content = content.replace(seStr, repStr)
     return content
 
     # pp(cfg)
+
+# TODO: develop in parse_tpl_cfg_value_strings.py
+def evaluateValFromCfg(v):
+    pass
 
 #TODO: filenem/(path ?) generation in eigene Struktur mit unterscheidung ob host-bezogen (yml Files) oder liste (dhcpd.con) etc
 #TODO ggfs hn aus writeFile hearusnehmen und abghaengig vom tpl/tpl-type anderen parameter uebergeben ?!
@@ -222,7 +224,7 @@ def writeFile(hn,contens):
 cfg = cfg_defaults.copy()
 
 # for testing only one possibility: use given tpl and tpl_type
-# TODO: handle values/options from cmdline args and create singe host outputs as well as hostlist lie outputs....HIER
+# TODO: handle values/options from cmdline args and create single host related outputs as well as hostlist based outputs
 content = createObjectFromHostCfg(hn,tpl,tpl_type)
 
 
