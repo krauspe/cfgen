@@ -201,9 +201,10 @@ def createObjectFromTemplate(tpl,tpl_type):
 
     # pp(cfg)
 
-# TODO: develop in parse_tpl_cfg_value_strings.py
-def evaluateValFromCfg(v):
-    pass
+# TODO: development in parse_tpl_cfg_value_strings.py
+def getValFromCfg(v):
+    return eval(v)  # TODO: to be exchanged with intelligent save function :-)
+
 
 #TODO: filenem/(path ?) generation in eigene Struktur mit unterscheidung ob host-bezogen (yml Files) oder liste (dhcpd.con) etc
 #TODO ggfs hn aus writeFile hearusnehmen und abghaengig vom tpl/tpl-type anderen parameter uebergeben ?!
