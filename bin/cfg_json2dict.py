@@ -18,7 +18,7 @@ cfg_defaults = {}
 hosts = {}
 
 
-filename = "config.json"
+filename = "config.develop.json"
 in_file = os.path.join(confdir,filename)
 print "read " + in_file
 with open(in_file,'r') as f:

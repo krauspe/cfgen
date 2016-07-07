@@ -203,7 +203,7 @@ config_dict = {
     'hosts':hosts,
 }
 
-filename = "config.json"
+filename = "config.develop.json"
 out_file = os.path.join(confdir,filename)
 print "create " + out_file
 with open(out_file,'w') as f:
