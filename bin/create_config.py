@@ -15,7 +15,7 @@ from prettyprint import pp
 
 
 # data handling
-# DONEse json.load config/config.json instead of hard coded dict for config
+# DONEse json.load config/config.develop.json instead of hard coded dict for config
 # DONEse hjson for templates (supports multiline strings)
 # DONE: create hjson files from tpl files and define short cuts to use in the template strings
 # DONEead hjson tpl files and build flat cfg dict as database for replacements
@@ -37,7 +37,8 @@ from prettyprint import pp
 
 hn = 'etcd-02'
 #hn = 'gitsrv2'
-tpl_type = 'cloud-config'
+#tpl_type = 'cloud-config'
+tpl_type = 'kickstart-cwp'
 #tpl_type = 'dhcpd'
 #tpl_type = 'virt-install-cmd'
 #tpl = 'auto-install'
@@ -51,6 +52,7 @@ out_filename = {
     'cloud-config':'@@hn@@.yml',
     'dhcpd':'dhcpd'+'.@@hn@@.conf.entry',    
     'virt-install-cmd':'virt-install'+'.@@hn@@.sh',
+    'kickstart-cwp':'@@hn@@.@@dn@@.ks'
 }
 
 
@@ -74,10 +76,13 @@ tftp_dir = "/srv/inst/tftpboot"
 initrd = os.path.join(tftp_dir,"coreos_production_pxe_image.cpio.gz")
 kernel = os.path.join(tftp_dir,"coreos_production_pxe.vmlinuz")
 
+# hack: hard coded SITE
+# TODO: generate SITE from current dns domain
+#site = "develop"
+site = "lx3.lgn.dfs.de"
+# read config file config/config.develop.json
 
-# read config file config/config.json
-
-filename = "config.json"
+filename = "config." + site + ".json"
 in_file = os.path.join(confdir,filename)
 print "read " + in_file
 with open(in_file,'r') as f:
