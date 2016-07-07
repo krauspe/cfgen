@@ -1,0 +1,125 @@
+{
+  "cfg_defaults": {
+    "descr": "Host definitions", 
+    "app": {
+      "newsim-nss": "is01"
+    }, 
+    "hw": {
+      "disks": {
+        "disk0": {
+          "device": "sda",
+            "part0": {
+              "size": "2048",
+              "fstype": "swap",
+              "mp": "swap"
+            },
+            "part1": {
+              "size": "512",
+              "fstype": "ext3",
+              "mp": "/boot"
+            },
+            "part2": {
+              "size": "511200",
+              "fstype": "ext4",
+              "mp": "/"
+            }
+        }
+      }
+    }, 
+    "hardware": "physical",
+    "classes": [], 
+    "net": {
+      "dn": "lx3.lgn.dfs.de",
+      "gw": "192.168.33.10",
+      "nics": {
+        "nic0": {
+          "bridge": "",
+          "subnet": "192.168.33.0",
+          "sn": "255.255.255.0",
+          "ip": "",
+          "mac": "",
+          "dv": "eth0",
+          "options": ""
+        }
+      },
+      "dhcp-range-from": "192.168.33.200",
+      "dhcp-range-to": "192.168.33.239",
+      "nic": "nic0",
+      "is": "192.168.33.10",
+      "ns": "192.168.33.10",
+      "netconf-type": "static"
+    }
+  }, 
+  "hosts": {
+    "nss": {
+      "hardware": "physical",
+      "net": {
+        "dn": "lx3.lgn.dfs.de",
+        "gw": "10.232.250.253",
+        "nics": {
+          "nic0": {
+            "dv": [
+              "eth0",
+              "is09"
+            ],
+            "ip": [
+              "192.168.33.10",
+              "192.168.33.9"
+            ],
+            "subnet": "192.168.33.0",
+            "sn": "255.255.255.0",
+            "mac": "00:30:48:b8:f8:80",
+            "options": "speed 100 duplex ful wol g"
+          },
+          "nic1": {
+            "dv": "eth1",
+            "ip": "10.232.250.232",
+            "mac": "00:30:48:b8:f8:81",
+            "sn": "255.255.254.0"
+          }
+        },
+        "nic": "nic0",
+        "is": "10.232.250.190",
+        "ns": "192.168.33.10",
+        "netconf-type": "static"
+      },
+      "classes": [
+        "nss",
+        "is"
+      ],
+      "vm": {
+        "vm-name": "nss-lx3"
+      }
+    },
+    "cwp10-s1": {
+      "hardware": "physical",
+      "net": {
+        "nics": {
+          "nic0": {
+            "dv": "eth0",
+            "ip": "192.168.33.29",
+            "mac": ""
+          }
+        }
+      },
+      "classes": [
+        "nsc.cwp.s1"
+      ]
+    },
+    "cwp11-s1": {
+      "hardware": "physical",
+      "net": {
+        "nics": {
+          "nic0": {
+            "dv": "eth0",
+            "ip": "192.168.33.30",
+            "mac": ""
+          }
+        }
+      },
+      "classes": [
+        "nsc.cwp.s1"
+      ]
+    }
+   }
+}
