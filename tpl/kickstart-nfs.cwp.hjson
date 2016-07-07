@@ -10,14 +10,14 @@
 "@@part-swap-fstype@@": "cfg['hw']['disks']['disk0']['part0']['fstype']",
 "@@part-swap-mp@@":     "cfg['hw']['disks']['disk0']['part0']['mp']",
 "@@part-swap-size@@":   "cfg['hw']['disks']['disk0']['part0']['size']",
-"@@part-boot-dv@@":     "cfg['hw']['disks']['disk1']['device']",
-"@@part-boot-fstype@@": "cfg['hw']['disks']['disk1']['part0']['fstype']",
-"@@part-boot-mp@@":     "cfg['hw']['disks']['disk1']['part0']['mp']",
-"@@part-boot-size@@":   "cfg['hw']['disks']['disk1']['part0']['size']",
-"@@part-root-dv@@":     "cfg['hw']['disks']['disk2']['device']",
-"@@part-root-fstype@@": "cfg['hw']['disks']['disk2']['part0']['fstype']",
-"@@part-root-mp@@":     "cfg['hw']['disks']['disk2']['part0']['mp']",
-"@@part-root-size@@":   "cfg['hw']['disks']['disk2']['part0']['size']"
+"@@part-boot-dv@@":     "cfg['hw']['disks']['disk0']['device']",
+"@@part-boot-fstype@@": "cfg['hw']['disks']['disk0']['part1']['fstype']",
+"@@part-boot-mp@@":     "cfg['hw']['disks']['disk0']['part1']['mp']",
+"@@part-boot-size@@":   "cfg['hw']['disks']['disk0']['part1']['size']",
+"@@part-root-dv@@":     "cfg['hw']['disks']['disk0']['device']",
+"@@part-root-fstype@@": "cfg['hw']['disks']['disk0']['part2']['fstype']",
+"@@part-root-mp@@":     "cfg['hw']['disks']['disk0']['part2']['mp']",
+"@@part-root-size@@":   "cfg['hw']['disks']['disk0']['part2']['size']"
 }
 
 "tpl-text":
@@ -25,57 +25,71 @@
 #version=DEVEL
 # System authorization information
 auth --enableshadow --passalgo=sha512
-# Use CDROM installation media
-#cdrom
+
 # Use network installation
-url --url="http://nss/centos/7/os/x86_64"
+nfs --server=is01 --dir=/srv3/inst/sw/os/centos/centos/7/os/x86_64
+
 # disable repo updates and you get all updates during installation
-repo --name=update_local --baseurl=http://nss/centos/7/updates/x86_64
-repo --name=extras_local --baseurl=http://nss/centos/7/extras/x86_64
-repo --name=plus_local --baseurl=http://nss/centos/7/centosplus/x86_64
-repo --name=epel_local --baseurl=http://nss/epel/7/x86_64/
-repo --name=elrepo_local --baseurl=http://nss/elrepo/el7/x86_64/
-#nfs --server=192.168.101.1 --dir=/opt/storage/centos/www-share/centos/7/os/x86_64_ftp
-# Use graphical install
+repo --name=updates_local --baseurl=http://is01/srv3/inst/sw/os/centos/centos/7/updates/x86_64
+repo --name=extras_local --baseurl=http://is01/srv3/inst/sw/os/centos/centos/7/extras/x86_64
+repo --name=plus_local --baseurl=http://is01/srv3/inst/sw/os/centos/centos/7/centosplus/x86_64
+repo --name=epel_local --baseurl=http://is01/srv3/inst/sw/os/centos/epel/7/x86_64
+repo --name=elrepo_local --baseurl=http://is01/srv3/inst/sw/os/centos/elrepo/el7/x86_64
+
+
+# install graphical or text
 #graphical
 text
+
 # Run the Setup Agent on first boot
 firstboot --disable
+
 #ignoredisk --only-use=vda
 ignoredisk --only-use=sda
+
 reboot
 # Keyboard layouts
+
 keyboard --vckeymap=de --xlayouts='de','us'
+
 # System language
 lang en_US.UTF-8
+
 # firewall --enabled --port=22:tcp
+
 # selinux --enforcing
 firewall --disabled
 selinux --disabled
 
 # Network information
-#network  --bootproto=dhcp --device=eth0 --onboot=off --noipv6 --activate --hostname=cwp6-s1.te2.lgn.dfs.de
+#network --bootproto static --device @@dv@@ --noipv6 --activate --hostname=@@hn@@.@@dn@@
 network --bootproto static --ip @@ip@@ --netmask @@sn@@ --gateway @@gw@@ --nameserver @@ns@@ --device @@dv@@ --noipv6 --hostname=@@hn@@.@@dn@@
 
 # Root password
 rootpw --iscrypted $6$Oy1jf/METsS.xx7U$ywleaE2GdHNP/jtVRM2jofvwXhwJNsvelh5GePgI6SD8mfDfNiuV52LYOVadR8BbyvDZtzTyDXDAVJ1vrdPBr0
+
 # user ladmin
 user --name=ladmin --password=$6$Oy1jf/METsS.xx7U$ywleaE2GdHNP/jtVRM2jofvwXhwJNsvelh5GePgI6SD8mfDfNiuV52LYOVadR8BbyvDZtzTyDXDAVJ1vrdPBr0 --iscrypted --gecos="ladmin"
+
 # System services
 services --disabled="chronyd"
+
 # System timezone
 timezone Europe/Berlin --isUtc --ntpservers=timesrv
+
 # X Window System configuration information
 xconfig  --startxonboot
+
 # System bootloader configuration
 bootloader --append=" crashkernel=auto" --location=mbr --boot-drive=sda
 
 # Partition clearing information
 clearpart --all --initlabel
-### TODO: Variablen einsetzen von oben !!!
-part swap --fstype="swap" --ondisk=sda --size=2048
-part /boot --fstype="ext3" --ondisk=sda --size=512
-part / --fstype="ext4" --ondisk=sda --size=51200
+
+part @@part-swap-mp@@ --fstype="@@part-swap-fstype@@" --ondisk=@@part-swap-dv@@ --size=@@part-swap-size@@
+part @@part-boot-mp@@ --fstype="@@part-boot-fstype@@" --ondisk=@@part-boot-dv@@ --size=@@part-boot-size@@
+part @@part-root-mp@@ --fstype="@@part-root-fstype@@" --ondisk=@@part-root-dv@@ --size=@@part-root-size@@
+
 
 %packages --ignoremissing
 #@^graphical-server-environment
