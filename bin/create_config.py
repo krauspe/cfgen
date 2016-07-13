@@ -39,7 +39,8 @@ from prettyprint import pp
 #hn = 'gitsrv2'
 hn = 'cwp10-s1'
 #tpl_type = 'cloud-config'
-tpl_type = 'kickstart-nfs'
+#tpl_type = 'kickstart-nfs'
+tpl_type = 'kickstart-http'
 #tpl_type = 'dhcpd'
 #tpl_type = 'virt-install-cmd'
 #tpl = 'auto-install'
@@ -55,8 +56,8 @@ out_filename = {
     'cloud-config':'@@hn@@.yml',
     'dhcpd':'dhcpd'+'.@@hn@@.conf.entry',
     'virt-install-cmd':'virt-install'+'.@@hn@@.sh',
-    'kickstart-nfs':'@@hn@@.' + site + '.ks',
-    'kickstart-http':'@@hn@@.' + site + '.ks'
+    'kickstart-nfs':'@@hn@@.' + site + '.nfs.ks',
+    'kickstart-http':'@@hn@@.' + site + '.http.ks'
 }
 
 
