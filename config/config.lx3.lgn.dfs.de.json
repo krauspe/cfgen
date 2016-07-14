@@ -120,6 +120,21 @@
       "classes": [
         "nsc.cwp.s1"
       ]
+    },
+    "adc3-s1": {
+      "hardware": "physical",
+      "net": {
+        "nics": {
+          "nic0": {
+            "dv": "eth0",
+            "ip": "192.168.33.82",
+            "mac": ""
+          }
+        }
+      },
+      "classes": [
+        "nsc.adc.s1"
+      ]
     }
    }
 }
