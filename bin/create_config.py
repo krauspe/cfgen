@@ -37,7 +37,7 @@ from prettyprint import pp
 
 #hn = 'etcd-02'
 #hn = 'gitsrv2'
-hn = 'cwp10-s1'
+hn = 'adc3-s1'
 #tpl_type = 'cloud-config'
 #tpl_type = 'kickstart-nfs'
 tpl_type = 'kickstart-http'
@@ -46,7 +46,7 @@ tpl_type = 'kickstart-http'
 #tpl = 'auto-install'
 #tpl = 'xen'
 #tpl = 'entry'
-tpl = 'cwp'
+tpl = 'nsc'
 #tpl = 'gitsrv'
 
 site = "lx3.lgn.dfs.de"
