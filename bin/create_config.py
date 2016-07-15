@@ -25,28 +25,32 @@ from prettyprint import pp
 # TODO: get possible choices for variants from files in tpl dir :-)
 # TODO: add values for dhcpd.conf in hosts and/or host_default
 # TODO: complete and activate when everything else works
-# parser = argparse.ArgumentParser(description="create various config files from host atributes")
-# parser.add_argument("--hn", type=str, required=True, help="hostname")
-# parser.add_argument("-t", "--type", type=str, required=True, choices=['cloud-config','dhcpd','virt-install'], help="config file to create")
-# parser.add_argument("-p", "--tpl", type=str, required=True, help="template to use")
-# args = parser.parse_args()
-#
-# hn = args.hn
-# tpl_type = args.type
-# tpl = args.tpl
+
+types =     ['cloud-config','dhcpd','virt-install','kickstart-http','kickstart-nfs']
+templates = ['auto-install','xen','entry','gitsrv','nsc']
+
+parser = argparse.ArgumentParser(description="create various config files from host atributes")
+parser.add_argument("--hn", type=str, required=True, help="hostname")
+parser.add_argument("-p", "--tpl" , type=str, required=True, choices=templates, help="template to use")
+parser.add_argument("-t", "--type", type=str, required=True, choices=types, help="config file to create")
+args = parser.parse_args()
+
+hn = args.hn
+tpl_type = args.type
+tpl = args.tpl
 
 #hn = 'etcd-02'
 #hn = 'gitsrv2'
-hn = 'adc3-s1'
+#hn = 'adc3-s1'
 #tpl_type = 'cloud-config'
 #tpl_type = 'kickstart-nfs'
-tpl_type = 'kickstart-http'
+#tpl_type = 'kickstart-http'
 #tpl_type = 'dhcpd'
 #tpl_type = 'virt-install-cmd'
 #tpl = 'auto-install'
 #tpl = 'xen'
 #tpl = 'entry'
-tpl = 'nsc'
+#tpl = 'nsc'
 #tpl = 'gitsrv'
 
 site = "lx3.lgn.dfs.de"
