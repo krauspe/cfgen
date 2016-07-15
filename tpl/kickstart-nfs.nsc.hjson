@@ -90,7 +90,6 @@ part @@part-swap-mp@@ --fstype="@@part-swap-fstype@@" --ondisk=@@part-swap-dv@@ 
 part @@part-boot-mp@@ --fstype="@@part-boot-fstype@@" --ondisk=@@part-boot-dv@@ --size=@@part-boot-size@@
 part @@part-root-mp@@ --fstype="@@part-root-fstype@@" --ondisk=@@part-root-dv@@ --size=@@part-root-size@@
 
-
 %packages --ignoremissing
 #@^graphical-server-environment
 #@base
@@ -122,6 +121,20 @@ screen
 clusterssh
 openbox
 icewm
+gnome-terminal
+xorg-x11-fonts
+xorg-x11-xinit
+libwacom.x86_64
+libwacom-data.noarch
+kmod-wacom.x86_64
+xorg-x11-drv-wacom.x86_64
+xorg-x11-drv-keyboard.x86_64
+xorg-x11-drv-mouse.x86_64
+esound-tools.x86_64
+esound-libs.x86_64
+esound-daemon.x86_64
+pulseaudio-esound-compat.x86_64
+kcm_touchpad.x86_64
 #cinnamon
 gdm
 nfs-utils
@@ -131,12 +144,16 @@ ypbind
 rpcbind
 bind-utils
 pciutils
+#pk
+ksh.x86_64
+rsync.x86_64
+ImageMagick-c++.x86_64
+mc
 # for newsim SW
 glibc.i686
 libXt-1.1.4-6.1.el7.i686
 libXtst-1.2.2-2.1.el7.i686
 %end
-
 %addon com_redhat_kdump --enable --reserve-mb='auto'
 
 %end
@@ -220,6 +237,24 @@ yum -v repolist
 mkdir -p /srv2/inst
 mkdir -p /srv2/client
 
+cat <<EOF> /etc/auto.master
+#
+/nss /etc/auto.nss
+EOF
+
+cat <<EOF> /etc/auto.nss
+home           -fstype=nfs,hard,intr,actimeo=3      nss:/nss/home
+newsim           -fstype=nfs,hard,intr,actimeo=3      nss:/nss/newsim
+simsys           -fstype=nfs,hard,intr,actimeo=3      nss:/nss/simsys
+setup           -fstype=nfs,hard,intr,actimeo=3      nss:/nss/setup
+voice           -fstype=nfs,hard,intr,actimeo=3      nss:/nss/voice
+corefiles           -fstype=nfs,hard,intr,actimeo=3      nss:/nss/corefiles
+EOF
+
+cat <<EOF> /etc/yp.conf
+#
+domain yp_nsim1 server nss
+EOF
 
 %end
 
