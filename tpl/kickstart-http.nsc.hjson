@@ -159,7 +159,6 @@ nmap-ncat
 libXrandr.i686
 openssl098e
 gamin
-
 %end
 
 %addon com_redhat_kdump --enable --reserve-mb='auto'
