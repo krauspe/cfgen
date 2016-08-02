@@ -292,12 +292,29 @@ voice           -fstype=nfs,hard,intr,actimeo=3      nss:/nss/voice
 corefiles           -fstype=nfs,hard,intr,actimeo=3      nss:/nss/corefiles
 EOF
 
-echo "create /etc/yp.conf"
+
+echo "enable autologin for user spv"
+sed -i '/daemon/d' /etc/gdm/custom.conf
+echo "[daemon]" >> /etc/gdm/custom.conf
+echo "AutomaticLoginEnable = true" >> /etc/gdm/custom.conf
+echo "AutomaticLogin = spv" >> /etc/gdm/custom.conf
+
+echo "set multicast route"
+echo "224.255.0.0 0.0.0.0 255.255.255.224 eth0" >> /etc/sysconfig/network-scripts/route-@@dv@@
+
+
+echo "configure nis service"
+
+echo "NISDOMAIN=yp_nsim1" >> /etc/sysconfig/network
+authconfig --enablenis --nisdomain=yp_nsim1 --nisserver=nss --enablemkhomedir --update
+
+echo " create /etc/yp.conf"
 
 cat <<EOF> /etc/yp.conf
 #
 domain yp_nsim1 server nss
 EOF
+
 
 echo "create blacklist for nouveau driver"
 
@@ -305,12 +322,14 @@ cat <<EOF> /etc/modprobe.d/blacklist.conf
 blacklist nouveau
 EOF
 
+echo "configure services"
+
 systemctl enable autofs
 systemctl start autofs
 systemctl enable ypbind
 systemctl start ypbind
 
-# compatibility stuff
+echo "make some compatibility settings"
 
 ln -s /usr/bin/ncat /usr/bin/netcat
 
