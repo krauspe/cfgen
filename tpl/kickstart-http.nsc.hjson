@@ -143,6 +143,9 @@ ypbind
 rpcbind
 bind-utils
 pciutils
+mutt
+ntp
+ntpdate
 #pk
 ksh.x86_64
 rsync.x86_64
@@ -152,6 +155,11 @@ mc
 glibc.i686
 libXt-1.1.4-6.1.el7.i686
 libXtst-1.2.2-2.1.el7.i686
+nmap-ncat
+libXrandr.i686
+openssl098e
+gamin
+
 %end
 
 %addon com_redhat_kdump --enable --reserve-mb='auto'
@@ -292,10 +300,20 @@ cat <<EOF> /etc/yp.conf
 domain yp_nsim1 server nss
 EOF
 
+echo "create blacklist for nouveau driver"
+
+cat <<EOF> /etc/modprobe.d/blacklist.conf
+blacklist nouveau
+EOF
+
 systemctl enable autofs
 systemctl start autofs
 systemctl enable ypbind
 systemctl start ypbind
+
+# compatibility stuff
+
+ln -s /usr/bin/ncat /usr/bin/netcat
 
 %end
 
