@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+ #!/usr/bin/env python
 
 # test script for developing a little parser for
 # "value-strings" from template files (.hjson)
