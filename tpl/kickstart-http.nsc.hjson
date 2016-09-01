@@ -182,7 +182,7 @@ wget http://is01/yum.repos.d/puppetlabs.repo
 echo "@@ip@@	@@hn@@.@@dn@@	@@hn@@" >> /etc/hosts
 
 #
-#yum clean all; yum update -y
+yum clean all; yum update -y
 yum -v repolist
 
 ## for nvidia sw from elrepo
