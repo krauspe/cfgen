@@ -28,16 +28,20 @@ from prettyprint import pp
 
 types =     ['cloud-config','dhcpd','virt-install','kickstart-http','kickstart-nfs']
 templates = ['auto-install','xen','entry','gitsrv','nsc']
+sites = ['lx3.lgn.dfs.de','develop']
 
 parser = argparse.ArgumentParser(description="create various config files from host atributes")
 parser.add_argument("--hn", type=str, required=True, help="hostname")
 parser.add_argument("-p", "--tpl" , type=str, required=True, choices=templates, help="template to use")
-parser.add_argument("-t", "--type", type=str, required=True, choices=types, help="config file to create")
+parser.add_argument("-t", "--type", type=str, required=True, choices=types, help="config file type")
+parser.add_argument("--site", type=str, required=True, choices=sites, help="site config to use")
+
 args = parser.parse_args()
 
 hn = args.hn
 tpl_type = args.type
 tpl = args.tpl
+site = args.site
 
 #hn = 'etcd-02'
 #hn = 'gitsrv2'
@@ -53,15 +57,15 @@ tpl = args.tpl
 #tpl = 'nsc'
 #tpl = 'gitsrv'
 
-site = "lx3.lgn.dfs.de"
+#site = "lx3.lgn.dfs.de"
 
 # TODO: filname should be defined in template
 out_filename = {
     'cloud-config':'@@hn@@.yml',
     'dhcpd':'dhcpd'+'.@@hn@@.conf.entry',
     'virt-install-cmd':'virt-install'+'.@@hn@@.sh',
-    'kickstart-nfs':'@@hn@@.' + site + '.nfs.ks',
-    'kickstart-http':'@@hn@@.' + site + '.http.ks'
+    'kickstart-nfs':'@@hn@@.nfs.ks',
+    'kickstart-http':'@@hn@@.http.ks'
 }
 
 
