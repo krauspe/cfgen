@@ -153,6 +153,7 @@ ntpdate
 ksh.x86_64
 rsync.x86_64
 ImageMagick-c++.x86_64
+wget.x86_64
 mc
 # for newsim SW
 glibc.i686
@@ -169,65 +170,14 @@ gamin
 %end
 
 %post --log=/root/ks-post.log
+
 ##configure repos
 rm /etc/yum.repos.d/*
-
-cat >/etc/yum.repos.d/CentOS-Base.repo <<EOF
-[base]
-name=CentOS-7 - Base
-baseurl=http://is01/centos/7/os/x86_64/
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
-
-#released updates 
-[updates]
-name=CentOS-7 - Updates
-baseurl=http://is01/centos/7/updates/x86_64/
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
-
-#additional packages that may be useful
-[extras]
-name=CentOS-7 - Extras
-baseurl=http://is01/centos/7/extras/x86_64/
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
-
-#additional packages that extend functionality of existing packages
-[centosplus]
-name=CentOS-7 - Plus
-baseurl=http://is01/centos/7/centosplus/x86_64/
-gpgcheck=1
-enabled=0
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
-EOF
-
-cat >/etc/yum.repos.d/epel.repo <<EOF
-[epel]
-name=Extra Packages for Enterprise Linux 7 - $basearch
-baseurl=http://is01/epel/7/x86_64/
-enabled=1
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
-EOF
-
-cat >/etc/yum.repos.d/elrepo.repo <<EOF
-[elrepo]
-name=ELRepo.org Community Enterprise Linux Repository - el7
-baseurl=http://is01/elrepo/el7/x86_64/
-enabled=1
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-elrepo.org
-protect=0
-EOF
-
-#cat >/etc/yum.repos.d/etcrepo.repo <<EOF
-#[etcrepo]
-#name=Etcetera Repo - el7
-#baseurl=http://is01/etcrepo/el7\/$basearch/
-#enabled=1
-#gpgcheck=0
-#EOF
+cd /etc/yum.repos.d
+wget http://is01/yum.repos.d/CentOS-Base.repo
+wget http://is01/yum.repos.d/elrepo.repo
+wget http://is01/yum.repos.d/epel.repo
+wget http://is01/yum.repos.d/puppetlabs.repo
 
 echo "@@ip@@	@@hn@@.@@dn@@	@@hn@@" >> /etc/hosts
 
