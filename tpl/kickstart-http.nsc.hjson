@@ -1,5 +1,4 @@
 "cfg": {
-"outfilename":"hn + '.http.ks'",
 "@@hn@@":"hn",
 "@@dn@@":               "cfg['net']['dn']",
 "@@gw@@":               "cfg['net']['gw']",
@@ -33,11 +32,12 @@ selinux --disable
 url --url="http://is01/centos/7/os/x86_64"
 
 # disable repo updates and you get all updates during installation
-repo --name=update_local --baseurl=http://nss/centos/7/updates/x86_64
-repo --name=extras_local --baseurl=http://nss/centos/7/extras/x86_64
-repo --name=plus_local --baseurl=http://nss/centos/7/centosplus/x86_64
-repo --name=epel_local --baseurl=http://nss/epel/7/x86_64/
-repo --name=elrepo_local --baseurl=http://nss/elrepo/el7/x86_64/
+repo --name=update_local --baseurl=http://is01/centos/7/updates/x86_64
+repo --name=extras_local --baseurl=http://is01/centos/7/extras/x86_64
+repo --name=plus_local --baseurl=http://is01/centos/7/centosplus/x86_64
+repo --name=epel_local --baseurl=http://is01/epel/7/x86_64/
+repo --name=elrepo_local --baseurl=http://is01/elrepo/el7/x86_64/
+#repo --name=puppet_local --baseurl=http://is01/puppet/el/7/
 
 # install graphical or text
 #graphical
@@ -175,28 +175,28 @@ rm /etc/yum.repos.d/*
 cat >/etc/yum.repos.d/CentOS-Base.repo <<EOF
 [base]
 name=CentOS-7 - Base
-baseurl=http://nss/centos/7/os/x86_64/
+baseurl=http://is01/centos/7/os/x86_64/
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 
 #released updates 
 [updates]
 name=CentOS-7 - Updates
-baseurl=http://nss/centos/7/updates/x86_64/
+baseurl=http://is01/centos/7/updates/x86_64/
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 
 #additional packages that may be useful
 [extras]
 name=CentOS-7 - Extras
-baseurl=http://nss/centos/7/extras/x86_64/
+baseurl=http://is01/centos/7/extras/x86_64/
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 
 #additional packages that extend functionality of existing packages
 [centosplus]
 name=CentOS-7 - Plus
-baseurl=http://nss/centos/7/centosplus/x86_64/
+baseurl=http://is01/centos/7/centosplus/x86_64/
 gpgcheck=1
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
@@ -205,7 +205,7 @@ EOF
 cat >/etc/yum.repos.d/epel.repo <<EOF
 [epel]
 name=Extra Packages for Enterprise Linux 7 - $basearch
-baseurl=http://nss/epel/7/x86_64/
+baseurl=http://is01/epel/7/x86_64/
 enabled=1
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
@@ -214,20 +214,20 @@ EOF
 cat >/etc/yum.repos.d/elrepo.repo <<EOF
 [elrepo]
 name=ELRepo.org Community Enterprise Linux Repository - el7
-baseurl=http://nss/elrepo/el7/x86_64/
+baseurl=http://is01/elrepo/el7/x86_64/
 enabled=1
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-elrepo.org
 protect=0
 EOF
 
-cat >/etc/yum.repos.d/etcrepo.repo <<EOF
-[etcrepo]
-name=Etcetera Repo - el7 
-baseurl=http://nss/etcrepo/el7\/$basearch/
-enabled=1
-gpgcheck=0
-EOF
+#cat >/etc/yum.repos.d/etcrepo.repo <<EOF
+#[etcrepo]
+#name=Etcetera Repo - el7
+#baseurl=http://is01/etcrepo/el7\/$basearch/
+#enabled=1
+#gpgcheck=0
+#EOF
 
 echo "@@ip@@	@@hn@@.@@dn@@	@@hn@@" >> /etc/hosts
 
