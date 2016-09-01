@@ -262,6 +262,8 @@ echo "mounting install server"
 echo "check mount"
 df
 
+#<BEGIN-LEGACY-CODE>
+
 echo "create 2step vars"
 
 mkdir -p /etc/2step
@@ -273,6 +275,7 @@ type=@@type@@
 osversion=centos
 version=centos7
 EOF
+
 
 echo "create /etc/auto.master"
 
@@ -315,6 +318,7 @@ cat <<EOF> /etc/yp.conf
 domain yp_nsim1 server nss
 EOF
 
+#<END-LEGACY-CODE>
 
 echo "create blacklist for nouveau driver"
 
