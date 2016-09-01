@@ -1,4 +1,5 @@
 "cfg": {
+"outfilename":"hn + '.http.ks'",
 "@@hn@@":"hn",
 "@@dn@@":               "cfg['net']['dn']",
 "@@gw@@":               "cfg['net']['gw']",
@@ -23,8 +24,10 @@
 "tpl-text":
 '''
 #version=DEVEL
-# System authorization information
+
+# System authorization 
 auth --enableshadow --passalgo=sha512
+selinux --disable
 
 # Use network installation
 url --url="http://is01/centos/7/os/x86_64"
@@ -320,6 +323,14 @@ EOF
 
 #<END-LEGACY-CODE>
 
+#rpm -ivh https://yum.puppetlabs.com/el/7/PC1/x86_64/puppetlabs-release-pc1-1.0.0-1.el7.noarch.rpm
+rpm -ivh http://is01/puppet/el/7/products/x86_64/puppetlabs-release-7-12.noarch.rpm
+yum -y install puppetserver
+#yum -y update
+
+
+#<BEGIN-TO-BE-MANAGED-BY-PUPPET>
+
 echo "create blacklist for nouveau driver"
 
 cat <<EOF> /etc/modprobe.d/blacklist.conf
@@ -336,6 +347,8 @@ systemctl start ypbind
 echo "make some compatibility settings"
 
 ln -s /usr/bin/ncat /usr/bin/netcat
+
+#<END-TO-BE-MANAGED-BY-PUPPET>
 
 %end
 
