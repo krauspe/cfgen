@@ -26,7 +26,6 @@
 
 # System authorization 
 auth --enableshadow --passalgo=sha512
-selinux --disable
 
 # Use network installation
 url --url="http://is01/centos/7/os/x86_64"
@@ -46,19 +45,20 @@ text
 # Run the Setup Agent on first boot
 firstboot --disable
 
-#ignoredisk --only-use=vda
+# Ignore additional disks
 ignoredisk --only-use=sda
 
+# Reboot after installation
 reboot
-# Keyboard layouts
 
+# Keyboard layouts
 keyboard --vckeymap=de --xlayouts='de','us'
 
 # System language
 lang en_US.UTF-8
 
+# Security settings
 # firewall --enabled --port=22:tcp
-
 # selinux --enforcing
 firewall --disabled
 selinux --disabled
