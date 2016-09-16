@@ -166,6 +166,8 @@ nmap-ncat
 libXrandr.i686
 openssl098e
 gamin
+# SITE PUPPET CONFIG (to be created )
+# dfs-puppet-lx3-lgn-dfs-de
 %end
 
 %addon com_redhat_kdump --enable --reserve-mb='auto'
@@ -255,24 +257,6 @@ echo "AutomaticLogin = spv" >> /etc/gdm/custom.conf
 echo "set multicast route"
 echo "224.255.0.0 0.0.0.0 255.255.255.224 eth0" >> /etc/sysconfig/network-scripts/route-@@dv@@
 
-# obsolete da User lokal angelegt werden, services ueber RPMs kommen
-#echo "configure nis service"
-#
-#echo "NISDOMAIN=yp_nsim1" >> /etc/sysconfig/network
-#authconfig --enablenis --nisdomain=yp_nsim1 --nisserver=nss --enablemkhomedir --update
-#
-#echo " create /etc/yp.conf"
-#
-#cat <<EOF> /etc/yp.conf
-##
-#domain yp_nsim1 server nss
-#EOF
-
-# obsolete da puppet repo zur Inst bereits zur verfuegung steht
-#rpm -ivh https://yum.puppetlabs.com/el/7/PC1/x86_64/puppetlabs-release-pc1-1.0.0-1.el7.noarch.rpm
-#rpm -ivh http://is01/puppet/el/7/products/x86_64/puppetlabs-release-7-12.noarch.rpm
-#yum -y install puppetserver
-#yum -y update
 
 #echo "create blacklist for nouveau driver"
 #
@@ -292,13 +276,6 @@ echo "make some compatibility settings"
 ln -s /usr/bin/ncat /usr/bin/netcat
 
 #<END-TO-BE-MANAGED-BY-PUPPET>
-
-#echo "Configuring puppet"
-#cat >> /etc/puppet/puppet.conf << EOF
-#server = nss.lx3.lgn.dfs.de
-#EOF
-
-#puppet agent --test --ca_server=nss.lx3.lgn.dfs.de
 
 %end
 
