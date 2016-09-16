@@ -36,7 +36,7 @@ repo --name=extras_local --baseurl=http://is01/centos/7/extras/x86_64
 repo --name=plus_local --baseurl=http://is01/centos/7/centosplus/x86_64
 repo --name=epel_local --baseurl=http://is01/epel/7/x86_64/
 repo --name=elrepo_local --baseurl=http://is01/elrepo/el7/x86_64/
-#repo --name=puppet_local --baseurl=http://is01/puppet/el/7/
+repo --name=puppet_local --baseurl=http://is01/puppet/el/7/products/x86_64
 
 # install graphical or text
 #graphical
@@ -109,11 +109,12 @@ part @@part-root-mp@@ --fstype="@@part-root-fstype@@" --ondisk=@@part-root-dv@@ 
 #@print-client
 @x11
 @Fonts
+epel-release
+elrepo-release
+puppetlabs-release
 net-tools
 yum-utils
 kexec-tools
-epel-release
-elrepo-release
 #motif
 kernel-devel
 kernel-headers
@@ -126,17 +127,17 @@ icewm
 gnome-terminal
 xorg-x11-fonts
 xorg-x11-xinit
-libwacom.x86_64
+libwacom
 libwacom-data.noarch
-kmod-wacom.x86_64
-xorg-x11-drv-wacom.x86_64
-xorg-x11-drv-keyboard.x86_64
-xorg-x11-drv-mouse.x86_64
-esound-tools.x86_64
-esound-libs.x86_64
-esound-daemon.x86_64
-pulseaudio-esound-compat.x86_64
-kcm_touchpad.x86_64
+kmod-wacom
+xorg-x11-drv-wacom
+xorg-x11-drv-keyboard
+xorg-x11-drv-mouse
+esound-tools
+esound-libs
+esound-daemon
+pulseaudio-esound-compat
+kcm_touchpad
 #cinnamon
 gdm
 nfs-utils
@@ -150,11 +151,13 @@ mutt
 ntp
 ntpdate
 #pk
-ksh.x86_64
-rsync.x86_64
-ImageMagick-c++.x86_64
-wget.x86_64
+ksh
+rsync
+ImageMagick-c++
+wget
 mc
+puppet
+augeas
 # for newsim SW
 glibc.i686
 libXt-1.1.4-6.1.el7.i686
@@ -170,14 +173,6 @@ gamin
 %end
 
 %post --log=/root/ks-post.log
-
-##configure repos
-rm /etc/yum.repos.d/*
-cd /etc/yum.repos.d
-wget http://is01/yum.repos.d/CentOS-Base.repo
-wget http://is01/yum.repos.d/elrepo.repo
-wget http://is01/yum.repos.d/epel.repo
-wget http://is01/yum.repos.d/puppetlabs.repo
 
 echo "@@ip@@	@@hn@@.@@dn@@	@@hn@@" >> /etc/hosts
 
@@ -196,16 +191,18 @@ yum -v repolist
 
 mkdir -p /root/bin
 
+#<BEGIN-LEGACY-CODE>
+
 cat <<EOF> /root/bin/mount_install_server.sh
 #!/usr/bin/bash
 
 srv_dir=/srv2/inst
 client_dir=/srv2/client
 
-[ ! -d $srv_dir ] && mkdir -p $srv_dir
-[ ! -d $client_dir ] && mkdir -p $client_dir
+[ ! -d $srv_dir ] && mkdir -p \$srv_dir
+[ ! -d $client_dir ] && mkdir -p \$client_dir
 
-mount is01:/srv/inst $srv_dir
+mount is01:/srv/inst \$srv_dir
 mount is01:/srv/inst/xchg/client $client_dir # rw mount !
 EOF
 
@@ -214,8 +211,6 @@ echo "mounting install server"
 /root/bin/mount_install_server.sh
 echo "check mount"
 df
-
-#<BEGIN-LEGACY-CODE>
 
 echo "create 2step vars"
 
@@ -229,6 +224,9 @@ osversion=centos
 version=centos7
 EOF
 
+#<END-LEGACY-CODE>
+
+#<BEGIN-TO-BE-MANAGED-BY-PUPPET>
 
 echo "create /etc/auto.master"
 
@@ -248,7 +246,6 @@ voice           -fstype=nfs,hard,intr,actimeo=3      nss:/nss/voice
 corefiles           -fstype=nfs,hard,intr,actimeo=3      nss:/nss/corefiles
 EOF
 
-
 echo "enable autologin for user spv"
 sed -i '/daemon/d' /etc/gdm/custom.conf
 echo "[daemon]" >> /etc/gdm/custom.conf
@@ -258,47 +255,50 @@ echo "AutomaticLogin = spv" >> /etc/gdm/custom.conf
 echo "set multicast route"
 echo "224.255.0.0 0.0.0.0 255.255.255.224 eth0" >> /etc/sysconfig/network-scripts/route-@@dv@@
 
-
-echo "configure nis service"
-
-echo "NISDOMAIN=yp_nsim1" >> /etc/sysconfig/network
-authconfig --enablenis --nisdomain=yp_nsim1 --nisserver=nss --enablemkhomedir --update
-
-echo " create /etc/yp.conf"
-
-cat <<EOF> /etc/yp.conf
+# obsolete da User lokal angelegt werden, services ueber RPMs kommen
+#echo "configure nis service"
 #
-domain yp_nsim1 server nss
-EOF
+#echo "NISDOMAIN=yp_nsim1" >> /etc/sysconfig/network
+#authconfig --enablenis --nisdomain=yp_nsim1 --nisserver=nss --enablemkhomedir --update
+#
+#echo " create /etc/yp.conf"
+#
+#cat <<EOF> /etc/yp.conf
+##
+#domain yp_nsim1 server nss
+#EOF
 
-#<END-LEGACY-CODE>
-
+# obsolete da puppet repo zur Inst bereits zur verfuegung steht
 #rpm -ivh https://yum.puppetlabs.com/el/7/PC1/x86_64/puppetlabs-release-pc1-1.0.0-1.el7.noarch.rpm
-rpm -ivh http://is01/puppet/el/7/products/x86_64/puppetlabs-release-7-12.noarch.rpm
-yum -y install puppetserver
+#rpm -ivh http://is01/puppet/el/7/products/x86_64/puppetlabs-release-7-12.noarch.rpm
+#yum -y install puppetserver
 #yum -y update
 
-
-#<BEGIN-TO-BE-MANAGED-BY-PUPPET>
-
-echo "create blacklist for nouveau driver"
-
-cat <<EOF> /etc/modprobe.d/blacklist.conf
-blacklist nouveau
-EOF
+#echo "create blacklist for nouveau driver"
+#
+#cat <<EOF> /etc/modprobe.d/blacklist.conf
+#blacklist nouveau
+#EOF
 
 echo "configure services"
 
 systemctl enable autofs
 systemctl start autofs
-systemctl enable ypbind
-systemctl start ypbind
+#systemctl enable ypbind
+#systemctl start ypbind
 
 echo "make some compatibility settings"
 
 ln -s /usr/bin/ncat /usr/bin/netcat
 
 #<END-TO-BE-MANAGED-BY-PUPPET>
+
+#echo "Configuring puppet"
+#cat >> /etc/puppet/puppet.conf << EOF
+#server = nss.lx3.lgn.dfs.de
+#EOF
+
+#puppet agent --test --ca_server=nss.lx3.lgn.dfs.de
 
 %end
 
