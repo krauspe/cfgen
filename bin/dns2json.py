@@ -8,7 +8,7 @@ import argparse
 import json
 import hjson
 from prettyprint import pp
-#import re
+import re
 ##usage: pp(content) # where content is json
 
 pydir =  os.path.dirname(os.path.abspath(__file__))
@@ -37,24 +37,72 @@ print("output file: %s" % outfile)
 print("output format: %s\n" % format)
 
 
+#TODO:
 
-#TODO: read dns hosts file ....
+file = infile
 
-def getDnsHostsFile(file):
-    if os.path.exists(file):
-        lines = [line.rstrip('\n').split() for line in open(file) if not line.startswith('#')]
-        lines = list(line for line in lines if line) # only non blank lines
-        if len(lines) < 0:
-            print("WARNING: %s is empty or has no valid lines !!" % file)
-        return lines
-    else:
-        print ("WARNING: %s doesn't exist !!" % file)
-        return []
+#host_entrys = {}
 
-dnslines = getDnsHostsFile(infile)
+# host_entrys dict with test data
 
-# Debug ouput file
+host_entrys = {
+        "nss.nsa.lgn.dfs.de" :{
+            "ip": "10.232.222.10",
+            "hname": "nss",
+            "dv"  : "eth0",
+            "gw"  : "10.232.222.253",
+            "sn"  : "255.255.255.0",
+            "hn_list": ["nss-mgt","nss-p1","nss-ph"],
+            "sy"  : "SIU AFS"
+        }
+}
 
-with open(tempfile,mode='w') as f:
-    for line in dnslines:
-        f.write (' '.join(line) + '\n')
+
+
+if os.path.exists(file):
+    # records = [line.rstrip('\n').split('#') for line in open(file) if not line.startswith('#')]
+    lines = [line.rstrip('\n') for line in open(file) if not line.startswith('#')]
+    lines = list(line for line in lines if line) # only non blank lines
+    for line in lines:
+        records = line.split('#')
+        ip_fqdn_hn = records[0]
+
+        # GET ip, fqdn and hn and add to host_entrys hash
+
+
+        ip,fqdn,hn = ip_fqdn_hn.split()[:3]
+
+
+
+        hn_list = []
+
+        if len(records) >1 and len(records[-1]) > 0:  # is there a '#" after hn AND is there a non emtpy string
+            t_rec_string = records[-1] # get string after last '#'
+            t_rec_string = re.sub(r'^\s+', "", records[-1]) # remove leading whitespace
+
+            # get the text records from each line (t_rec_string)
+
+            key_value_pair_strings = t_rec_string.split()
+            for key_val in key_value_pair_strings:
+                if len(key_val) == 2:
+                    key,val = key_val.split('=')
+
+        # else:
+        #     t_rec_string = "NO-T-RECORDS"
+
+        # get text records
+
+
+        #outline = "ip=" + ip + " fqdn=" + fqdn + " hn=" + hn + " TREC=\"" + t_rec_string + '\"'
+        #print(outline)
+
+    # Debug ouput file
+    with open(tempfile,mode='w') as f:
+        for line in lines:
+            f.write (' '.join(line) + '\n')
+
+else:
+    print ("WARNING: %s doesn't exist !!" % file)
+    #return []
+
+
