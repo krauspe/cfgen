@@ -27,7 +27,7 @@
       }
     }, 
     "hardware": "physical",
-    "classes": [], 
+    "classes": {},
     "net": {
       "dn": "lx3.lgn.dfs.de",
       "gw": "192.168.33.10",
@@ -52,20 +52,18 @@
   }, 
   "hosts": {
     "nss": {
+      "classes": {
+        "main": ["nss", "is", "rose-server"],
+        "sub": []
+      },
       "hardware": "physical",
       "net": {
         "dn": "lx3.lgn.dfs.de",
         "gw": "10.232.250.253",
         "nics": {
           "nic0": {
-            "dv": [
-              "eth0",
-              "is09"
-            ],
-            "ip": [
-              "192.168.33.10",
-              "192.168.33.9"
-            ],
+            "dv": "eth0",
+            "ip": "192.168.33.10",
             "subnet": "192.168.33.0",
             "sn": "255.255.255.0",
             "mac": "00:30:48:b8:f8:80",
@@ -83,15 +81,20 @@
         "ns": "192.168.33.10",
         "netconf-type": "static"
       },
-      "classes": [
-        "nss",
-        "is"
-      ],
       "vm": {
         "vm-name": "nss-lx3"
       }
     },
     "cwp10-s1": {
+      "classes": {
+        "main": [
+          "nsc",
+          "rose"
+        ],
+        "sub": [
+          "cwp"
+        ]
+      },
       "hardware": "physical",
       "net": {
         "nics": {
@@ -101,12 +104,13 @@
             "mac": ""
           }
         }
-      },
-      "classes": [
-        "nsc.cwp.s1"
-      ]
+      }
     },
     "cwp11-s1": {
+      "classes": {
+        "main": ["nsc", "rose"],
+        "sub": ["cwp"]
+      },
       "hardware": "physical",
       "net": {
         "nics": {
@@ -116,25 +120,28 @@
             "mac": ""
           }
         }
-      },
-      "classes": [
-        "nsc.cwp.s1"
-      ]
+      }
     },
-    "adc3-s1": {
-      "hardware": "physical",
-      "net": {
-        "nics": {
-          "nic0": {
-            "dv": "eth0",
-            "ip": "192.168.33.82",
-            "mac": ""
+      "adc3-s1": {
+        "classes": {
+          "main": [
+            "nsc",
+            "rose"
+          ],
+          "sub": [
+            "adc"
+          ]
+        },
+        "hardware": "physical",
+        "net": {
+          "nics": {
+            "nic0": {
+              "dv": "eth0",
+              "ip": "192.168.33.82",
+              "mac": ""
+            }
           }
         }
-      },
-      "classes": [
-        "nsc.adc.s1"
-      ]
+      }
     }
-   }
 }
