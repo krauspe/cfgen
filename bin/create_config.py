@@ -31,10 +31,17 @@ templates = ['auto-install','xen','entry','gitsrv','nsc']
 sites = ['lx3.lgn.dfs.de','develop']
 
 parser = argparse.ArgumentParser(description="create various config files from host atributes")
-parser.add_argument("--hn", type=str, required=True, help="hostname")
-parser.add_argument("-p", "--tpl" , type=str, required=True, choices=templates, help="template to use")
-parser.add_argument("-t", "--type", type=str, required=True, choices=types, help="config file type")
-parser.add_argument("--site", type=str, required=True, choices=sites, help="site config to use")
+# parser.add_argument("--hn", type=str, required=True, help="hostname")
+# parser.add_argument("-p", "--tpl" , type=str, required=True, choices=templates, help="template to use")
+# parser.add_argument("-t", "--type", type=str, required=True, choices=types, help="config file type")
+# parser.add_argument("--site", type=str, required=True, choices=sites, help="site config to use")
+
+# with defaults for testing
+parser.add_argument("--hn", type=str, required=False, default="cwp10-s1", help="hostname")
+parser.add_argument("-p", "--tpl" , type=str, required=False, choices=templates, default="nsc-node.pp", help="template to use")
+parser.add_argument("-t", "--type", type=str, required=False, choices=types, default="puppet", help="config file type")
+parser.add_argument("--site", type=str, required=False, choices=sites, default="lx3.lgn.dfs.de", help="site config to use")
+
 
 args = parser.parse_args()
 
@@ -65,7 +72,8 @@ out_filename = {
     'dhcpd':'dhcpd'+'.@@hn@@.conf.entry',
     'virt-install-cmd':'virt-install'+'.@@hn@@.sh',
     'kickstart-nfs':'@@hn@@.nfs.ks',
-    'kickstart-http':'@@hn@@.http.ks'
+    'kickstart-http':'@@hn@@.http.ks',
+    'puppet':'node.@@hn@@.pp'
 }
 
 
