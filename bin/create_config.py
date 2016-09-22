@@ -126,13 +126,14 @@ def update_nested_dict(d, u):
 
 # hostlist functions
 
+
+#TODO: currently not used !!
 def getHostlistFromType(type):
     hostlist = []
     for hn in hosts.iterkeys():
         if hosts[hn]['type'] == type:
             hostlist.append()
     return hostlist
-
 
 
 def getDhcpHostEntrys(): # TODO: awake to live :-)
@@ -189,13 +190,7 @@ def getCreateVmImagesCmd(hn):
 # qemu-img create -f @@install-img-format@@ @@install-img-path@@ 10G
 # '''
 
-
 # UTIL
-
-def createObjectFromHostCfg(hn,tpl,tpl_type):
-    cfg['hn'] = hn
-    update_nested_dict(cfg,hosts[hn]) # join the dicts
-    return createObjectFromTemplate(tpl,tpl_type)
 
 def createObjectFromTemplate(tpl,tpl_type):
     tpl_file = os.path.join(tpldir, tpl_type + '.' + tpl + '.hjson')
@@ -215,6 +210,12 @@ def createObjectFromTemplate(tpl,tpl_type):
             #conten = content.replace('@@'+seStr+'@@',repStr)
             content = content.replace(seStr, repStr)
     return content
+
+
+def createObjectFromHostCfg(hn,tpl,tpl_type):
+    cfg['hn'] = hn
+    update_nested_dict(cfg,hosts[hn]) # join the dicts
+    return createObjectFromTemplate(tpl,tpl_type)
 
     # pp(cfg)
 
