@@ -78,13 +78,15 @@ def update_nested_dict(d, u):
     return d
 
 
+class NicEntry(object):
+    #def __init__(self,nic_id,hn,dv,ip,kwargs**):
+    pass
 
 # records = [line.rstrip('\n').split('#') for line in open(file) if not line.startswith('#')]
 lines = [line.rstrip('\n') for line in open(file) if not line.startswith('#')]
 lines = list(line for line in lines if line) # only non blank lines
 for line in lines:
     records = line.split('#')
-
     # GET ip, fqdn and hn
     ip_fqdn_hn = records[0]
     # debug
@@ -95,29 +97,40 @@ for line in lines:
     else:
         continue
 
-    # Add a new entry in host_entrys dict
-
+    # Create a new entry and an host_entrys_update to update host_entrys dict
     new_entry = {}
     host_entrys_update = {}
-    # create empty hn list for each host entry which define additional interface configurations in 2step
-    hn_list = []
+    description = ""
+
+    # initialize nic entrys
+    nics = {}
+    nic_id = 0
+
+    # create nic entry for first interface as nic0
+    nic = 'nic' + str(nic_id)
+    new_entry["nics"] = {}
+    new_entry["nics"][nic] = {}
+    new_entry["nics"][nic]["ip"] = ip
 
     # is there a '#" after hn AND is there a non emtpy string
     if len(records) >1 and len(records[-1]) > 0:
+        # get description from first field after '#'
+        if records[1] != records[-1]:
+            description = re.sub(r'^\s+',"",records[1])
+            if len(description) > 0:
+                new_entry['description'] = description
+
         # get string after last '#'
         t_rec_string = records[-1]
         # remove leading whitespace
         t_rec_string = re.sub(r'^\s+', "", records[-1])
-
         # get 'key=val' strings
         key_value_pair_strings = t_rec_string.split()
-        # get keys and their values
-
         # emtpy keys list
         keys = []
+        # get keys and their values
         key = ""
         val = ""
-
         for key_val in key_value_pair_strings:
             # do we have a non 'emtpy' value for the key
             l = key_val.split('=')
@@ -127,24 +140,19 @@ for line in lines:
                 continue
 
             if key == 'hn':
-                hn_list.append(val)
+                hn = val
+                nic_id += 1
+                nic = 'nic' + str(nic_id)
+                new_entry["nics"][nic] = {}
+                new_entry["nics"][nic]['hn'] = hn
+
+
             else:
                 new_entry[key] = val
-        if len(hn_list) > 0:
-            new_entry['hn_list'] = hn_list
 
     host_entrys_update[fqdn] = new_entry
     #host_entrys[fqdn] = new_entry
     update_nested_dict(host_entrys,host_entrys_update)
-
-    # else:
-    #     t_rec_string = "NO-T-RECORDS"
-
-    # get text records
-
-
-    #outline = "ip=" + ip + " fqdn=" + fqdn + " hn=" + hn + " TREC=\"" + t_rec_string + '\"'
-    #print(outline)
 
 # Debug ouput file
 with open(tempfile,mode='w') as f:
@@ -155,5 +163,5 @@ with open(tempfile,mode='w') as f:
 with open(outfile,mode='w') as f:
     f.write(json.dumps(host_entrys, sort_keys=True, indent=2, separators=(',', ': ')))
 
-pp(host_entrys)
+#pp(host_entrys)
 
