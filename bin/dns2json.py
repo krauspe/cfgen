@@ -79,8 +79,19 @@ def update_nested_dict(d, u):
 
 
 class NicEntry(object):
-    #def __init__(self,nic_id,hn,dv,ip,kwargs**):
-    pass
+    def __init__(self,nic_id,hn,**kwargs):
+        self.nic_entry = {}
+        self.nic_name = 'nic' + str(nic_id)
+        self.nic_entry[self.nic_name] = {}
+        self.set_hn(self,hn=hn)
+        for key in kwargs:
+            self.nic_entry[[self.nic_name]][key] = kwargs[key]
+
+        return self.nic_entry
+    def set_hn(self,hn):
+        self.nic_entry[[self.nic_name]]['hn'] = hn
+
+
 
 # records = [line.rstrip('\n').split('#') for line in open(file) if not line.startswith('#')]
 lines = [line.rstrip('\n') for line in open(file) if not line.startswith('#')]
@@ -143,6 +154,7 @@ for line in lines:
                 hn = val
                 nic_id += 1
                 nic = 'nic' + str(nic_id)
+                # how to use the NicEntry class instead ???
                 new_entry["nics"][nic] = {}
                 new_entry["nics"][nic]['hn'] = hn
 
