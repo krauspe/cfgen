@@ -16,7 +16,7 @@ basedir = os.path.dirname(pydir)
 confdir = os.path.join(basedir,"config")
 #tpldir = os.path.join(basedir,"tpl")
 deploydir = os.path.join(basedir,"deployment")
-default_hosts_file = os.path.join(confdir,"all.dns.hosts")
+default_hosts_file = os.path.join(confdir,"mu1.muc.dfs.de.dns.hosts")
 tempfile = os.path.join(deploydir,"temp_out.txt")
 
 # parse args
@@ -45,19 +45,19 @@ file = infile
 
 # host_entrys dict with test data
 
-host_entrys = {
-        "nss.nsa.lgn.dfs.de" :{
-            "ip": "10.232.222.10",
-            "hname": "nss",
-            "dv"  : "eth0",
-            "gw"  : "10.232.222.253",
-            "sn"  : "255.255.255.0",
-            "hn_list": ["nss-mgt","nss-p1","nss-ph"],
-            "sy"  : "SIU AFS"
-        }
-}
+# host_entrys = {
+#         "nss.nsa.lgn.dfs.de" :{
+#             "ip": "10.232.222.10",
+#             "hname": "nss",
+#             "dv"  : "eth0",
+#             "gw"  : "10.232.222.253",
+#             "sn"  : "255.255.255.0",
+#             "hn_list": ["nss-mgt","nss-p1","nss-ph"],
+#             "sy"  : "SIU AFS"
+#         }
+# }
 
-
+host_entrys = {}
 
 if not os.path.exists(file):
     print ("ERROR: %s doesn't exist !!" % file)
@@ -91,15 +91,14 @@ for line in lines:
     print("ip_fqdn_hn = " + ip_fqdn_hn)
     l = ip_fqdn_hn.split()
     if len(l) > 1:
-        ip = l[0]
-        fqdn = l[1]
+        ip,fqdn = l[:2]
     else:
         continue
 
     # Add a new entry in host_entrys dict
 
     new_entry = {}
-
+    host_entrys_update = {}
     # create empty hn list for each host entry which define additional interface configurations in 2step
     hn_list = []
 
@@ -123,8 +122,7 @@ for line in lines:
             # do we have a non 'emtpy' value for the key
             l = key_val.split('=')
             if len(l) == 2:
-                key = l[0]
-                val = l[1]
+                key,val = l
             else:
                 continue
 
@@ -135,8 +133,9 @@ for line in lines:
         if len(hn_list) > 0:
             new_entry['hn_list'] = hn_list
 
-    host_entrys[fqdn] = new_entry
-
+    host_entrys_update[fqdn] = new_entry
+    #host_entrys[fqdn] = new_entry
+    update_nested_dict(host_entrys,host_entrys_update)
 
     # else:
     #     t_rec_string = "NO-T-RECORDS"
@@ -151,6 +150,10 @@ for line in lines:
 with open(tempfile,mode='w') as f:
     for line in lines:
         f.write (line + '\n')
+
+# write output file
+with open(outfile,mode='w') as f:
+    f.write(json.dumps(host_entrys, sort_keys=True, indent=2, separators=(',', ': ')))
 
 pp(host_entrys)
 
