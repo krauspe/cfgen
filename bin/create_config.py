@@ -20,6 +20,8 @@ from prettyprint import pp
 # DONE: create hjson files from tpl files and define short cuts to use in the template strings
 # DONEead hjson tpl files and build flat cfg dict as database for replacements
 # TODO: import network module, create funcs to calculate bc,subnet from ip,sn  or so, then change templates
+# TODO: add global vars: install_server, repo_server, disk_device (?.. gibts vielleicht schon ...)
+# TODO: develop new template and handling : kickstart.auto.hjson
 
 # command line handling
 # TODO: get possible choices for variants from files in tpl dir :-)
@@ -38,9 +40,9 @@ parser = argparse.ArgumentParser(description="create various config files from h
 
 # with defaults for testing
 parser.add_argument("--hn", type=str, required=False, default="cwp10-s1", help="hostname")
-parser.add_argument("-p", "--tpl" , type=str, required=False, choices=templates, default="nsc-node.pp", help="template to use")
-parser.add_argument("-t", "--type", type=str, required=False, choices=types, default="puppet", help="config file type")
-parser.add_argument("--site", type=str, required=False, choices=sites, default="lx3.lgn.dfs.de", help="site config to use")
+parser.add_argument("-p", "--tpl" , type=str, required=False, choices=templates, default="kickstart-http", help="template to use")
+parser.add_argument("-t", "--type", type=str, required=False, choices=types, default="auto", help="config file type")
+parser.add_argument("--site", type=str, required=False, choices=sites, default="vx1.lgn.dfs.de", help="site config to use")
 
 
 args = parser.parse_args()
@@ -71,8 +73,7 @@ out_filename = {
     'cloud-config':'@@hn@@.yml',
     'dhcpd':'dhcpd'+'.@@hn@@.conf.entry',
     'virt-install-cmd':'virt-install'+'.@@hn@@.sh',
-    'kickstart-nfs':'@@hn@@.nfs.ks',
-    'kickstart-http':'@@hn@@.http.ks',
+    'kickstart-http':'@@site@@.'+tpl+'.ks',
     'puppet':'node.@@hn@@.pp'
 }
 

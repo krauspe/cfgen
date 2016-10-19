@@ -1,0 +1,126 @@
+comment":
+'''
+Allgemeines template fuer kickstart; auto parttioning (nur /)
+Variabel: repo_server, install_server, disk_device, install_dv
+Netzwerk: dhcp
+
+'''
+
+"cfg": {
+  "@@repo_server@@":         "cfg['net']['rp']",
+  "@@install_server@@":      "cfg['net']['is']",
+  "@@disk_device@@":         "cfg['hw']['disks']['disk0']['device']",
+  "@@install_netdev@@":      "cfg['net']['nics'][cfg['net']['nic']]['dv']",
+}
+
+"tpl-text":
+'''
+# Kickstart File fuer beliebige Maschine
+#
+# auto.ks
+#  
+# - partitioning:
+#   swap  1GB
+#   /boot 2GB
+#   /     Rest
+#
+# - alles andere aus /proc-cmdline -> nextboot-script -> puppet 
+#
+# System authorization information
+auth --enableshadow --passalgo=sha512
+# Use CDROM installation media
+#cdrom
+
+# Use network installation
+url --url="http://@@repo_server@@/centos/7/os/x86_64"
+# disable repo updates and you get all updates during installation
+repo --name=update_local --baseurl=http://@@repo_server@@/centos/7/updates/x86_64
+repo --name=extras_local --baseurl=http://@@repo_server@@/centos/7/extras/x86_64
+#repo --name=plus_local --baseurl=http://@@repo_server@@/centos/7/centosplus/x86_64
+repo --name=epel_local --baseurl=http://@@repo_server@@/epel/7/x86_64/
+repo --name=elrepo_local --baseurl=http://@@repo_server@@/elrepo/el7/x86_64/
+repo --name=puppet_local --baseurl=http://@@repo_server@@/puppet/el/7/products/x86_64
+
+# Use graphical install
+
+#Use text install
+text
+
+# Run the Setup Agent on first boot
+firstboot --disable
+ignoredisk --only-use=@@disk_device@@
+reboot
+
+# Keyboard layouts
+keyboard --vckeymap=de --xlayouts='de','us'
+
+# System language
+lang en_US.UTF-8
+
+# security
+firewall --disabled
+selinux --disabled
+
+# Network information
+network  --bootproto=dhcp --device=@@install_netdev@@ --onboot=off --noipv6 --activate
+
+# Root password
+rootpw --iscrypted $6$Oy1jf/METsS.xx7U$ywleaE2GdHNP/jtVRM2jofvwXhwJNsvelh5GePgI6SD8mfDfNiuV52LYOVadR8BbyvDZtzTyDXDAVJ1vrdPBr0
+
+# System services
+services --disabled="chronyd"
+
+# System timezone
+timezone Europe/Berlin --isUtc --ntpservers=timesrv
+
+# X Window System configuration information
+xconfig  --startxonboot
+
+# System bootloader configuration
+bootloader --append=" crashkernel=auto" --location=mbr --boot-drive=@@disk_device@@
+
+# Partition clearing information
+clearpart --all --initlabel
+part swap --fstype="swap" --ondisk=@@disk_device@@ --size=1024
+part /boot --fstype="ext3" --ondisk=@@disk_device@@ --size=512
+#part / --fstype="ext4" --ondisk=@@disk_device@@ --size=51200
+part / --fstype="ext4" --ondisk=@@disk_device@@  --size=1 --grow
+
+%packages --ignoremissing
+@core
+
+## repos
+epel-release
+elrepo-release
+puppetlabs-release
+
+## sw packages
+puppet
+nfs-utils # required for nextboot script
+
+%end
+
+%addon com_redhat_kdump --enable --reserve-mb='auto'
+
+%end
+
+%post --log=/root/ks-post.log
+
+##configure repos
+#rm /etc/yum.repos.d/*
+#
+#yum clean all; yum update -y
+#yum -v repolist
+
+### nextboot
+curl http://@@install_server@@/ks-files/scripts/nextboot.sh -o /usr/local/bin/nextboot.sh; chmod +x /usr/local/bin/nextboot.sh
+curl http://@@install_server@@/ks-files/scripts/prepare_nextboot.sh -o /usr/local/bin/prepare_nextboot.sh; chmod +x /usr/local/bin/prepare_nextboot.sh
+curl http://@@install_server@@/ks-files/scripts/evaluate_bootargs.sh -o /usr/local/bin/evaluate_bootargs.sh; chmod +x /usr/local/bin/evaluate_bootargs.sh
+curl http://@@install_server@@/ks-files/scripts/nextboot.service -o /usr/lib/systemd/system/nextboot.service; systemctl enable nextboot.service
+
+cat /proc/cmdline > /proc-cmdline
+
+/usr/local/bin/evaluate_bootargs.sh
+
+%end
+'''
