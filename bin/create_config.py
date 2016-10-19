@@ -38,10 +38,16 @@ parser = argparse.ArgumentParser(description="create various config files from h
 # parser.add_argument("-t", "--type", type=str, required=True, choices=types, help="config file type")
 # parser.add_argument("--site", type=str, required=True, choices=sites, help="site config to use")
 
-# with defaults for testing
-parser.add_argument("--hn", type=str, required=False, default="cwp10-s1", help="hostname")
-parser.add_argument("-p", "--tpl" , type=str, required=False, choices=templates, default="kickstart-http", help="template to use")
-parser.add_argument("-t", "--type", type=str, required=False, choices=types, default="auto", help="config file type")
+# # with defaults for testing (puppet)
+# parser.add_argument("--hn", type=str, required=False, default="cwp10-s1", help="hostname")
+# parser.add_argument("-p", "--tpl" , type=str, required=False, choices=templates, default="nsc-node.pp", help="template to use")
+# parser.add_argument("-t", "--type", type=str, required=False, choices=types, default="puppet", help="config file type")
+# parser.add_argument("--site", type=str, required=False, choices=sites, default="lx3.lgn.dfs.de", help="site config to use")
+
+# with defaults for testing (kickstart vx1)
+parser.add_argument("--hn", type=str, required=False, default="cwp1-s1", help="hostname")
+parser.add_argument("-p", "--tpl" , type=str, required=False, choices=templates, default="auto", help="template to use")
+parser.add_argument("-t", "--type", type=str, required=False, choices=types, default="kickstart-http", help="config file type")
 parser.add_argument("--site", type=str, required=False, choices=sites, default="vx1.lgn.dfs.de", help="site config to use")
 
 
@@ -73,7 +79,7 @@ out_filename = {
     'cloud-config':'@@hn@@.yml',
     'dhcpd':'dhcpd'+'.@@hn@@.conf.entry',
     'virt-install-cmd':'virt-install'+'.@@hn@@.sh',
-    'kickstart-http':'@@site@@.'+tpl+'.ks',
+    'kickstart-http': site+'.'+tpl+'.ks',
     'puppet':'node.@@hn@@.pp'
 }
 
