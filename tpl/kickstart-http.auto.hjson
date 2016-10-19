@@ -7,7 +7,7 @@ Netzwerk: dhcp
 '''
 
 "cfg": {
-  "@@repo_server@@":         "cfg['net']['rp']",
+  "@@repo_server@@":         "cfg['net']['rs']",
   "@@install_server@@":      "cfg['net']['is']",
   "@@disk_device@@":         "cfg['hw']['disks']['disk0']['device']",
   "@@install_netdev@@":      "cfg['net']['nics'][cfg['net']['nic']]['dv']",
