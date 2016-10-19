@@ -7,7 +7,7 @@
     "hw": {
       "disks": {
         "disk0": {
-          "device": "sda",
+          "device": "xvda",
             "part0": {
               "size": "2048",
               "fstype": "swap",
@@ -26,7 +26,7 @@
         }
       }
     }, 
-    "hardware": "physical",
+    "hardware": "virtual",
     "classes": {},
     "net": {
       "dn": "vx1.lgn.dfs.de",
@@ -46,7 +46,8 @@
       "dhcp-range-to": "192.168.34.239",
       "nic": "nic0",
       "is": "192.168.34.10",
-      "rs": "192.168.34.10",
+      "install_server":  "nss",
+      "repo_server": "nss",
       "ns": "192.168.34.10",
       "netconf-type": "static"
     }
@@ -57,7 +58,7 @@
         "main": ["nss", "is", "rose-server"],
         "sub": []
       },
-      "hardware": "physical",
+      "hardware": "virtual",
       "net": {
         "dn": "vx1.lgn.dfs.de",
         "gw": "10.232.250.253",
@@ -86,7 +87,28 @@
         "vm-name": "nss-vx1"
       }
     },
-    "cwp10-s1": {
+    "psp1-s1": {
+      "classes": {
+        "main": [
+          "nsc",
+          "rose"
+        ],
+        "sub": [
+          "cwp"
+        ]
+      },
+      "hardware": "physical",
+      "net": {
+        "nics": {
+          "nic0": {
+            "dv": "eth0",
+            "ip": "192.168.34.92",
+            "mac": ""
+          }
+        }
+      }
+    },
+    "cwp1-s1": {
       "classes": {
         "main": [
           "nsc",
@@ -123,7 +145,7 @@
         }
       }
     },
-      "adc3-s1": {
+    "adc3-s1": {
         "classes": {
           "main": [
             "nsc",
