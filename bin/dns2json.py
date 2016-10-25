@@ -1,5 +1,29 @@
 #!/usr/bin/env python
 
+#TODO: insert 'net' obove 'nic' tree
+#TODO: create 'classes' tree and fill with values (each host or global ??)
+# "cwp10-s1": {
+#                 "classes": {
+#                     "main": [
+#                         "nsc",
+#                         "rose"
+#                     ],
+#                     "sub": [
+#                         "cwp"
+#                     ]
+#                 },
+#                 "hardware": "physical",
+#                 "net": {
+#                     "nics": {
+#                         "nic0": {
+#                             "dv": "eth0",
+#                             "ip": "192.168.33.29",
+#                             "mac": ""
+#                         }
+#                     }
+#                 }
+#             },
+
 from __future__ import print_function
 import os
 import socket
@@ -16,7 +40,8 @@ basedir = os.path.dirname(pydir)
 confdir = os.path.join(basedir,"config")
 #tpldir = os.path.join(basedir,"tpl")
 deploydir = os.path.join(basedir,"deployment")
-default_hosts_file = os.path.join(confdir,"mu1.muc.dfs.de.dns.hosts")
+dnsdir = os.path.join(confdir,"dns_hosts")
+default_hosts_file = os.path.join(dnsdir,"lx3.lgn.dfs.de.dns.hosts")
 tempfile = os.path.join(deploydir,"temp_out.txt")
 
 # parse args
