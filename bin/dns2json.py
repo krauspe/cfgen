@@ -41,11 +41,12 @@ confdir = os.path.join(basedir,"config")
 #tpldir = os.path.join(basedir,"tpl")
 deploydir = os.path.join(basedir,"deployment")
 dnsdir = os.path.join(confdir,"dns_hosts")
-default_hosts_file = os.path.join(dnsdir,"lx3.lgn.dfs.de.dns.hosts")
+#default_hosts_file = os.path.join(dnsdir,"lx3.lgn.dfs.de.dns.hosts")
+default_hosts_file = os.path.join(dnsdir,"test.dns.hosts")
 tempfile = os.path.join(deploydir,"temp_out.txt")
 
 # parse args
-formats = ['json,']
+formats = ['json',]
 
 parser = argparse.ArgumentParser(description="convert dns hosts entrys with txt records to json")
 parser.add_argument("--hosts", type=str, required=False,default=default_hosts_file ,help="hosts file")
@@ -182,6 +183,14 @@ for line in lines:
                 # how to use the NicEntry class instead ???
                 new_entry["nics"][nic] = {}
                 new_entry["nics"][nic]['hn'] = hn
+            elif key == 'mac':
+                mac = val
+                new_entry["nics"][nic]["mac"] = mac
+            elif key == 'hcl':
+                main_class,sub_class = val.split('.')
+                new_entry["classes"] = {}
+                new_entry["classes"]['main'] = main_class
+                new_entry["classes"]['sub']  = sub_class
 
 
             else:
