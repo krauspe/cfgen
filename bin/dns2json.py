@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-#TODO: insert 'net' obove 'nic' tree
+#TODO: insert 'net' obove 'nic' tree (maybe ...?)
 #TODO: create 'classes' tree and fill with values (each host or global ??)
+#TODO: make a second loop to collect all hn entrys of each line and add nis entrys to each host
 # "cwp10-s1": {
 #                 "classes": {
 #                     "main": [
@@ -30,6 +31,7 @@ import socket
 import collections
 import argparse
 import json
+import yaml
 import hjson
 from prettyprint import pp
 import re
@@ -39,23 +41,35 @@ pydir =  os.path.dirname(os.path.abspath(__file__))
 basedir = os.path.dirname(pydir)
 confdir = os.path.join(basedir,"config")
 #tpldir = os.path.join(basedir,"tpl")
-deploydir = os.path.join(basedir,"deployment")
+deploydir_default = os.path.join(basedir, "deployment")
 dnsdir = os.path.join(confdir,"dns_hosts")
 #default_hosts_file = os.path.join(dnsdir,"lx3.lgn.dfs.de.dns.hosts")
 default_hosts_file = os.path.join(dnsdir,"test.dns.hosts")
-tempfile = os.path.join(deploydir,"temp_out.txt")
+tempfile = os.path.join(deploydir_default, "temp_out.txt")
 
 # parse args
 formats = ['json',]
 
 parser = argparse.ArgumentParser(description="convert dns hosts entrys with txt records to json")
 parser.add_argument("--hosts", type=str, required=False,default=default_hosts_file ,help="hosts file")
-parser.add_argument("-f", "--format" , type=str, required=False, default='json', choices=formats, help="output format")
+parser.add_argument("-f", "--format" , type=str, required=False, default='yaml', choices=formats, help="output format")
+#parser.add_argument("-d", "--deploydir" , type=str, required=False, default=deploydir_default, choices=formats, help="output format")
+parser.add_argument("-d", "--deploydir" , type=str, required=False, default=os.path.join(deploydir_default,'lx3.lgn.dfs.de'), choices=formats, help="output format")
 args = parser.parse_args()
 
 infile = args.hosts
 format = args.format
-outfile = os.path.join(deploydir,args.hosts.split('/')[-1].rstrip('.hosts') + '.' + format)
+deploydir = args.deploydir
+host_entrys = {}
+
+def ensure_dir(f):
+    if not os.path.exists(f):
+        os.makedirs(f)
+
+ensure_dir(deploydir)
+
+outfile = os.path.join(deploydir, args.hosts.split('/')[-1].rstrip('.hosts') + '.' + format)
+
 
 #print('hosts file: {} '.format(args.hosts))
 print("\ninput  file: %s" % infile)
@@ -67,29 +81,13 @@ print("output format: %s\n" % format)
 
 file = infile
 
-#host_entrys = {}
-
-# host_entrys dict with test data
-
-# host_entrys = {
-#         "nss.nsa.lgn.dfs.de" :{
-#             "ip": "10.232.222.10",
-#             "hname": "nss",
-#             "dv"  : "eth0",
-#             "gw"  : "10.232.222.253",
-#             "sn"  : "255.255.255.0",
-#             "hn_list": ["nss-mgt","nss-p1","nss-ph"],
-#             "sy"  : "SIU AFS"
-#         }
-# }
-
-host_entrys = {}
+# functions
 
 if not os.path.exists(file):
     print ("ERROR: %s doesn't exist !!" % file)
     exit()
 
-# functions
+
 
 def update_nested_dict(d, u):
     for k, v in u.iteritems():
@@ -127,13 +125,14 @@ for line in lines:
     # GET ip, fqdn and hn
     ip_fqdn_hn = records[0]
     # debug
-    print("ip_fqdn_hn = " + ip_fqdn_hn)
+    #print("ip_fqdn_hn = " + ip_fqdn_hn)
     l = ip_fqdn_hn.split()
     if len(l) > 1:
-        ip,fqdn = l[:2]
+        ip,fqdn,hn = l[:3]
     else:
         continue
 
+    host_outfile = os.path.join(deploydir, hn + '.' + format)
     # Create a new entry and an host_entrys_update to update host_entrys dict
     new_entry = {}
     host_entrys_update = {}
@@ -192,22 +191,39 @@ for line in lines:
                 new_entry["classes"]['main'] = main_class
                 new_entry["classes"]['sub']  = sub_class
 
-
             else:
                 new_entry[key] = val
 
     host_entrys_update[fqdn] = new_entry
+
+
+    with open(host_outfile, mode='w') as f:
+        print("writing {} file {}".format(format,host_outfile))
+
+        if format == "json":
+                f.write(json.dumps(new_entry, sort_keys=True, indent=2, separators=(',', ': ')))
+        elif format == "yaml":
+                yaml.dump(new_entry, f, default_flow_style=False)
+
+
     #host_entrys[fqdn] = new_entry
     update_nested_dict(host_entrys,host_entrys_update)
 
-# Debug ouput file
-with open(tempfile,mode='w') as f:
-    for line in lines:
-        f.write (line + '\n')
-
+# # Debug ouput file
+# with open(tempfile,mode='w') as f:
+#     for line in lines:
+#         f.write (line + '\n')
+#
 # write output file
-with open(outfile,mode='w') as f:
-    f.write(json.dumps(host_entrys, sort_keys=True, indent=2, separators=(',', ': ')))
+
+with open(outfile, mode='w') as f:
+    print("writing single data {} file {}".format(format, outfile))
+
+    if format == "json":
+            f.write(json.dumps(host_entrys, sort_keys=True, indent=2, separators=(',', ': ')))
+    elif format == "yaml":
+            yaml.dump(host_entrys, f, default_flow_style=False)
+
 
 #pp(host_entrys)
 
