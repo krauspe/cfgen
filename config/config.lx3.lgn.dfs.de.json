@@ -30,26 +30,23 @@
     "classes": {},
     "net": {
       "dn": "lx3.lgn.dfs.de",
+      "is": "192.168.33.10",
+      "ns": "192.168.33.10",
       "gw": "192.168.33.10",
       "nics": {
         "nic0": {
+          "dv": "eth0",
+          "netconf-type": "static"
           "bridge": "",
           "subnet": "192.168.33.0",
           "sn": "255.255.255.0",
           "ip": "",
           "mac": "",
-          "dv": "eth0",
           "options": ""
         }
       },
-      "dhcp-range-from": "192.168.33.200",
-      "dhcp-range-to": "192.168.33.239",
-      "nic": "nic0",
-      "is": "192.168.33.10",
-      "ns": "192.168.33.10",
-      "netconf-type": "static"
     }
-  }, 
+  },
   "hosts": {
     "nss": {
       "classes": {
@@ -58,11 +55,14 @@
       },
       "hardware": "physical",
       "net": {
+        "is": "10.232.250.190",
+        "ns": "192.168.33.10",
         "dn": "lx3.lgn.dfs.de",
         "gw": "10.232.250.253",
         "nics": {
           "nic0": {
             "dv": "eth0",
+            "netconf-type": "static"
             "ip": "192.168.33.10",
             "subnet": "192.168.33.0",
             "sn": "255.255.255.0",
@@ -71,18 +71,29 @@
           },
           "nic1": {
             "dv": "eth1",
+            "netconf-type": "static"
             "ip": "10.232.250.232",
             "mac": "00:30:48:b8:f8:81",
             "sn": "255.255.254.0"
           }
         },
-        "nic": "nic0",
-        "is": "10.232.250.190",
-        "ns": "192.168.33.10",
-        "netconf-type": "static"
       },
       "vm": {
         "vm-name": "nss-lx3"
+      }
+      "services": {
+        "dhcpd": {
+          "device": "net['nics']['nic0']['dv']",
+          "dhcp-range-to": "192.168.33.239",
+          "dhcp-range-from": "192.168.33.200",
+          "netmask": "net['nics']['nic0']['sn']",
+          "subnet" : "net['nics']['nic0']['subnet']",
+          "routers": "net['gw']",
+          "domain_name_servers": "net['ns']",
+          "domain_name": "net['dn']",
+          "default_lease_time": "3600",
+          "default_lease_time": "21600",
+        }
       }
     },
     "cwp10-s1": {
