@@ -10,7 +10,7 @@ Netzwerk: dhcp
   "@@repo_server@@":         "cfg['net']['repo_server']",
   "@@install_server@@":      "cfg['net']['install_server']",
   "@@disk_device@@":         "cfg['hw']['disks']['disk0']['device']",
-  "@@install_netdev@@":      "cfg['net']['nics'][cfg['net']['nic']]['dv']",
+  "@@install_netdev@@":      "cfg['net']['nics']['nic0']['dv']",
 }
 
 "tpl-text":
