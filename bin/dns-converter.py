@@ -3,7 +3,7 @@
 #TODO: check which entrys are real (installable) entrys: derive from hostname
 #TODO: insert 'net' obove 'nic' tree (maybe ...?)
 #TODO: create 'classes' tree and fill with values (each host or global ??)
-#TODO: make a second loop to collect all hn entrys of each line and add nis entrys to each host
+#TODO: make a second loop to collect all hn entrys of each line and add nic entrys to each host
 # "cwp10-s1": {
 #                 "classes": {
 #                     "main": [
@@ -33,9 +33,9 @@ import collections
 import argparse
 import json
 import yaml
-import hjson
 from prettyprint import pp
 import re
+
 ##usage: pp(content) # where content is json
 
 pydir =  os.path.dirname(os.path.abspath(__file__))
@@ -52,7 +52,7 @@ tempfile = os.path.join(deploydir_default, "temp_out.txt")
 formats = ['json',]
 
 parser = argparse.ArgumentParser(description="convert dns hosts entrys with txt records to json")
-parser.add_argument("--hosts", type=str, required=False,default=default_hosts_file ,help="hosts file")
+parser.add_argument("--hosts", type=str, required=False,default=default_hosts_file, help="hosts file")
 parser.add_argument("-f", "--format" , type=str, required=False, default='yaml', choices=formats, help="output format")
 #parser.add_argument("-d", "--deploydir" , type=str, required=False, default=deploydir_default, choices=formats, help="output format")
 parser.add_argument("-d", "--deploydir" , type=str, required=False, default=os.path.join(deploydir_default,'lx3.lgn.dfs.de'), choices=formats, help="output format")
@@ -61,21 +61,24 @@ args = parser.parse_args()
 infile = args.hosts
 format = args.format
 deploydir = args.deploydir
-host_entrys = {}
 host_outfile = {}
 HN = {}
 DN = {}
+ENTRY_TYPE = {}
+MAIN_CLASS = {}
+SUB_CLASS = {}
+NIC_ENTRYS = {}
+FQDNS = set([])
+INSTALLABLE_HOSTS = set([])
+installable_prefixes = ['psp', 'cwp', 'adc', 'sup', 'dap', 'siu', 'sim', 'iss']
+installable_suffixes = ['s1', 's2']
+DNS_ENTRY_LINES = set([])
 MAC = {}
 IP = {}
 DV = {}
 SN = {}
-HN_ENTRYS = {}
+HN_ENTRYS = collections.defaultdict(list)
 DESCRIPTION = {}
-ip = ''
-fqdn = ''
-hn = ''
-
-
 
 def ensure_dir(f):
     if not os.path.exists(f):
@@ -85,24 +88,16 @@ ensure_dir(deploydir)
 
 outfile = os.path.join(deploydir, args.hosts.split('/')[-1].rstrip('.hosts') + '.' + format)
 
-
-#print('hosts file: {} '.format(args.hosts))
+print('hosts file: {} '.format(args.hosts))
 print("\ninput  file: %s" % infile)
 print("output file: %s" % outfile)
 print("output format: %s\n" % format)
 
-
-#TODO:
-
-file = infile
-
 # functions
 
-if not os.path.exists(file):
-    print ("ERROR: %s doesn't exist !!" % file)
+if not os.path.exists(infile):
+    print ("ERROR: %s doesn't exist !!" % infile)
     exit()
-
-
 
 def update_nested_dict(d, u):
     for k, v in u.iteritems():
@@ -116,6 +111,35 @@ def update_nested_dict(d, u):
             d = {k: u[k]}
     return d
 
+def getEntryClassification(fqdn):
+    # get hostname from fqdn
+    hn = fqdn.split('.')[0]
+    pre_suf = hn.split('-')
+    pre = pre_suf[0]
+    pre = re.sub(r'[0-9]+$', "", pre)
+
+    if len(pre_suf) == 2:
+        suf = pre_suf[1]
+        if pre in installable_prefixes and suf in installable_suffixes:
+            entry_type = 'installable'
+            main_class = 'nsc'
+            sub_class  = pre
+        else:
+            entry_type = 'dns'
+            main_class = None
+            sub_class  = None
+    else:
+        entry_type = 'dns'
+        main_class = None
+        sub_class = None
+
+    if len(pre_suf) == 1 and pre == 'nss':
+        entry_type = 'installable'
+        main_class = 'nss'
+        sub_class = ''
+
+
+    return entry_type, main_class, sub_class
 
 # class NicEntry(object):
 #     def __init__(self,nic_id,hn,**kwargs):
@@ -130,24 +154,19 @@ def update_nested_dict(d, u):
 #     def set_hn(self,hn):
 #         self.nic_entry[[self.nic_name]]['hn'] = hn
 
-
-
-# records = [line.rstrip('\n').split('#') for line in open(file) if not line.startswith('#')]
-lines = [line.rstrip('\n') for line in open(file) if not line.startswith('#')]
+lines = [line.rstrip('\n') for line in open(infile) if not line.startswith('#')]
 lines = list(line for line in lines if line) # only non blank lines
 for line in lines:
     records = line.split('#')
     # GET ip, fqdn and hn
     ip_fqdn_hn = records[0]
-    # debug
-    #print("ip_fqdn_hn = " + ip_fqdn_hn)
     l = ip_fqdn_hn.split()
     if len(l) > 2:
         ip,fqdn,hn = l[:3]
         IP[fqdn] = ip
         HN[fqdn] = hn
-        HN_ENTRYS[fqdn] = {}
-
+        FQDNS.add(fqdn)
+        ENTRY_TYPE[fqdn],MAIN_CLASS[fqdn], SUB_CLASS[fqdn] , = getEntryClassification(fqdn)
     else:
         continue
 
@@ -158,7 +177,7 @@ for line in lines:
     description = ""
 
     # is there a '#" after hn AND is there a non emtpy string
-    if len(records) >1 and len(records[-1]) > 0:
+    if len(records) > 1 and len(records[-1]) > 0:
         # get description from first field after '#'
         if records[1] != records[-1]:
             description = re.sub(r'^\s+',"",records[1])
@@ -180,7 +199,7 @@ for line in lines:
             # do we have a non 'emtpy' value for the key
             l = key_val.split('=')
             if len(l) == 2:
-                key,val = l
+                key, val = l
             else:
                 continue
 
@@ -195,22 +214,31 @@ for line in lines:
             elif key == 'sn':
                 SN[fqdn] = val
 
-# ab hier:
-# - Loop über die Liste von fqdns und über hostnamen feststellen was ein installierbarer Host ist und classe
+for fqdn in FQDNS:
+    entry_type, main_class, sub_class = getEntryClassification(fqdn)
+    # debug output
+    if entry_type == 'installable':
+        INSTALLABLE_HOSTS.add(fqdn)
+        print("{} {} main_class={} sub_class={}".format(fqdn, entry_type, main_class, sub_class))
+    else:
+        print("{} {}".format(fqdn, entry_type))
+
+
+# - Loop ueber die Liste von fqdns und ueber hostnamen feststellen was ein installierbarer Host ist und classe
 #   feststellen
 # - Nicht installierbare Hosts als DNS Entrys festhalten ...??
 # - Suche nach 2step-cc Eintrag: hieraus Defaults bereitstellen
 # - Neue Liste aus installierbaren Hosts
-# - Neue Liste aus übrigen Hosts
-# - Loop über die HN_ENTRYS jedes installaierbaren host:
+# - Neue Liste aus uebrigen Hosts
+# - Loop ueber die HN_ENTRYS jedes installaierbaren host:
 #    - check ob ein DN[fqdn] existiert, wenn nein, Default einsetzen
-#    - Dictionary (oder object ?) für jeden installierbaren Host mit allen seinen Einträgen aus HN_ENTRYS un deren IPs, sn. dv etc
-# - Einträge aus HN_ENTRYS aus Liste übriger Hosts entfernen und als DNS-Einträge dem Host.Dictionary (oder object) zuordnen
+#    - Dictionary (oder object ?) fuer jeden installierbaren Host mit allen seinen Eintraegen aus HN_ENTRYS un deren IPs, sn. dv etc
+# - Eintraege aus HN_ENTRYS aus Liste uebriger Hosts entfernen und als DNS-Eintraege dem Host.Dictionary (oder object) zuordnen
 
 # OUTPUT:
-# - Loop über alle alle installierbaren hosts und Output files für Puppet (yaml) erzeugen
-# - Aus allen DNS-Einträgen der installierbaren hosts und der reduzierten Liste neue HOSTS Datei für DNS bauen
-#   diese sollte keine Text-Records für interface Konfig enthalten , jedoch ggfs Einträge wie "rnsc" ??
+# - Loop ueber alle alle installierbaren hosts und Output files fuer Puppet (yaml) erzeugen
+# - Aus allen DNS-Eintraegen der installierbaren hosts und der reduzierten Liste neue HOSTS Datei fuer DNS bauen
+#   diese sollte keine Text-Records fuer interface Konfig enthalten , jedoch ggfs Eintraege wie "rnsc" ??
 
 
 
