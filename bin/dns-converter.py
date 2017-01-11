@@ -29,7 +29,7 @@
 from __future__ import print_function
 import os
 import socket
-from  collections import defaultdict
+from  collections import defaultdict, Mapping
 import argparse
 import json
 import yaml
@@ -106,8 +106,8 @@ if not os.path.exists(infile):
 
 def update_nested_dict(d, u):
     for k, v in u.iteritems():
-        if isinstance(d, collections.Mapping):
-            if isinstance(v, collections.Mapping):
+        if isinstance(d, Mapping):
+            if isinstance(v, Mapping):
                 r = update_nested_dict(d.get(k, {}), v)
                 d[k] = r
             else:
@@ -176,7 +176,6 @@ for line in lines:
         IP[fqdn] = ip
         HN[fqdn] = hn
         if hn != '2step-cc': FQDNS.add(fqdn)
-        ENTRY_TYPE[fqdn], MAIN_CLASS[fqdn], SUB_CLASS[fqdn] = getEntryClassification(fqdn)
     else:
         continue
 
@@ -228,26 +227,42 @@ for line in lines:
             elif key == 'sy':
                 SY[fqdn] = val
 
-# set defaults for missing values from 2step-cc entry
-
-for fqdn in FQDNS:
-    dn_default = getDefaultKey(fqdn)
-    if not DN[fqdn]:
-        DN[fqdn] = DN[dn_default]
-    if not SN[fqdn]:
-        SN[fqdn] = SN[dn_default]
-    if not GW[fqdn]:
-        GW[fqdn] = GW[dn_default]
-    #if not DV[fqdn]:
-    #    DV[fqdn] = DV[dn_default]
-
+# for fqdn in FQDNS:
+#     print("-----\n")
+#     print(HN_ENTRYS[fqdn])
+#
+# exit()
+# classify fqdn entrys and set defaults for missing values from 2step-cc entry
 
 for fqdn in FQDNS:
     entry_type, main_class, sub_class = getEntryClassification(fqdn)
-    # debug output
+    ENTRY_TYPE[fqdn], MAIN_CLASS[fqdn], SUB_CLASS[fqdn] = entry_type, main_class, sub_class
+
     if entry_type == 'installable' or entry_type == 'interface':
         INSTALLABLE_FQDNS.add(fqdn)
-        print("{}:\t {}\tmain_class={} sub_class={}".format(fqdn, entry_type, main_class, sub_class))
+        # set default for dv after classification
+        dn_default = getDefaultKey(fqdn)
+        if not DN[fqdn]:
+            DN[fqdn] = DN[dn_default]
+        if not SN[fqdn]:
+            SN[fqdn] = SN[dn_default]
+        if not GW[fqdn]:
+            GW[fqdn] = GW[dn_default]
+        if not DV[fqdn]:
+           DV[fqdn] = DV[dn_default]
+
+        print("{}:\t {}\tclasses:{}.{}\t dv={}".format(fqdn, entry_type, main_class, sub_class, DV[fqdn]))
+        # get list of entrys which can be used as configuration data for installable hosts
+        if entry_type == 'installable':
+            INSTALLABLE_FQDNS.add(fqdn)
+            for hn_entry in HN_ENTRYS[fqdn]:
+                if hn_entry == hn_entry.split('.')[0]:
+                    fqdn_entry = "{}.{}".format(hn_entry, DN[fqdn])
+                else:
+                    fqdn_entry = hn_entry
+
+                print ("\t{}\tdv={}".format(fqdn_entry,DV[fqdn_entry]))
+
     else:
         print("{}:\t {}\t".format(fqdn, entry_type))
 
