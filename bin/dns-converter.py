@@ -29,7 +29,7 @@
 from __future__ import print_function
 import os
 import socket
-import collections
+from  collections import defaultdict
 import argparse
 import json
 import yaml
@@ -45,7 +45,8 @@ confdir = os.path.join(basedir,"config")
 deploydir_default = os.path.join(basedir, "deployment")
 dnsdir = os.path.join(confdir,"dns_hosts")
 #default_hosts_file = os.path.join(dnsdir,"lx3.lgn.dfs.de.dns.hosts")
-default_hosts_file = os.path.join(dnsdir,"test.dns.hosts")
+#default_hosts_file = os.path.join(dnsdir,"test.dns.hosts")
+default_hosts_file = os.path.join(dnsdir,"mu1.muc.dfs.de.hosts")
 tempfile = os.path.join(deploydir_default, "temp_out.txt")
 
 # parse args
@@ -61,24 +62,28 @@ args = parser.parse_args()
 infile = args.hosts
 format = args.format
 deploydir = args.deploydir
-host_outfile = {}
-HN = {}
-DN = {}
-ENTRY_TYPE = {}
-MAIN_CLASS = {}
-SUB_CLASS = {}
-NIC_ENTRYS = {}
+
+host_outfile = defaultdict(str)
+HN = defaultdict(str)
+DN = defaultdict(str)
+ENTRY_TYPE = defaultdict(str)
+MAIN_CLASS = defaultdict(str)
+SUB_CLASS = defaultdict(str)
+NIC_ENTRYS = defaultdict(str)
+MAC = defaultdict(str)
+IP = defaultdict(str)
+DV = defaultdict(str)
+SN = defaultdict(str)
+GW = defaultdict(str)
+SY = defaultdict(str)
+DESCRIPTION = defaultdict(str)
+HN_ENTRYS = defaultdict(list)
+
 FQDNS = set([])
-INSTALLABLE_HOSTS = set([])
+INSTALLABLE_FQDNS = set([])
 installable_prefixes = ['psp', 'cwp', 'adc', 'sup', 'dap', 'siu', 'sim', 'iss']
 installable_suffixes = ['s1', 's2']
 DNS_ENTRY_LINES = set([])
-MAC = {}
-IP = {}
-DV = {}
-SN = {}
-HN_ENTRYS = collections.defaultdict(list)
-DESCRIPTION = {}
 
 def ensure_dir(f):
     if not os.path.exists(f):
@@ -111,6 +116,11 @@ def update_nested_dict(d, u):
             d = {k: u[k]}
     return d
 
+def getDefaultKey(fqdn):
+    dn = re.sub(r'^.*?\.', "", fqdn)
+    return '2step-cc.'+dn
+
+
 def getEntryClassification(fqdn):
     # get hostname from fqdn
     hn = fqdn.split('.')[0]
@@ -118,26 +128,26 @@ def getEntryClassification(fqdn):
     pre = pre_suf[0]
     pre = re.sub(r'[0-9]+$', "", pre)
 
-    if len(pre_suf) == 2:
+    entry_type = 'dns'
+    main_class = None
+    sub_class = None
+
+    if len(pre_suf) == 1 and pre == 'nss':
+        entry_type = 'installable'
+        main_class = 'nss'
+        sub_class = None
+    elif len(pre_suf) == 2:
         suf = pre_suf[1]
         if pre in installable_prefixes and suf in installable_suffixes:
             entry_type = 'installable'
             main_class = 'nsc'
             sub_class  = pre
-        else:
-            entry_type = 'dns'
-            main_class = None
-            sub_class  = None
-    else:
-        entry_type = 'dns'
+    elif pre == "2step" and suf == 'cc':
+        entry_type = 'defaults'
         main_class = None
         sub_class = None
-
-    if len(pre_suf) == 1 and pre == 'nss':
-        entry_type = 'installable'
-        main_class = 'nss'
-        sub_class = ''
-
+    elif DV[fqdn] and DV[fqdn] != DV[getDefaultKey(fqdn)]:
+        entry_type = 'interface'
 
     return entry_type, main_class, sub_class
 
@@ -162,11 +172,11 @@ for line in lines:
     ip_fqdn_hn = records[0]
     l = ip_fqdn_hn.split()
     if len(l) > 2:
-        ip,fqdn,hn = l[:3]
+        ip, fqdn, hn = l[:3]
         IP[fqdn] = ip
         HN[fqdn] = hn
-        FQDNS.add(fqdn)
-        ENTRY_TYPE[fqdn],MAIN_CLASS[fqdn], SUB_CLASS[fqdn] , = getEntryClassification(fqdn)
+        if hn != '2step-cc': FQDNS.add(fqdn)
+        ENTRY_TYPE[fqdn], MAIN_CLASS[fqdn], SUB_CLASS[fqdn] = getEntryClassification(fqdn)
     else:
         continue
 
@@ -207,21 +217,39 @@ for line in lines:
                 HN_ENTRYS[fqdn].append(val)
             elif key == 'dn':
                 DN[fqdn] = val
-            elif key == 'mac':
-                MAC[fqdn] = val
             elif key == 'dv':
                 DV[fqdn] = val
             elif key == 'sn':
                 SN[fqdn] = val
+            elif key == 'gw':
+                GW[fqdn] = val
+            elif key == 'mac':
+                MAC[fqdn] = val
+            elif key == 'sy':
+                SY[fqdn] = val
+
+# set defaults for missing values from 2step-cc entry
+
+for fqdn in FQDNS:
+    dn_default = getDefaultKey(fqdn)
+    if not DN[fqdn]:
+        DN[fqdn] = DN[dn_default]
+    if not SN[fqdn]:
+        SN[fqdn] = SN[dn_default]
+    if not GW[fqdn]:
+        GW[fqdn] = GW[dn_default]
+    #if not DV[fqdn]:
+    #    DV[fqdn] = DV[dn_default]
+
 
 for fqdn in FQDNS:
     entry_type, main_class, sub_class = getEntryClassification(fqdn)
     # debug output
-    if entry_type == 'installable':
-        INSTALLABLE_HOSTS.add(fqdn)
-        print("{} {} main_class={} sub_class={}".format(fqdn, entry_type, main_class, sub_class))
+    if entry_type == 'installable' or entry_type == 'interface':
+        INSTALLABLE_FQDNS.add(fqdn)
+        print("{}:\t {}\tmain_class={} sub_class={}".format(fqdn, entry_type, main_class, sub_class))
     else:
-        print("{} {}".format(fqdn, entry_type))
+        print("{}:\t {}\t".format(fqdn, entry_type))
 
 
 # - Loop ueber die Liste von fqdns und ueber hostnamen feststellen was ein installierbarer Host ist und classe
