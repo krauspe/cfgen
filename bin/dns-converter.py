@@ -33,7 +33,7 @@ from  collections import defaultdict, Mapping
 import argparse
 import json
 import yaml
-from prettyprint import pp
+import pretty as pp
 import re
 
 ##usage: pp(content) # where content is json
@@ -167,10 +167,10 @@ def getEntryClassification(fqdn):
             entry_type = 'installable'
             main_class = 'nsc'
             sub_class  = pre
-    elif pre == "2step" and suf == 'cc':
-        entry_type = 'defaults'
-        main_class = None
-        sub_class = None
+        elif pre == "2step" and suf == 'cc':
+            entry_type = 'defaults'
+            main_class = None
+            sub_class = None
     elif DV[fqdn] and DV[fqdn] != DV[getDefaultKey(fqdn)]:
         entry_type = 'interface'
 
@@ -200,7 +200,7 @@ for line in lines:
         ip, fqdn, hn = l[:3]
         IP[fqdn] = ip
         HN[fqdn] = hn
-        if hn != '2step-cc': FQDNS.add(fqdn)
+        FQDNS.add(fqdn)
     else:
         continue
 
@@ -267,7 +267,6 @@ for fqdn in FQDNS:
     ENTRY_TYPE[fqdn], MAIN_CLASS[fqdn], SUB_CLASS[fqdn] = entry_type, main_class, sub_class
 
     if entry_type == 'installable' or entry_type == 'interface':
-        INSTALLABLE_FQDNS.add(fqdn)
         # set default for dv after classification
         dn_default = getDefaultKey(fqdn)
         if not DN[fqdn]:
@@ -279,8 +278,8 @@ for fqdn in FQDNS:
         if not DV[fqdn]:
            DV[fqdn] = DV[dn_default]
 
-        print("{}:\t {}\tclasses:{}.{}\t dv={}".format(fqdn, entry_type, main_class, sub_class, DV[fqdn]))
-        # get list of entrys which can be used as configuration data for installable hosts
+        #print("{}:\t {}\tclasses:{}.{}\t dv={}".format(fqdn, entry_type, main_class, sub_class, DV[fqdn]))
+        # Use for configuration data for installable hosts
         if entry_type == 'installable':
             INSTALLABLE_FQDNS.add(fqdn)
             for hn_entry in HN_ENTRYS[fqdn]:
@@ -292,11 +291,12 @@ for fqdn in FQDNS:
                 print ("\t{}\tdv={}".format(fqdn_entry,DV[fqdn_entry]))
 
     else:
+        # Use as DNS entry only
         print("{}:\t {}\t".format(fqdn, entry_type))
 
 
 # - Loop ueber die Liste von fqdns und ueber hostnamen feststellen was ein installierbarer Host ist und classe
-#   feststellen
+#   feststellen -> OK
 # - Nicht installierbare Hosts als DNS Entrys festhalten ...??
 # - Suche nach 2step-cc Eintrag: hieraus Defaults bereitstellen
 # - Neue Liste aus installierbaren Hosts
