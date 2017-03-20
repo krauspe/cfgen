@@ -152,7 +152,7 @@ for line in lines:
     if len(records) >1 and len(records[-1]) > 0:
         # get description from first field after '#'
         if records[1] != records[-1]:
-            description = re.sub(r'^\s+',"",records[1])
+            description = re.sub(r'^\s+', "", records[1])
             if len(description) > 0:
                 new_entry['description'] = description
 

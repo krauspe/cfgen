@@ -1,0 +1,34 @@
+10.232.205.179	aman1.atv.muc.dfs.de	aman1	#
+10.232.205.180	aman2.atv.muc.dfs.de	aman2	#
+10.232.205.181	aman3.atv.muc.dfs.de	aman3	#
+10.70.82.14	timesrv1.br1.bre.dfs.de	timesrv1
+10.232.197.151  siu1-s1.br1.bre.dfs.de  siu1-s1 siu1-s1-sim siu1-s1-vcs                    # hcl=nsc.siu hn=siu1-s1-p11 hn=siu1-s1-phx
+10.70.32.50	siu1-s1-p11.br1.bre.dfs.de   siu1-s1-p11   #      Anbindung an P1 String 1 # dv=eth1 sn=255.255.248.0
+10.70.3.5	siu1-s1-phx.br1.bre.dfs.de   siu1-s1-phx   #      Anbindung an Phoenix     # dv=eth2 sn=255.255.255.0
+10.232.197.152  siu2-s1.br1.bre.dfs.de       siu2-s1 siu2-s1-sim siu2-s1-vcs               # hcl=nsc.siu hn=siu2-s1-p12
+10.70.32.51     siu2-s1-p12.br1.bre.dfs.de   siu2-s1-p12   #      Anbindung an P1 String 2 # dv=eth1 sn=255.255.248.0
+10.70.3.5	siu2-s1-phx.br1.bre.dfs.de   siu2-s1-phx   #      Anbindung an Phoenix     # dv=eth2 sn=255.255.255.0
+10.232.197.153  siu3-s1.br1.bre.dfs.de  siu3-s1 siu3-s1-sim siu3-s1-vcs			   # hcl=nsc.siu hn=siu3-s1-icas sn=255.255.252.0
+10.10.52.161	siu3-s1-icas.br1.bre.dfs.de  siu3-s1-icas  #	  Anbindung an ICAS        # dv=eth1
+10.232.197.128        psp101-s1.br1.bre.dfs.de       psp101-s1 # mac=00:D0:C9:C4:3D:25 rnsc=1
+10.232.197.129        psp102-s1.br1.bre.dfs.de       psp102-s1 # mac=00:d0:c9:c4:2c:57 rnsc=1
+10.232.197.130        psp103-s1.br1.bre.dfs.de       psp103-s1 # mac=00:d0:c9:c4:2f:f9 rnsc=1
+10.232.197.131        psp104-s1.br1.bre.dfs.de       psp104-s1 # mac=00:d0:c9:c4:22:e7 rnsc=1
+10.232.197.132        psp105-s1.br1.bre.dfs.de       psp105-s1 # rnsc=1
+10.232.197.133        psp106-s1.br1.bre.dfs.de       psp106-s1 # rnsc=1
+10.232.197.134        psp107-s1.br1.bre.dfs.de       psp107-s1 # rnsc=1
+10.232.197.135        psp108-s1.br1.bre.dfs.de       psp108-s1 # rnsc=1
+10.232.197.136        psp109-s1.br1.bre.dfs.de       psp109-s1 # rnsc=1
+10.232.197.137        psp110-s1.br1.bre.dfs.de       psp110-s1 # rnsc=1
+10.232.181.10	 is01.br1.bre.dfs.de			is01
+10.232.181.10	 timesrv.br1.bre.dfs.de			timesrv
+10.232.205.10	nss.br1.bre.dfs.de	nss	#
+10.232.197.20	cwp1-s1.br1.bre.dfs.de	cwp1-s1	# hcl=nsc.cwp
+10.232.197.21	cwp2-s1.br1.bre.dfs.de	cwp2-s1	# hcl=nsc.cwp
+10.232.197.22	cwp3-s1.br1.bre.dfs.de	cwp3-s1	# hcl=nsc.cwp
+10.232.197.80   adc1-s1.br1.bre.dfs.de  adc1-s1 # hcl=nsc.adc
+10.232.197.81   adc2-s1.br1.bre.dfs.de  adc2-s1 # hcl=nsc.adc
+10.232.197.82   adc3-s1.br1.bre.dfs.de  adc3-s1 # hcl=nsc.adc
+10.232.197.92   psp1-s1.br1.bre.dfs.de  psp1-s1 # hcl=nsc.psp
+10.232.197.93   psp2-s1.br1.bre.dfs.de  psp2-s1 # hcl=nsc.psp
+10.232.197.94   psp3-s1.br1.bre.dfs.de  psp3-s1 # hcl=nsc.psp

@@ -1,0 +1,201 @@
+0.0.0.0 2step-cc.ka1.krl.dfs.de 2step-cc # sy='SIMSYS KRLKA1' dv=eth0 sn=255.255.255.0 gw=10.232.182.250 ns=10.232.182.10 dn=ka1.krl.dfs.de
+#
+10.34.82.120 timesrv1.ka1.krl.dfs.de timesrv1
+10.34.82.121 timesrv2.ka1.krl.dfs.de timesrv2
+#
+10.232.182.151  siu1-s1.ka1.krl.dfs.de  siu1-s1 siu1-s1-sim siu1-s1-vcs # hn=siu1-vaf hn=siu1-phx dn=ka1.krl.dfs.de hcl=nsc.siu
+10.232.182.152  siu2-s1.ka1.krl.dfs.de  siu2-s1 siu2-s1-sim siu2-s1-vcs # hn=siu2-vaf hcl=nsc.siu
+10.232.182.153  siu3-s1.ka1.krl.dfs.de  siu3-s1 siu3-s1-sim siu3-s1-vcs # hn=siu3-vaf hcl=nsc.siu
+10.232.182.154  siu4-s1.ka1.krl.dfs.de  siu4-s1 siu4-s1-sim siu4-s1-vcs # hn=siu4-icas hn=siu4-phx hcl=nsc.siu
+10.232.182.155  siu5-s1.ka1.krl.dfs.de  siu5-s1 siu5-s1-sim siu5-s1-vcs # hn=siu5-icas hcl=nsc.siu
+10.232.182.156  siu6-s1.ka1.krl.dfs.de  siu6-s1 siu6-s1-sim siu6-s1-vcs # hn=siu6-icas hcl=nsc.siu
+
+10.34.3.5 siu1-phx.ka1.krl.dfs.de siu1-phx # SIU 1 KASIM AFS # dv=eth2 sn=255.255.255.0
+10.34.33.1 siu1-vaf.ka1.krl.dfs.de siu1-vaf # SIU 1 KASIM AFS # dv=eth3 sn=255.255.248.0 bc=10.34.39.255
+10.34.33.2 siu2-vaf.ka1.krl.dfs.de siu2-vaf # SIU 2 KASIM AFS # dv=eth3 sn=255.255.248.0 bc=10.34.39.255
+10.34.33.3 siu3-vaf.ka1.krl.dfs.de siu3-vaf # SIU 3 KASIM AFS # dv=eth3 sn=255.255.248.0 bc=10.34.39.255
+
+10.80.3.161 siu4-phx.ka1.krl.dfs.de siu4-phx # SIU 4 KASIM AFS # dv=eth2 sn=255.255.255.0
+10.80.52.161 siu4-icas.ka1.krl.dfs.de siu4-icas # SIU 4 KASIM AFS # dv=eth3 sn=255.255.252.0 bc=10.80.55.255
+10.80.52.162 siu5-icas.ka1.krl.dfs.de siu5-icas # SIU 5 KASIM AFS # dv=eth3 sn=255.255.252.0 bc=10.80.55.255
+10.80.52.163 siu6-icas.ka1.krl.dfs.de siu6-icas # SIU 6 KASIM AFS # dv=eth3 sn=255.255.252.0 bc=10.80.55.255
+
+# sim
+10.232.182.159  sim3-s1.ka1.krl.dfs.de sim3-s1    # hn=sim3-mgt hcl=nsc.sim
+10.232.181.14 sim3-mgt.ka1.krl.dfs.de sim3-mgt # dv=eth1
+
+
+10.232.182.106  psp15-s1.ka1.krl.dfs.de psp15-s1 psp15-s1-sim psp15-s1-vcs # hn=atcis-psp15 hcl=nsc.psp
+10.232.182.107  psp16-s1.ka1.krl.dfs.de psp16-s1 psp16-s1-sim psp16-s1-vcs # hn=atcis-psp16 hcl=nsc.psp
+10.232.182.108  psp17-s1.ka1.krl.dfs.de psp17-s1 psp17-s1-sim psp17-s1-vcs # hn=atcis-psp17 hcl=nsc.psp
+10.232.182.109  psp18-s1.ka1.krl.dfs.de psp18-s1 psp18-s1-sim psp18-s1-vcs # hn=atcis-psp18 hcl=nsc.psp
+10.232.182.110  psp19-s1.ka1.krl.dfs.de psp19-s1 psp19-s1-sim psp19-s1-vcs # hn=atcis-psp19 hcl=nsc.psp
+10.232.182.111  psp20-s1.ka1.krl.dfs.de psp20-s1 psp20-s1-sim psp20-s1-vcs # hn=atcis-psp20 hcl=nsc.psp
+
+10.34.8.25 atcis-psp15.ka1.krl.dfs.de atcis-psp15 # dv=eth1 sn=255.255.255.0
+10.34.8.26 atcis-psp16.ka1.krl.dfs.de atcis-psp16 # dv=eth1 sn=255.255.255.0
+10.34.8.27 atcis-psp17.ka1.krl.dfs.de atcis-psp17 # dv=eth1 sn=255.255.255.0
+10.34.8.28 atcis-psp18.ka1.krl.dfs.de atcis-psp18 # dv=eth1 sn=255.255.255.0
+10.34.8.29 atcis-psp19.ka1.krl.dfs.de atcis-psp19 # dv=eth1 sn=255.255.255.0
+10.34.8.30 atcis-psp20.ka1.krl.dfs.de atcis-psp20 # dv=eth1 sn=255.255.255.0
+#10.34.8.228 atcis-psp19.ka1.krl.dfs.de atcis-psp19 # dv=eth1 sn=255.255.255.0
+#10.34.8.229 atcis-psp20.ka1.krl.dfs.de atcis-psp20 # dv=eth1 sn=255.255.255.0
+
+10.232.182.80	adc1-s1.ka1.krl.dfs.de	adc1-s1	adc1-s1-sim adc1-s1-vcs	# hn=atcis-adc1 dn=ka1.krl.dfs.de hcl=nsc.adc
+10.232.182.81   adc2-s1.ka1.krl.dfs.de  adc2-s1 adc2-s1-sim adc2-s1-vcs # hn=atcis-adc2 dn=ka1.krl.dfs.de hcl=nsc.adc
+10.232.182.82   adc3-s1.ka1.krl.dfs.de  adc2-s1 adc3-s1-sim adc3-s1-vcs # hn=atcis-adc3 dn=ka1.krl.dfs.de hcl=nsc.adc
+
+10.34.8.51 atcis-adc1.ka1.krl.dfs.de atcis-adc1 # dv=eth1 sn=255.255.255.0
+10.34.8.52 atcis-adc2.ka1.krl.dfs.de atcis-adc2 # dv=eth1 sn=255.255.255.0
+10.34.8.53 atcis-adc3.ka1.krl.dfs.de atcis-adc3 # dv=eth1 sn=255.255.255.0
+
+## <REMOTE-PILOTING-START> ##
+10.232.182.128        psp101-s1.ka1.krl.dfs.de       psp101-s1 # mac=00:D0:C9:C4:3D:25 rnsc=1 hcl=nsc.psp
+10.232.182.129        psp102-s1.ka1.krl.dfs.de       psp102-s1 # mac=00:d0:c9:c4:2c:57 rnsc=1 hcl=nsc.psp
+10.232.182.130        psp103-s1.ka1.krl.dfs.de       psp103-s1 # mac=00:d0:c9:c4:2f:f9 rnsc=1 hcl=nsc.psp
+10.232.182.131        psp104-s1.ka1.krl.dfs.de       psp104-s1 # mac=00:d0:c9:c4:22:e7 rnsc=1 hcl=nsc.psp
+10.232.182.132        psp105-s1.ka1.krl.dfs.de       psp105-s1 # rnsc=1 hcl=nsc.psp
+10.232.182.133        psp106-s1.ka1.krl.dfs.de       psp106-s1 # rnsc=1 hcl=nsc.psp
+10.232.182.134        psp107-s1.ka1.krl.dfs.de       psp107-s1 # rnsc=1 hcl=nsc.psp
+10.232.182.135        psp108-s1.ka1.krl.dfs.de       psp108-s1 # rnsc=1 hcl=nsc.psp
+10.232.182.136        psp109-s1.ka1.krl.dfs.de       psp109-s1 # rnsc=1 hcl=nsc.psp
+10.232.182.137        psp110-s1.ka1.krl.dfs.de       psp110-s1 # rnsc=1 hcl=nsc.psp
+## <REMOTE-PILOTING-END> ##
+
+10.232.182.10 is01.ka1.krl.dfs.de is01
+10.232.182.10 timesrv.ka1.krl.dfs.de timesrv
+10.232.182.10	nss.ka1.krl.dfs.de	nss	# hcl=nss
+#
+# Client adresses start at 20
+10.232.182.20	cwp1-s1.ka1.krl.dfs.de	cwp1-s1	# hcl=nsc.cwp
+10.232.182.21	cwp2-s1.ka1.krl.dfs.de	cwp2-s1	# hcl=nsc.cwp
+10.232.182.22	cwp3-s1.ka1.krl.dfs.de	cwp3-s1	# hcl=nsc.cwp
+10.232.182.23	cwp4-s1.ka1.krl.dfs.de	cwp4-s1	# hcl=nsc.cwp
+10.232.182.24	cwp5-s1.ka1.krl.dfs.de	cwp5-s1	# hcl=nsc.cwp
+10.232.182.25	cwp6-s1.ka1.krl.dfs.de	cwp6-s1	# hcl=nsc.cwp
+10.232.182.26	cwp7-s1.ka1.krl.dfs.de	cwp7-s1	# hcl=nsc.cwp
+10.232.182.27	cwp8-s1.ka1.krl.dfs.de	cwp8-s1	# hcl=nsc.cwp
+10.232.182.28	cwp9-s1.ka1.krl.dfs.de	cwp9-s1	# hcl=nsc.cwp
+10.232.182.29	cwp10-s1.ka1.krl.dfs.de	cwp10-s1	# hcl=nsc.cwp
+10.232.182.30	cwp11-s1.ka1.krl.dfs.de	cwp11-s1	# hcl=nsc.cwp
+10.232.182.31	cwp12-s1.ka1.krl.dfs.de	cwp12-s1	# hcl=nsc.cwp
+10.232.182.32	cwp13-s1.ka1.krl.dfs.de	cwp13-s1	# hcl=nsc.cwp
+10.232.182.33	cwp14-s1.ka1.krl.dfs.de	cwp14-s1	# hcl=nsc.cwp
+10.232.182.34	cwp15-s1.ka1.krl.dfs.de	cwp15-s1	# hcl=nsc.cwp
+10.232.182.35	cwp16-s1.ka1.krl.dfs.de	cwp16-s1	# hcl=nsc.cwp
+10.232.182.36	cwp17-s1.ka1.krl.dfs.de	cwp17-s1	# hcl=nsc.cwp
+10.232.182.37	cwp18-s1.ka1.krl.dfs.de	cwp18-s1	# hcl=nsc.cwp
+10.232.182.38	cwp19-s1.ka1.krl.dfs.de	cwp19-s1	# hcl=nsc.cwp
+10.232.182.39	cwp20-s1.ka1.krl.dfs.de	cwp20-s1	# hcl=nsc.cwp
+10.232.182.40	cwp21-s1.ka1.krl.dfs.de	cwp21-s1	# hcl=nsc.cwp
+10.232.182.41	cwp22-s1.ka1.krl.dfs.de	cwp22-s1	# hcl=nsc.cwp
+10.232.182.42	cwp23-s1.ka1.krl.dfs.de	cwp23-s1	# hcl=nsc.cwp
+10.232.182.43	cwp24-s1.ka1.krl.dfs.de	cwp24-s1	# hcl=nsc.cwp
+10.232.182.44	cwp25-s1.ka1.krl.dfs.de	cwp25-s1	# hcl=nsc.cwp
+10.232.182.45	cwp26-s1.ka1.krl.dfs.de	cwp26-s1	# hcl=nsc.cwp
+10.232.182.46	cwp27-s1.ka1.krl.dfs.de	cwp27-s1	# hcl=nsc.cwp
+10.232.182.47	cwp28-s1.ka1.krl.dfs.de	cwp28-s1	# hcl=nsc.cwp
+10.232.182.48	cwp29-s1.ka1.krl.dfs.de	cwp29-s1	# hcl=nsc.cwp
+10.232.182.49	cwp30-s1.ka1.krl.dfs.de	cwp30-s1	# hcl=nsc.cwp
+10.232.182.50 cwp1-s2.ka1.krl.dfs.de cwp1-s2 #
+10.232.182.51 cwp2-s2.ka1.krl.dfs.de cwp2-s2 #
+10.232.182.52 cwp3-s2.ka1.krl.dfs.de cwp3-s2 #
+10.232.182.53 cwp4-s2.ka1.krl.dfs.de cwp4-s2 #
+10.232.182.54 cwp5-s2.ka1.krl.dfs.de cwp5-s2 #
+10.232.182.55 cwp6-s2.ka1.krl.dfs.de cwp6-s2 #
+10.232.182.56 cwp7-s2.ka1.krl.dfs.de cwp7-s2 #
+10.232.182.57 cwp8-s2.ka1.krl.dfs.de cwp8-s2 #
+10.232.182.58 cwp9-s2.ka1.krl.dfs.de cwp9-s2 #
+10.232.182.59 cwp10-s2.ka1.krl.dfs.de cwp10-s2 #
+10.232.182.60 cwp11-s2.ka1.krl.dfs.de cwp11-s2 #
+10.232.182.61 cwp12-s2.ka1.krl.dfs.de cwp12-s2 #
+10.232.182.62 cwp13-s2.ka1.krl.dfs.de cwp13-s2 #
+10.232.182.63 cwp14-s2.ka1.krl.dfs.de cwp14-s2 #
+10.232.182.64 cwp15-s2.ka1.krl.dfs.de cwp15-s2 #
+10.232.182.65 cwp16-s2.ka1.krl.dfs.de cwp16-s2 #
+10.232.182.66 cwp17-s2.ka1.krl.dfs.de cwp17-s2 #
+10.232.182.67 cwp18-s2.ka1.krl.dfs.de cwp18-s2 #
+10.232.182.68 cwp19-s2.ka1.krl.dfs.de cwp19-s2 #
+10.232.182.69 cwp20-s2.ka1.krl.dfs.de cwp20-s2 #
+10.232.182.70 cwp21-s2.ka1.krl.dfs.de cwp21-s2 #
+10.232.182.71 cwp22-s2.ka1.krl.dfs.de cwp22-s2 #
+10.232.182.72 cwp23-s2.ka1.krl.dfs.de cwp23-s2 #
+10.232.182.73 cwp24-s2.ka1.krl.dfs.de cwp24-s2 #
+10.232.182.74 cwp25-s2.ka1.krl.dfs.de cwp25-s2 #
+10.232.182.75 cwp26-s2.ka1.krl.dfs.de cwp26-s2 #
+10.232.182.76 cwp27-s2.ka1.krl.dfs.de cwp27-s2 #
+10.232.182.77 cwp28-s2.ka1.krl.dfs.de cwp28-s2 #
+10.232.182.78 cwp29-s2.ka1.krl.dfs.de cwp29-s2 #
+10.232.182.79 cwp30-s2.ka1.krl.dfs.de cwp30-s2 #
+10.232.182.83	adc4-s1.ka1.krl.dfs.de	adc4-s1	# hcl=nsc.adc
+10.232.182.84	adc5-s1.ka1.krl.dfs.de	adc5-s1	# hcl=nsc.adc
+10.232.182.85	adc6-s1.ka1.krl.dfs.de	adc6-s1	# hcl=nsc.adc
+10.232.182.86 adc1-s2.ka1.krl.dfs.de adc1-s2 #
+10.232.182.87 adc2-s2.ka1.krl.dfs.de adc2-s2 #
+10.232.182.88 adc3-s2.ka1.krl.dfs.de adc3-s2 #
+10.232.182.89 adc4-s2.ka1.krl.dfs.de adc4-s2 #
+10.232.182.90 adc5-s2.ka1.krl.dfs.de adc5-s2 #
+10.232.182.91 adc6-s2.ka1.krl.dfs.de adc6-s2 #
+10.232.182.92	psp1-s1.ka1.krl.dfs.de	psp1-s1	# hcl=nsc.psp
+10.232.182.93	psp2-s1.ka1.krl.dfs.de	psp2-s1	# hcl=nsc.psp
+10.232.182.94	psp3-s1.ka1.krl.dfs.de	psp3-s1	# hcl=nsc.psp
+10.232.182.95	psp4-s1.ka1.krl.dfs.de	psp4-s1	# hcl=nsc.psp
+10.232.182.96	psp5-s1.ka1.krl.dfs.de	psp5-s1	# hcl=nsc.psp
+10.232.182.97	psp6-s1.ka1.krl.dfs.de	psp6-s1	# hcl=nsc.psp
+10.232.182.98	psp7-s1.ka1.krl.dfs.de	psp7-s1	# hcl=nsc.psp
+10.232.182.99	psp8-s1.ka1.krl.dfs.de	psp8-s1	# hcl=nsc.psp
+10.232.182.100	psp9-s1.ka1.krl.dfs.de	psp9-s1	# hcl=nsc.psp
+10.232.182.101	psp10-s1.ka1.krl.dfs.de	psp10-s1	# hcl=nsc.psp
+10.232.182.102	psp11-s1.ka1.krl.dfs.de	psp11-s1	# hcl=nsc.psp
+10.232.182.103	psp12-s1.ka1.krl.dfs.de	psp12-s1	# hcl=nsc.psp
+10.232.182.104	psp13-s1.ka1.krl.dfs.de	psp13-s1	# hcl=nsc.psp
+10.232.182.105	psp14-s1.ka1.krl.dfs.de	psp14-s1	# hcl=nsc.psp
+10.232.182.112	dap1-s1.ka1.krl.dfs.de	dap1-s1	# hcl=nsc.dap
+10.232.182.113	dap2-s1.ka1.krl.dfs.de	dap2-s1	# hcl=nsc.dap
+10.232.182.114	dap3-s1.ka1.krl.dfs.de	dap3-s1	# hcl=nsc.dap
+10.232.182.115	dap4-s1.ka1.krl.dfs.de	dap4-s1	# hcl=nsc.dap
+10.232.182.116	dap5-s1.ka1.krl.dfs.de	dap5-s1	# hcl=nsc.dap
+10.232.182.117	dap6-s1.ka1.krl.dfs.de	dap6-s1	# hcl=nsc.dap
+10.232.182.118	dap7-s1.ka1.krl.dfs.de	dap7-s1	# hcl=nsc.dap
+10.232.182.119	dap8-s1.ka1.krl.dfs.de	dap8-s1	# hcl=nsc.dap
+10.232.182.120	dap9-s1.ka1.krl.dfs.de	dap9-s1	# hcl=nsc.dap
+10.232.182.121	dap10-s1.ka1.krl.dfs.de	dap10-s1	# hcl=nsc.dap
+10.232.182.122	sup1-s1.ka1.krl.dfs.de	sup1-s1	# hcl=nsc.sup
+10.232.182.123	sup2-s1.ka1.krl.dfs.de	sup2-s1	# hcl=nsc.sup
+10.232.182.124	sup3-s1.ka1.krl.dfs.de	sup3-s1	# hcl=nsc.sup
+10.232.182.125 sup1-s2.ka1.krl.dfs.de sup1-s2 #
+10.232.182.126 sup2-s2.ka1.krl.dfs.de sup2-s2 #
+10.232.182.127 sup3-s2.ka1.krl.dfs.de sup3-s2 #
+#
+# Server adresses start at 150
+10.232.182.150	iss1-s1.ka1.krl.dfs.de	iss1-s1	# hcl=nsc.iss
+10.232.182.157	sim1-s1.ka1.krl.dfs.de	sim1-s1	# hcl=nsc.sim
+10.232.182.158	sim2-s1.ka1.krl.dfs.de	sim2-s1	# hcl=nsc.sim
+10.232.182.160	sim4-s1.ka1.krl.dfs.de	sim4-s1	# hcl=nsc.sim
+10.232.182.161 fcf1-s1.ka1.krl.dfs.de fcf1-s1 #
+10.232.182.162 fcf2-s1.ka1.krl.dfs.de fcf2-s1 #
+10.232.182.163 fcf3-s1.ka1.krl.dfs.de fcf3-s1 #
+10.232.182.164 fcf4-s1.ka1.krl.dfs.de fcf4-s1 #
+10.232.182.165 fcf5-s1.ka1.krl.dfs.de fcf5-s1 #
+10.232.182.166 fcf6-s1.ka1.krl.dfs.de fcf6-s1 #
+10.232.182.167 tst1.ka1.krl.dfs.de tst1 #
+10.232.182.168 tst2.ka1.krl.dfs.de tst2 #
+10.232.182.169 tst3.ka1.krl.dfs.de tst3 #
+10.232.182.170 dal1.ka1.krl.dfs.de dal1 #
+10.232.182.171 dal2.ka1.krl.dfs.de dal2 #
+10.232.182.172 dal3.ka1.krl.dfs.de dal3 #
+10.232.182.173 adm1.ka1.krl.dfs.de adm1 #
+10.232.182.174 adm2.ka1.krl.dfs.de adm2 #
+10.232.182.175 adm3.ka1.krl.dfs.de adm3 #
+10.232.182.176 net-prn1.ka1.krl.dfs.de net-prn1 #
+10.232.182.177 net-prn2.ka1.krl.dfs.de net-prn2 #
+10.232.182.178 net-prn3.ka1.krl.dfs.de net-prn3 #
+10.232.182.179 aman1.ka1.krl.dfs.de aman1 #
+10.232.182.180 aman2.ka1.krl.dfs.de aman2 #
+10.232.182.181 aman3.ka1.krl.dfs.de aman3 #
+#
+# unused adresses start at 182
+#
+# DHCP adresses start at 200
+#
+# Default gateway adresses is 250

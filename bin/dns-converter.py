@@ -41,22 +41,32 @@ import re
 pydir =  os.path.dirname(os.path.abspath(__file__))
 basedir = os.path.dirname(pydir)
 confdir = os.path.join(basedir,"config")
-#tpldir = os.path.join(basedir,"tpl")
-deploydir_default = os.path.join(basedir, "deployment")
 dnsdir = os.path.join(confdir,"dns_hosts")
-#default_hosts_file = os.path.join(dnsdir,"lx3.lgn.dfs.de.dns.hosts")
-#default_hosts_file = os.path.join(dnsdir,"test.dns.hosts")
-default_hosts_file = os.path.join(dnsdir,"mu1.muc.dfs.de.hosts")
+#tpldir = os.path.join(basedir,"tpl")
+deploydir_default_base = os.path.join(basedir, "deployment")
+
+# deploydir_default      = os.path.join(deploydir_default_base, "mu1.muc.dfs.de")
+# hosts_file_default     = os.path.join(dnsdir, "mu1.muc.dfs.de.hosts")
+
+deploydir_default      = os.path.join(deploydir_default_base, "ka1.krl.dfs.de")
+hosts_file_default     = os.path.join(dnsdir, "ka1.krl.dfs.de.hosts")
+
+# deploydir_default      = os.path.join(deploydir_default_base, "br1.bre.dfs.de")
+# hosts_file_default     = os.path.join(dnsdir, "br1.bre.dfs.de.hosts")
+
+# deploydir_default      = os.path.join(deploydir_default_base, "lx3.lgn.dfs.de")
+# hosts_file_default     = os.path.join(dnsdir, "lx3.lgn.dfs.de.hosts")
+
+
 tempfile = os.path.join(deploydir_default, "temp_out.txt")
 
 # parse args
 formats = ['json',]
 
 parser = argparse.ArgumentParser(description="convert dns hosts entrys with txt records to json")
-parser.add_argument("--hosts", type=str, required=False,default=default_hosts_file, help="hosts file")
+parser.add_argument("--hosts", type=str, required=False, default=hosts_file_default, help="hosts file")
 parser.add_argument("-f", "--format" , type=str, required=False, default='yaml', choices=formats, help="output format")
-#parser.add_argument("-d", "--deploydir" , type=str, required=False, default=deploydir_default, choices=formats, help="output format")
-parser.add_argument("-d", "--deploydir" , type=str, required=False, default=os.path.join(deploydir_default,'lx3.lgn.dfs.de'), choices=formats, help="output format")
+parser.add_argument("-d", "--deploydir" , type=str, required=False, default=deploydir_default, choices=formats, help="output format")
 args = parser.parse_args()
 
 infile = args.hosts
@@ -64,6 +74,7 @@ format = args.format
 deploydir = args.deploydir
 
 host_outfile = defaultdict(str)
+
 HN = defaultdict(str)
 DN = defaultdict(str)
 ENTRY_TYPE = defaultdict(str)
@@ -81,6 +92,7 @@ HN_ENTRYS = defaultdict(list)
 
 FQDNS = set([])
 INSTALLABLE_FQDNS = set([])
+
 installable_prefixes = ['psp', 'cwp', 'adc', 'sup', 'dap', 'siu', 'sim', 'iss']
 installable_suffixes = ['s1', 's2']
 DNS_ENTRY_LINES = set([])
@@ -122,6 +134,19 @@ def getDefaultKey(fqdn):
 
 
 def getEntryClassification(fqdn):
+    '''
+    returns list: [entry_type, main_class, sub_class]
+    to characterize each input line from dns *.hosts file(s)
+    derived from it's fqdn
+    Uses 2step-cc entry
+
+        possible entry_types:
+            installable : use for DNS and as data set (hiera data) for puppet installation of a host
+            interface   : use for DNS as data set for additional interface of an installable host
+            dns         : use for DNS only (all additional DNS entrys for one domain (or site)
+
+        main_class, sub_class: puppet/hiera parameters which control installation
+    '''
     # get hostname from fqdn
     hn = fqdn.split('.')[0]
     pre_suf = hn.split('-')
@@ -185,6 +210,9 @@ for line in lines:
 #    host_entrys_update = {}
     description = ""
 
+
+    # Parse lines
+    #
     # is there a '#" after hn AND is there a non emtpy string
     if len(records) > 1 and len(records[-1]) > 0:
         # get description from first field after '#'
