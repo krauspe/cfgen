@@ -82,6 +82,7 @@ MAIN_CLASS = defaultdict(str)
 SUB_CLASS = defaultdict(str)
 NIC_ENTRYS = defaultdict(str)
 MAC = defaultdict(str)
+NS = defaultdict(str)
 IP = defaultdict(str)
 DV = defaultdict(str)
 SN = defaultdict(str)
@@ -89,13 +90,15 @@ GW = defaultdict(str)
 SY = defaultdict(str)
 DESCRIPTION = defaultdict(str)
 HN_ENTRYS = defaultdict(list)
+IF_ENTRYS = defaultdict(list)
 
 FQDNS = set([])
 INSTALLABLE_FQDNS = set([])
 
 installable_prefixes = ['psp', 'cwp', 'adc', 'sup', 'dap', 'siu', 'sim', 'iss']
 installable_suffixes = ['s1', 's2']
-DNS_ENTRY_LINES = set([])
+DNS_ENTRYS = []
+DNS_ENTRY_LINES = []
 
 def ensure_dir(f):
     if not os.path.exists(f):
@@ -204,10 +207,10 @@ for line in lines:
     else:
         continue
 
-#    host_outfile = os.path.join(deploydir, hn + '.' + format)
+    # host_outfile = os.path.join(deploydir, hn + '.' + format)
     # Create a new entry and an host_entrys_update to update host_entrys dict
-#    new_entry = {}
-#    host_entrys_update = {}
+    # new_entry = {}
+    # host_entrys_update = {}
     description = ""
 
 
@@ -250,16 +253,13 @@ for line in lines:
                 SN[fqdn] = val
             elif key == 'gw':
                 GW[fqdn] = val
+            elif key == 'ns':
+                NS[fqdn] = val
             elif key == 'mac':
                 MAC[fqdn] = val
             elif key == 'sy':
                 SY[fqdn] = val
 
-# for fqdn in FQDNS:
-#     print("-----\n")
-#     print(HN_ENTRYS[fqdn])
-#
-# exit()
 # classify fqdn entrys and set defaults for missing values from 2step-cc entry
 
 for fqdn in FQDNS:
@@ -273,6 +273,8 @@ for fqdn in FQDNS:
             DN[fqdn] = DN[dn_default]
         if not SN[fqdn]:
             SN[fqdn] = SN[dn_default]
+        if not NS[fqdn]:
+            NS[fqdn] = NS[dn_default]
         if not GW[fqdn]:
             GW[fqdn] = GW[dn_default]
         if not DV[fqdn]:
@@ -287,13 +289,49 @@ for fqdn in FQDNS:
                     fqdn_entry = "{}.{}".format(hn_entry, DN[fqdn])
                 else:
                     fqdn_entry = hn_entry
-
-                print ("\t{}\tdv={}".format(fqdn_entry,DV[fqdn_entry]))
+                IF_ENTRYS[fqdn].append(fqdn_entry)
+                #print ("\t{}\tdv={}".format(fqdn_entry,DV[fqdn_entry]))
 
     else:
         # Use as DNS entry only
-        print("{}:\t {}\t".format(fqdn, entry_type))
+        #print("{}:\t {}\t".format(entry_type, fqdn))
+        DNS_ENTRYS.append(fqdn)
 
+def generateHostDataStruct(fqdn):
+    data = {}; data[fqdn] = {}
+    dn_default = getDefaultKey(fqdn)
+    print("  {}:".format(DV[fqdn]))
+    print("    fqdn: {}".format(fqdn))
+    print("    ipaddress: {}".format(IP[fqdn]))
+    print("    netmask: {}".format(SN[fqdn]))
+    print("    gateway: {}".format(GW[fqdn]))
+    print("    DNS1: {}".format(NS[fqdn]))
+
+    for if_entry in IF_ENTRYS[fqdn]:
+        print("  {}:".format(DV[if_entry]))
+        print("    fqdn: {}".format(if_entry))
+        print("    ipaddress: {}".format(IP[if_entry]))
+        print("    netmask: {}".format(SN[if_entry]))
+        print("    gateway: {}".format(GW[if_entry]))
+        print("    DNS1: {}".format(NS[if_entry]))
+
+    #data['network::if_static:'] = {}
+
+
+
+def generateDnsLines(fqdn_list, txt_rec_list):
+    dns_lines = []
+    for fqdn in fqdn_list:
+        hn = fqdn.split('.')[0]
+        dns_lines.append("{}\t{}\t{}".format(hn, fqdn, IP[fqdn]))
+    return dns_lines
+
+for fqdn in INSTALLABLE_FQDNS:
+    print("{}".format(fqdn))
+    generateHostDataStruct(fqdn)
+
+#print('2step.cc.ka1.krl.dfs.de')
+#generateHostDataStruct('2step.cc.ka1.krl.dfs.de')
 
 # - Loop ueber die Liste von fqdns und ueber hostnamen feststellen was ein installierbarer Host ist und classe
 #   feststellen -> OK
@@ -312,8 +350,18 @@ for fqdn in FQDNS:
 #   diese sollte keine Text-Records fuer interface Konfig enthalten , jedoch ggfs Eintraege wie "rnsc" ??
 
 
+# yaml output
+    #
+    # network::if_static:
+    #   'eth0':
+    #     ensure: up
+    #     ipaddress: 192.168.40.20
+    #     netmask: 255.255.255.0
+    #     gateway: 192.168.40.20
+    #     peerdns: true
+    #     dns1: 192.168.40.10
 
-#                new_entry[key] = val
+
 
 #    host_entrys_update[fqdn] = new_entry
 
