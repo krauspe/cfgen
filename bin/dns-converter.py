@@ -50,6 +50,7 @@ import json
 import yaml
 import pretty as pp
 import re
+#from netaddr import *
 
 ##usage: pp(content) # where content is json
 
@@ -63,8 +64,14 @@ deploydir_default_base = os.path.join(basedir, "deployment")
 # deploydir_default      = os.path.join(deploydir_default_base, "mu1.muc.dfs.de")
 # hosts_file_default     = os.path.join(dnsdir, "mu1.muc.dfs.de.hosts")
 
-deploydir_default      = os.path.join(deploydir_default_base, "ka1.krl.dfs.de")
-hosts_file_default     = os.path.join(dnsdir, "ka1.krl.dfs.de.hosts")
+#deploydir_default      = os.path.join(deploydir_default_base, "ka1.krl.dfs.de")
+#hosts_file_default     = os.path.join(dnsdir, "ka1.krl.dfs.de.hosts")
+
+#deploydir_default      = os.path.join(deploydir_default_base, "vx4.lgn.dfs.de")
+#hosts_file_default     = os.path.join(dnsdir, "vx4.lgn.dfs.de.hosts")
+
+deploydir_default      = os.path.join(deploydir_default_base, "si2.lgn.dfs.de")
+hosts_file_default     = os.path.join(dnsdir, "si2.lgn.dfs.de.hosts")
 
 # deploydir_default      = os.path.join(deploydir_default_base, "br1.bre.dfs.de")
 # hosts_file_default     = os.path.join(dnsdir, "br1.bre.dfs.de.hosts")
@@ -114,6 +121,8 @@ installable_prefixes = ['psp', 'cwp', 'adc', 'sup', 'dap', 'siu', 'sim', 'iss']
 installable_suffixes = ['s1', 's2']
 DNS_ENTRYS = []
 DNS_ENTRY_LINES = []
+
+nss_default_subclass = 'light'
 
 def ensure_dir(f):
     if not os.path.exists(f):
@@ -336,8 +345,59 @@ def generateHostDataStruct(main_fqdn):
             'DNS1': NS[fqdn],
         }
         data.update({DV[fqdn]: dv})
-    network_if_static = {'network::if_static': data}
-    return network_if_static
+
+    #network_if_static = {'network::if_static': data}
+    dataout = {'network::if_static': data}
+
+    host_classes = getHostClasses(main_fqdn)
+
+    #dataout.update(host_classes)
+    dataout = update_nested_dict(dataout, host_classes)
+
+
+    return dataout
+
+
+def getHostClasses(fqdn):
+    hn = fqdn.split('.')[0]
+    main = ''; sub = ''
+
+    if hn == 'nss':
+        main = 'nss'
+        sub =  nss_default_subclass
+    else:
+        prefix = hn[0:3]
+        if prefix in installable_prefixes:
+            main = 'nsc'
+            sub  = prefix
+
+    host_classes = {
+        'host_classes::main': main,
+        'host_classes::sub': sub,
+    }
+    return host_classes
+
+def getDhcpConfig(fqdn):
+    # TODO: generate subnet address
+    # TODO: USE IT :-)
+    #dn = '.'.join(fqdn.split('.'))
+    subnet = "x.x.x.0"
+    dhcpd = {
+      'netmask': SN[fqdn],
+      'subnet':  "'{}'".format(subnet),
+      'routers': GW[fqdn],
+      'domain_name_servers': "'{}'".format(NS[fqdn]),
+      'domain_name':         "'{}'".format(DN[fqdn]),
+      'range_start':         '\'200\'',
+      'range_end':           '\'239\'',
+      'default_lease_time':  '\'3600\'',
+      'max_lease_time':      '\'21600\'',
+      'args':                'eth0',
+      'ensure':              'running',
+      'enable':              'true',
+    }
+
+    return dhcpd
 
 def generateDnsLines(fqdn_list, txt_rec_list):
     dns_lines = []
