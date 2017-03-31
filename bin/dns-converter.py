@@ -326,7 +326,12 @@ for fqdn in FQDNS:
         DNS_ENTRYS.append(fqdn)
 
 def generateHostDataStruct(main_fqdn):
-    #data = {}
+    hn = main_fqdn.split('.')[0]
+
+    # get host classes
+    dataout = getHostClasses(main_fqdn)
+
+    # get network interface config data
     dv = {
         'ipaddress':IP[main_fqdn],
         'netmask':SN[main_fqdn],
@@ -335,7 +340,7 @@ def generateHostDataStruct(main_fqdn):
         'peerdns': 'true',
 
     }
-    data = {DV[main_fqdn]:dv}
+    ifdata = {DV[main_fqdn]:dv}
 
     for fqdn in IF_ENTRYS[main_fqdn]:
         dv = {
@@ -344,15 +349,16 @@ def generateHostDataStruct(main_fqdn):
             'gateway': GW[fqdn],
             'DNS1': NS[fqdn],
         }
-        data.update({DV[fqdn]: dv})
+        ifdata.update({DV[fqdn]: dv})
 
-    #network_if_static = {'network::if_static': data}
-    dataout = {'network::if_static': data}
+    network_if_static = {'network::if_static': ifdata}
+    dataout = update_nested_dict(dataout, network_if_static)
 
-    host_classes = getHostClasses(main_fqdn)
+    # get dhcpd config if hn==nss
 
-    #dataout.update(host_classes)
-    dataout = update_nested_dict(dataout, host_classes)
+    if hn == 'nss':
+        dhcpd = getDhcpConfig(main_fqdn)
+        dataout = update_nested_dict(dataout, dhcpd)
 
 
     return dataout
@@ -382,7 +388,7 @@ def getDhcpConfig(fqdn):
     # TODO: USE IT :-)
     #dn = '.'.join(fqdn.split('.'))
     subnet = "x.x.x.0"
-    dhcpd = {
+    data = {
       'netmask': SN[fqdn],
       'subnet':  "'{}'".format(subnet),
       'routers': GW[fqdn],
@@ -396,8 +402,8 @@ def getDhcpConfig(fqdn):
       'ensure':              'running',
       'enable':              'true',
     }
-
-    return dhcpd
+    dataout = {'dhcpd': data}
+    return dataout
 
 def generateDnsLines(fqdn_list, txt_rec_list):
     dns_lines = []

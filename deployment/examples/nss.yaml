@@ -1,0 +1,48 @@
+## HOST_CLASSES
+
+host_classes::main: nss
+host_classes::sub: light
+
+#host_classes:
+#  main: nss
+#  sub: nss
+
+## NETWORK
+
+network::global:
+  gatewaydev: eth1
+
+network::if_static:
+  'eth0':
+    ensure: up
+    ipaddress: 192.168.33.10
+    netmask: 255.255.255.0
+    gateway: 10.232.250.252
+    peerdns: true
+    dns1: 192.168.33.10
+  'eth1':
+    ensure: up
+    ipaddress: 10.232.250.232 
+    netmask: 255.255.254.0
+    gateway: 10.232.250.253
+    peerdns: false
+
+## DHCPD CONFIG
+
+dhcpd:
+  netmask:             255.255.255.0
+  subnet:              192.168.33.0
+  routers:             192.168.33.250
+  domain_name_servers: 192.168.33.10
+  domain_name:         lx3.lgn.dfs.de
+  range_start:         '200'
+  range_end:           '239'
+  default_lease_time:  '3600'
+  max_lease_time:      '21600'
+  args:                eth0
+  ensure:              running
+  enable:              true
+
+## HTTPD CONFIG
+
+httpd::conf_d: template
