@@ -325,44 +325,6 @@ for fqdn in FQDNS:
         #print("{}:\t {}\t".format(entry_type, fqdn))
         DNS_ENTRYS.append(fqdn)
 
-def generateHostDataStruct(main_fqdn):
-    hn = main_fqdn.split('.')[0]
-
-    # get host classes
-    dataout = getHostClasses(main_fqdn)
-
-    # get network interface config data
-    dv = {
-        'ipaddress':IP[main_fqdn],
-        'netmask':SN[main_fqdn],
-        'gateway':GW[main_fqdn],
-        'DNS1':NS[main_fqdn],
-        'peerdns': 'true',
-
-    }
-    ifdata = {DV[main_fqdn]:dv}
-
-    for fqdn in IF_ENTRYS[main_fqdn]:
-        dv = {
-            'ipaddress': IP[fqdn],
-            'netmask': SN[fqdn],
-            'gateway': GW[fqdn],
-            'DNS1': NS[fqdn],
-        }
-        ifdata.update({DV[fqdn]: dv})
-
-    network_if_static = {'network::if_static': ifdata}
-    dataout = update_nested_dict(dataout, network_if_static)
-
-    # get dhcpd config if hn==nss
-
-    if hn == 'nss':
-        dhcpd = getDhcpConfig(main_fqdn)
-        dataout = update_nested_dict(dataout, dhcpd)
-
-
-    return dataout
-
 
 def getHostClasses(fqdn):
     hn = fqdn.split('.')[0]
@@ -404,6 +366,50 @@ def getDhcpConfig(fqdn):
     }
     dataout = {'dhcpd': data}
     return dataout
+
+def generateHostDataStruct(main_fqdn):
+    hn = main_fqdn.split('.')[0]
+
+    # get host classes
+    dataout = getHostClasses(main_fqdn)
+    main = dataout['host_classes::main']
+    #sub  = dataout['host_classes']['sub']
+
+    if main in ['nss', 'cis']:
+        dhcpd   = getDhcpConfig(main_fqdn)
+        dataout = update_nested_dict(dataout, dhcpd)
+        ns      = 'localhost'
+    else:
+        ns = NS[main_fqdn]
+    # get network interface config data
+    dv = {
+        'ipaddress':IP[main_fqdn],
+        'netmask':SN[main_fqdn],
+        'gateway':GW[main_fqdn],
+        'DNS1':ns,
+        'peerdns': 'true',
+
+    }
+    ifdata = {DV[main_fqdn]:dv}
+
+    for fqdn in IF_ENTRYS[main_fqdn]:
+        dv = {
+            'ipaddress': IP[fqdn],
+            'netmask': SN[fqdn],
+            'gateway': GW[fqdn],
+            'DNS1': NS[fqdn],
+        }
+        ifdata.update({DV[fqdn]: dv})
+
+    network_if_static = {'network::if_static': ifdata}
+    dataout = update_nested_dict(dataout, network_if_static)
+
+    # get dhcpd config if hn==nss
+
+
+
+    return dataout
+
 
 def generateDnsLines(fqdn_list, txt_rec_list):
     dns_lines = []
