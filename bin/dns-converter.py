@@ -67,11 +67,14 @@ deploydir_default_base = os.path.join(basedir, "deployment")
 #deploydir_default      = os.path.join(deploydir_default_base, "ka1.krl.dfs.de")
 #hosts_file_default     = os.path.join(dnsdir, "ka1.krl.dfs.de.hosts")
 
-#deploydir_default      = os.path.join(deploydir_default_base, "vx4.lgn.dfs.de")
-#hosts_file_default     = os.path.join(dnsdir, "vx4.lgn.dfs.de.hosts")
+deploydir_default      = os.path.join(deploydir_default_base, "vx4.lgn.dfs.de")
+hosts_file_default     = os.path.join(dnsdir, "vx4.lgn.dfs.de.hosts")
 
-deploydir_default      = os.path.join(deploydir_default_base, "si2.lgn.dfs.de")
-hosts_file_default     = os.path.join(dnsdir, "si2.lgn.dfs.de.hosts")
+#deploydir_default      = os.path.join(deploydir_default_base, "si2.lgn.dfs.de")
+#hosts_file_default     = os.path.join(dnsdir, "si2.lgn.dfs.de.hosts")
+
+#deploydir_default      = os.path.join(deploydir_default_base, "vx1.lgn.dfs.de")
+#hosts_file_default     = os.path.join(dnsdir, "vx1.lgn.dfs.de.hosts")
 
 # deploydir_default      = os.path.join(deploydir_default_base, "br1.bre.dfs.de")
 # hosts_file_default     = os.path.join(dnsdir, "br1.bre.dfs.de.hosts")
@@ -352,17 +355,17 @@ def getDhcpConfig(fqdn):
     subnet = "x.x.x.0"
     data = {
       'netmask': SN[fqdn],
-      'subnet':  "'{}'".format(subnet),
+      'subnet':  "{}".format(subnet),
       'routers': GW[fqdn],
-      'domain_name_servers': "'{}'".format(NS[fqdn]),
-      'domain_name':         "'{}'".format(DN[fqdn]),
-      'range_start':         '\'200\'',
-      'range_end':           '\'239\'',
-      'default_lease_time':  '\'3600\'',
-      'max_lease_time':      '\'21600\'',
+      'domain_name_servers': "{}".format(NS[fqdn]),
+      'domain_name':         "{}".format(DN[fqdn]),
+      'range_start':         '200',
+      'range_end':           '239',
+      'default_lease_time':  '3600',
+      'max_lease_time':      '21600',
       'args':                'eth0',
       'ensure':              'running',
-      'enable':              'true',
+      'enable':              True,
     }
     dataout = {'dhcpd': data}
     return dataout
@@ -382,22 +385,27 @@ def generateHostDataStruct(main_fqdn):
     else:
         ns = NS[main_fqdn]
     # get network interface config data
-    dv = {
-        'ipaddress':IP[main_fqdn],
-        'netmask':SN[main_fqdn],
-        'gateway':GW[main_fqdn],
-        'DNS1':ns,
-        'peerdns': 'true',
 
+    ensure = 'up'
+    peerdns = True
+
+    dv = {
+        'ensure': ensure,
+        'ipaddress': IP[main_fqdn],
+        'netmask': SN[main_fqdn],
+        'gateway': GW[main_fqdn],
+        'dns1': ns,
+        'peerdns': peerdns,
     }
     ifdata = {DV[main_fqdn]:dv}
 
     for fqdn in IF_ENTRYS[main_fqdn]:
         dv = {
+            'ensure': 'up',
             'ipaddress': IP[fqdn],
             'netmask': SN[fqdn],
             'gateway': GW[fqdn],
-            'DNS1': NS[fqdn],
+            'dns1': NS[fqdn],
         }
         ifdata.update({DV[fqdn]: dv})
 
