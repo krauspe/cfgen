@@ -67,8 +67,8 @@ deploydir_default_base = os.path.join(basedir, "deployment")
 #deploydir_default      = os.path.join(deploydir_default_base, "ka1.krl.dfs.de")
 #hosts_file_default     = os.path.join(dnsdir, "ka1.krl.dfs.de.hosts")
 
-deploydir_default      = os.path.join(deploydir_default_base, "vx4.lgn.dfs.de")
-hosts_file_default     = os.path.join(dnsdir, "vx4.lgn.dfs.de.hosts")
+#deploydir_default      = os.path.join(deploydir_default_base, "vx4.lgn.dfs.de")
+#hosts_file_default     = os.path.join(dnsdir, "vx4.lgn.dfs.de.hosts")
 
 #deploydir_default      = os.path.join(deploydir_default_base, "si2.lgn.dfs.de")
 #hosts_file_default     = os.path.join(dnsdir, "si2.lgn.dfs.de.hosts")
@@ -79,8 +79,8 @@ hosts_file_default     = os.path.join(dnsdir, "vx4.lgn.dfs.de.hosts")
 # deploydir_default      = os.path.join(deploydir_default_base, "br1.bre.dfs.de")
 # hosts_file_default     = os.path.join(dnsdir, "br1.bre.dfs.de.hosts")
 
-# deploydir_default      = os.path.join(deploydir_default_base, "lx3.lgn.dfs.de")
-# hosts_file_default     = os.path.join(dnsdir, "lx3.lgn.dfs.de.hosts")
+deploydir_default      = os.path.join(deploydir_default_base, "lx3.lgn.dfs.de")
+hosts_file_default     = os.path.join(dnsdir, "lx3.lgn.dfs.de.hosts")
 
 
 tempfile = os.path.join(deploydir_default, "temp_out.txt")
@@ -98,7 +98,7 @@ infile = args.hosts
 format = args.format
 deploydir = args.deploydir
 
-host_outfile = defaultdict(str)
+#host_outfile = defaultdict(str)
 
 HN = defaultdict(str)
 DN = defaultdict(str)
@@ -176,6 +176,7 @@ def getEntryClassification(fqdn):
             dns         : use for DNS only (all additional DNS entrys for one domain (or site)
 
         main_class, sub_class: puppet/hiera parameters which control installation
+
     '''
     # get hostname from fqdn
     hn = fqdn.split('.')[0]
@@ -295,6 +296,7 @@ for line in lines:
 
 for fqdn in FQDNS:
     entry_type, main_class, sub_class = getEntryClassification(fqdn)
+    #print("{}: ENTRY TYPE: {}".format(fqdn, entry_type))
     ENTRY_TYPE[fqdn], MAIN_CLASS[fqdn], SUB_CLASS[fqdn] = entry_type, main_class, sub_class
 
     if entry_type == 'installable' or entry_type == 'interface':
@@ -303,7 +305,10 @@ for fqdn in FQDNS:
         if not DN[fqdn]:
             DN[fqdn] = DN[dn_default]
         if not SN[fqdn]:
-            SN[fqdn] = SN[dn_default]
+            if SN[dn_default]:
+                SN[fqdn] = SN[dn_default]
+            else:
+                print("Warning: NO NETMASK (and NO default) found for {} !!".format(fqdn))
         if not NS[fqdn]:
             NS[fqdn] = NS[dn_default]
         if not GW[fqdn]:
@@ -429,22 +434,22 @@ def generateDnsLines(fqdn_list, txt_rec_list):
 # output hiera yaml files
 
 for fqdn in INSTALLABLE_FQDNS:
-    print("{}".format(fqdn))
+    #print("{}".format(fqdn))
     data = generateHostDataStruct(fqdn)
     outfile = os.path.join(deploydir, fqdn + '.' + format)
 
     with open(outfile, mode='w') as f:
-        print("writing {} file {}".format(format,host_outfile))
+        print("writing {} file {}".format(format,outfile))
 
         if format == "json":
                 f.write(json.dumps(data, sort_keys=False, indent=2, separators=(',', ': ')))
         elif format == "yaml":
                 yaml.dump(data, f, default_flow_style=False)
-    print(data)
+    #print(data)
 
 
 
-# yaml output
+# yaml output (only IFs)
     #
     # network::if_static:
     #   'eth0':
