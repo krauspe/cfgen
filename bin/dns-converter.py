@@ -44,7 +44,7 @@
 from __future__ import print_function
 import os
 import socket
-from  collections import defaultdict, Mapping
+from collections import defaultdict, Mapping
 import argparse
 import json
 import yaml
@@ -56,31 +56,44 @@ import re
 
 pydir =  os.path.dirname(os.path.abspath(__file__))
 basedir = os.path.dirname(pydir)
-confdir = os.path.join(basedir,"config")
-dnsdir = os.path.join(confdir,"dns_hosts")
+confdir = os.path.join(basedir, "config")
+dnsdir_default = os.path.join(confdir, "dns_hosts")
+
+if os.path.exists('/mnt/puppet/hieradata'):
+    puppet_dir = '/mnt/puppet'
+elif os.path.exists('/opt/export/puppet-master/hieradata'):
+    puppet_dir = '/opt/export/puppet-master'
+else:
+    puppet_dir = None
+
+
+if puppet_dir != None:
+    dnsdir_puppet = os.path.join(puppet_dir, "modules", "dns_server_config", "files", "data")
+    if os.path.exists(dnsdir_puppet):
+        dnsdir = dnsdir_puppet
+    else:
+        print("Warning: Production hosts dir {} does not exist !".format(dnsdir_puppet))
+        print("         Using {}".format(dnsdir_default))
+        dnsdir = dnsdir_default
+else:
+    dnsdir = dnsdir_default
+    print("Notice: Using {}".format(dnsdir_default))
+
+# /opt/export/puppet-master/modules/dns_server_config/files/data
+# /mnt/puppet/modules/dns_server_config/files/data
+
 #tpldir = os.path.join(basedir,"tpl")
 deploydir_default_base = os.path.join(basedir, "deployment")
 
-# deploydir_default      = os.path.join(deploydir_default_base, "mu1.muc.dfs.de")
-# hosts_file_default     = os.path.join(dnsdir, "mu1.muc.dfs.de.hosts")
-
-#deploydir_default      = os.path.join(deploydir_default_base, "ka1.krl.dfs.de")
-#hosts_file_default     = os.path.join(dnsdir, "ka1.krl.dfs.de.hosts")
-
-#deploydir_default      = os.path.join(deploydir_default_base, "vx4.lgn.dfs.de")
-#hosts_file_default     = os.path.join(dnsdir, "vx4.lgn.dfs.de.hosts")
-
-#deploydir_default      = os.path.join(deploydir_default_base, "si2.lgn.dfs.de")
-#hosts_file_default     = os.path.join(dnsdir, "si2.lgn.dfs.de.hosts")
-
-#deploydir_default      = os.path.join(deploydir_default_base, "vx1.lgn.dfs.de")
-#hosts_file_default     = os.path.join(dnsdir, "vx1.lgn.dfs.de.hosts")
 
 # deploydir_default      = os.path.join(deploydir_default_base, "br1.bre.dfs.de")
 # hosts_file_default     = os.path.join(dnsdir, "br1.bre.dfs.de.hosts")
 
-deploydir_default      = os.path.join(deploydir_default_base, "lx3.lgn.dfs.de")
-hosts_file_default     = os.path.join(dnsdir, "lx3.lgn.dfs.de.hosts")
+# deploydir_default      = os.path.join(deploydir_default_base, "lx3.lgn.dfs.de")
+# hosts_file_default     = os.path.join(dnsdir, "lx3.lgn.dfs.de.hosts")
+
+deploydir_default      = os.path.join(deploydir_default_base, "te2.lgn.dfs.de")
+hosts_file_default     = os.path.join(dnsdir, "te2.lgn.dfs.de.hosts")
 
 
 tempfile = os.path.join(deploydir_default, "temp_out.txt")

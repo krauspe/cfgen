@@ -1,180 +1,28 @@
 0.0.0.0 2step-cc.lx3.lgn.dfs.de 2step-cc # sy='NEWSIM LGNLX3' dv=eth0 sn=255.255.255.0 gw=192.168.33.1 ns=192.168.33.10 dn=lx3.lgn.dfs.de
 # remote pilot addresses (testen !)
 
-#psp101-s1 # mac=00:D0:C9:C4:3D:25
-192.168.33.130 psp101-s1.lx3.lgn.dfs.de psp101-s1  # hn=remote-psp1 dn=se.dfs.de mac=00:d0:c9:b6:a7:e5 # test maschine guenter hcl=nsc.psp
-192.168.33.131 psp102-s1.lx3.lgn.dfs.de psp102-s1  # hn=remote-psp2 dn=se.dfs.de mac=00:d0:c9:c4:2c:57 hcl=nsc.psp
-192.168.33.132 psp103-s1.lx3.lgn.dfs.de psp103-s1  # hn=remote-psp3 dn=se.dfs.de mac=00:d0:c9:c4:2f:f9 hcl=nsc.psp
-192.168.33.133 psp104-s1.lx3.lgn.dfs.de psp104-s1  # hn=remote-psp4 dn=se.dfs.de mac=00:d0:c9:c4:22:e7 hcl=nsc.psp
+#
+# NEWSIM Linux Testsystem lx3 (Schiessbude)
+#
+0.0.0.0 2step-cc.lx3.lgn.dfs.de 2step-cc # sy='NEWSIM LGNLX3' dv=eth0 sn=255.255.255.0 gw=192.168.33.1 ns=192.168.33.10 dn=lx3.lgn.dfs.de
+192.168.33.10  nss.lx3.lgn.dfs.de       nss     # hn=lgnlx3 dn=se.dfs.de hcl=nss
+10.232.250.232 lgnlx3.se.dfs.de lgnlx3 # dv=eth1 ns=10.232.250.190
 
 
-10.232.250.206 remote-psp1.se.dfs.de remote-psp1 # dv=eth1
-10.232.250.209 remote-psp2.se.dfs.de remote-psp2 # dv=eth1
-10.232.250.219 remote-psp3.se.dfs.de remote-psp3 # dv=eth1
-10.232.250.224 remote-psp4.se.dfs.de remote-psp4 # dv=eth1
 192.168.33.10 is01.lx3.lgn.dfs.de is01
 192.168.33.10 timesrv.lx3.lgn.dfs.de timesrv
 192.168.33.10	nss.lx3.lgn.dfs.de	nss	# hcl=nss
 #
 # Client adresses start at 20
 192.168.33.20	cwp1-s1.lx3.lgn.dfs.de	cwp1-s1	# hcl=nsc.cwp
-192.168.33.21	cwp2-s1.lx3.lgn.dfs.de	cwp2-s1	# hcl=nsc.cwp
-192.168.33.22	cwp3-s1.lx3.lgn.dfs.de	cwp3-s1	# hcl=nsc.cwp
-192.168.33.23	cwp4-s1.lx3.lgn.dfs.de	cwp4-s1	# hcl=nsc.cwp
-192.168.33.24	cwp5-s1.lx3.lgn.dfs.de	cwp5-s1	# hcl=nsc.cwp
-192.168.33.25	cwp6-s1.lx3.lgn.dfs.de	cwp6-s1	# hcl=nsc.cwp
-192.168.33.26	cwp7-s1.lx3.lgn.dfs.de	cwp7-s1	# hcl=nsc.cwp
-192.168.33.27	cwp8-s1.lx3.lgn.dfs.de	cwp8-s1	# hcl=nsc.cwp
-192.168.33.28	cwp9-s1.lx3.lgn.dfs.de	cwp9-s1	# hcl=nsc.cwp
-192.168.33.29	cwp10-s1.lx3.lgn.dfs.de	cwp10-s1	# hcl=nsc.cwp
-192.168.33.30	cwp11-s1.lx3.lgn.dfs.de	cwp11-s1	# hcl=nsc.cwp
-192.168.33.31	cwp12-s1.lx3.lgn.dfs.de	cwp12-s1	# hcl=nsc.cwp
-192.168.33.32	cwp13-s1.lx3.lgn.dfs.de	cwp13-s1	# hcl=nsc.cwp
-192.168.33.33	cwp14-s1.lx3.lgn.dfs.de	cwp14-s1	# hcl=nsc.cwp
-192.168.33.34	cwp15-s1.lx3.lgn.dfs.de	cwp15-s1	# hcl=nsc.cwp
-192.168.33.35	cwp16-s1.lx3.lgn.dfs.de	cwp16-s1	# hcl=nsc.cwp
-192.168.33.36	cwp17-s1.lx3.lgn.dfs.de	cwp17-s1	# hcl=nsc.cwp
-192.168.33.37	cwp18-s1.lx3.lgn.dfs.de	cwp18-s1	# hcl=nsc.cwp
-192.168.33.38	cwp19-s1.lx3.lgn.dfs.de	cwp19-s1	# hcl=nsc.cwp
-192.168.33.39	cwp20-s1.lx3.lgn.dfs.de	cwp20-s1	# hcl=nsc.cwp
-192.168.33.40	cwp21-s1.lx3.lgn.dfs.de	cwp21-s1	# hcl=nsc.cwp
-192.168.33.41	cwp22-s1.lx3.lgn.dfs.de	cwp22-s1	# hcl=nsc.cwp
-192.168.33.42	cwp23-s1.lx3.lgn.dfs.de	cwp23-s1	# hcl=nsc.cwp
-192.168.33.43	cwp24-s1.lx3.lgn.dfs.de	cwp24-s1	# hcl=nsc.cwp
-192.168.33.44	cwp25-s1.lx3.lgn.dfs.de	cwp25-s1	# hcl=nsc.cwp
-192.168.33.45	cwp26-s1.lx3.lgn.dfs.de	cwp26-s1	# hcl=nsc.cwp
-192.168.33.46	cwp27-s1.lx3.lgn.dfs.de	cwp27-s1	# hcl=nsc.cwp
-192.168.33.47	cwp28-s1.lx3.lgn.dfs.de	cwp28-s1	# hcl=nsc.cwp
-192.168.33.48	cwp29-s1.lx3.lgn.dfs.de	cwp29-s1	# hcl=nsc.cwp
-192.168.33.49	cwp30-s1.lx3.lgn.dfs.de	cwp30-s1	# hcl=nsc.cwp
-192.168.33.50 cwp1-s2.lx3.lgn.dfs.de cwp1-s2 #
-192.168.33.51 cwp2-s2.lx3.lgn.dfs.de cwp2-s2 #
-192.168.33.52 cwp3-s2.lx3.lgn.dfs.de cwp3-s2 #
-192.168.33.53 cwp4-s2.lx3.lgn.dfs.de cwp4-s2 #
-192.168.33.54 cwp5-s2.lx3.lgn.dfs.de cwp5-s2 #
-192.168.33.55 cwp6-s2.lx3.lgn.dfs.de cwp6-s2 #
-192.168.33.56 cwp7-s2.lx3.lgn.dfs.de cwp7-s2 #
-192.168.33.57 cwp8-s2.lx3.lgn.dfs.de cwp8-s2 #
-192.168.33.58 cwp9-s2.lx3.lgn.dfs.de cwp9-s2 #
-192.168.33.59 cwp10-s2.lx3.lgn.dfs.de cwp10-s2 #
-192.168.33.60 cwp11-s2.lx3.lgn.dfs.de cwp11-s2 #
-192.168.33.61 cwp12-s2.lx3.lgn.dfs.de cwp12-s2 #
-192.168.33.62 cwp13-s2.lx3.lgn.dfs.de cwp13-s2 #
-192.168.33.63 cwp14-s2.lx3.lgn.dfs.de cwp14-s2 #
-192.168.33.64 cwp15-s2.lx3.lgn.dfs.de cwp15-s2 #
-192.168.33.65 cwp16-s2.lx3.lgn.dfs.de cwp16-s2 #
-192.168.33.66 cwp17-s2.lx3.lgn.dfs.de cwp17-s2 #
-192.168.33.67 cwp18-s2.lx3.lgn.dfs.de cwp18-s2 #
-192.168.33.68 cwp19-s2.lx3.lgn.dfs.de cwp19-s2 #
-192.168.33.69 cwp20-s2.lx3.lgn.dfs.de cwp20-s2 #
-192.168.33.70 cwp21-s2.lx3.lgn.dfs.de cwp21-s2 #
-192.168.33.71 cwp22-s2.lx3.lgn.dfs.de cwp22-s2 #
-192.168.33.72 cwp23-s2.lx3.lgn.dfs.de cwp23-s2 #
-192.168.33.73 cwp24-s2.lx3.lgn.dfs.de cwp24-s2 #
-192.168.33.74 cwp25-s2.lx3.lgn.dfs.de cwp25-s2 #
-192.168.33.75 cwp26-s2.lx3.lgn.dfs.de cwp26-s2 #
-192.168.33.76 cwp27-s2.lx3.lgn.dfs.de cwp27-s2 #
-192.168.33.77 cwp28-s2.lx3.lgn.dfs.de cwp28-s2 #
-192.168.33.78 cwp29-s2.lx3.lgn.dfs.de cwp29-s2 #
-192.168.33.79 cwp30-s2.lx3.lgn.dfs.de cwp30-s2 #
-192.168.33.80	adc1-s1.lx3.lgn.dfs.de	adc1-s1	# hcl=nsc.adc
-192.168.33.81	adc2-s1.lx3.lgn.dfs.de	adc2-s1	# hcl=nsc.adc
 192.168.33.82	adc3-s1.lx3.lgn.dfs.de	adc3-s1	# hcl=nsc.adc
-192.168.33.83	adc4-s1.lx3.lgn.dfs.de	adc4-s1	# hcl=nsc.adc
-192.168.33.84	adc5-s1.lx3.lgn.dfs.de	adc5-s1	# hcl=nsc.adc
-192.168.33.85	adc6-s1.lx3.lgn.dfs.de	adc6-s1	# hcl=nsc.adc
-192.168.33.86 adc1-s2.lx3.lgn.dfs.de adc1-s2 #
-192.168.33.87 adc2-s2.lx3.lgn.dfs.de adc2-s2 #
-192.168.33.88 adc3-s2.lx3.lgn.dfs.de adc3-s2 #
-192.168.33.89 adc4-s2.lx3.lgn.dfs.de adc4-s2 #
-192.168.33.90 adc5-s2.lx3.lgn.dfs.de adc5-s2 #
-192.168.33.91 adc6-s2.lx3.lgn.dfs.de adc6-s2 #
 192.168.33.92	psp1-s1.lx3.lgn.dfs.de	psp1-s1	# hcl=nsc.psp
-192.168.33.93	psp2-s1.lx3.lgn.dfs.de	psp2-s1	# hcl=nsc.psp
-192.168.33.94	psp3-s1.lx3.lgn.dfs.de	psp3-s1	# hcl=nsc.psp
-192.168.33.95	psp4-s1.lx3.lgn.dfs.de	psp4-s1	# hcl=nsc.psp
-192.168.33.96	psp5-s1.lx3.lgn.dfs.de	psp5-s1	# hcl=nsc.psp
-192.168.33.97	psp6-s1.lx3.lgn.dfs.de	psp6-s1	# hcl=nsc.psp
-192.168.33.98	psp7-s1.lx3.lgn.dfs.de	psp7-s1	# hcl=nsc.psp
-192.168.33.99	psp8-s1.lx3.lgn.dfs.de	psp8-s1	# hcl=nsc.psp
-192.168.33.100	psp9-s1.lx3.lgn.dfs.de	psp9-s1	# hcl=nsc.psp
-192.168.33.101	psp10-s1.lx3.lgn.dfs.de	psp10-s1	# hcl=nsc.psp
-192.168.33.102	psp11-s1.lx3.lgn.dfs.de	psp11-s1	# hcl=nsc.psp
-192.168.33.103	psp12-s1.lx3.lgn.dfs.de	psp12-s1	# hcl=nsc.psp
-192.168.33.104	psp13-s1.lx3.lgn.dfs.de	psp13-s1	# hcl=nsc.psp
-192.168.33.105	psp14-s1.lx3.lgn.dfs.de	psp14-s1	# hcl=nsc.psp
-192.168.33.106	psp15-s1.lx3.lgn.dfs.de	psp15-s1	# hcl=nsc.psp
-192.168.33.107	psp16-s1.lx3.lgn.dfs.de	psp16-s1	# hcl=nsc.psp
-192.168.33.108	psp17-s1.lx3.lgn.dfs.de	psp17-s1	# hcl=nsc.psp
-192.168.33.109	psp18-s1.lx3.lgn.dfs.de	psp18-s1	# hcl=nsc.psp
-192.168.33.110	psp19-s1.lx3.lgn.dfs.de	psp19-s1	# hcl=nsc.psp
-192.168.33.111	psp20-s1.lx3.lgn.dfs.de	psp20-s1	# hcl=nsc.psp
 192.168.33.112	dap1-s1.lx3.lgn.dfs.de	dap1-s1	# hcl=nsc.dap
-192.168.33.113	dap2-s1.lx3.lgn.dfs.de	dap2-s1	# hcl=nsc.dap
-192.168.33.114	dap3-s1.lx3.lgn.dfs.de	dap3-s1	# hcl=nsc.dap
-192.168.33.115	dap4-s1.lx3.lgn.dfs.de	dap4-s1	# hcl=nsc.dap
-192.168.33.116	dap5-s1.lx3.lgn.dfs.de	dap5-s1	# hcl=nsc.dap
-192.168.33.117	dap6-s1.lx3.lgn.dfs.de	dap6-s1	# hcl=nsc.dap
-192.168.33.118	dap7-s1.lx3.lgn.dfs.de	dap7-s1	# hcl=nsc.dap
-192.168.33.119	dap8-s1.lx3.lgn.dfs.de	dap8-s1	# hcl=nsc.dap
-192.168.33.120	dap9-s1.lx3.lgn.dfs.de	dap9-s1	# hcl=nsc.dap
-192.168.33.121	dap10-s1.lx3.lgn.dfs.de	dap10-s1	# hcl=nsc.dap
 192.168.33.122	sup1-s1.lx3.lgn.dfs.de	sup1-s1	# hcl=nsc.sup
-192.168.33.123	sup2-s1.lx3.lgn.dfs.de	sup2-s1	# hcl=nsc.sup
-192.168.33.124	sup3-s1.lx3.lgn.dfs.de	sup3-s1	# hcl=nsc.sup
-192.168.33.125	sup4-s1.lx3.lgn.dfs.de	sup4-s1	# hcl=nsc.sup
-192.168.33.126 sup1-s2.lx3.lgn.dfs.de sup1-s2 #
-192.168.33.127 sup2-s2.lx3.lgn.dfs.de sup2-s2 #
-192.168.33.128 sup3-s2.lx3.lgn.dfs.de sup3-s2 #
-192.168.33.129 sup4-s2.lx3.lgn.dfs.de sup4-s2 #
-192.168.33.134 atspeak005.lx3.lgn.dfs.de atspeak005
-192.168.33.135 atspeak006.lx3.lgn.dfs.de atspeak006
-192.168.33.136 atspeak007.lx3.lgn.dfs.de atspeak007
-192.168.33.137 atspeak008.lx3.lgn.dfs.de atspeak008
-192.168.33.138 atspeak009.lx3.lgn.dfs.de atspeak009
-192.168.33.139 atspeak010.lx3.lgn.dfs.de atspeak010
-192.168.33.140 atspeak011.lx3.lgn.dfs.de atspeak011
-192.168.33.141 atspeak012.lx3.lgn.dfs.de atspeak012
-192.168.33.142 atspeak013.lx3.lgn.dfs.de atspeak013
-192.168.33.143 atspeak014.lx3.lgn.dfs.de atspeak014
-192.168.33.144 atspeak015.lx3.lgn.dfs.de atspeak015
 #
 # Server adresses start at 150
 192.168.33.150	iss1-s1.lx3.lgn.dfs.de	iss1-s1	# hcl=nsc.iss
 192.168.33.151	siu1-s1.lx3.lgn.dfs.de	siu1-s1	# hcl=nsc.siu
-192.168.33.152	siu2-s1.lx3.lgn.dfs.de	siu2-s1	# hcl=nsc.siu
-192.168.33.153	siu3-s1.lx3.lgn.dfs.de	siu3-s1	# hcl=nsc.siu
-192.168.33.154	siu4-s1.lx3.lgn.dfs.de	siu4-s1	# hcl=nsc.siu
-192.168.33.155	siu5-s1.lx3.lgn.dfs.de	siu5-s1	# hcl=nsc.siu
-192.168.33.156	siu6-s1.lx3.lgn.dfs.de	siu6-s1	# hcl=nsc.siu
 192.168.33.157	sim1-s1.lx3.lgn.dfs.de	sim1-s1	# hcl=nsc.sim
-192.168.33.158	sim2-s1.lx3.lgn.dfs.de	sim2-s1	# hcl=nsc.sim
-192.168.33.159	sim3-s1.lx3.lgn.dfs.de	sim3-s1	# hcl=nsc.sim
-192.168.33.160	sim4-s1.lx3.lgn.dfs.de	sim4-s1	# hcl=nsc.sim
 192.168.33.161 fcf1-s1.lx3.lgn.dfs.de fcf1-s1 #
 192.168.33.162 fcf2-s1.lx3.lgn.dfs.de fcf2-s1 #
-192.168.33.163 fcf3-s1.lx3.lgn.dfs.de fcf3-s1 #
-192.168.33.164 fcf4-s1.lx3.lgn.dfs.de fcf4-s1 #
-192.168.33.165 fcf5-s1.lx3.lgn.dfs.de fcf5-s1 #
-192.168.33.166 fcf6-s1.lx3.lgn.dfs.de fcf6-s1 #
-192.168.33.167 tst1.lx3.lgn.dfs.de tst1 #
-192.168.33.168 tst2.lx3.lgn.dfs.de tst2 #
-192.168.33.169 tst3.lx3.lgn.dfs.de tst3 #
-192.168.33.170 dal1.lx3.lgn.dfs.de dal1 #
-192.168.33.171 dal2.lx3.lgn.dfs.de dal2 #
-192.168.33.172 dal3.lx3.lgn.dfs.de dal3 #
-192.168.33.173 adm1.lx3.lgn.dfs.de adm1 #
-192.168.33.174 adm2.lx3.lgn.dfs.de adm2 #
-192.168.33.175 adm3.lx3.lgn.dfs.de adm3 #
-192.168.33.176 net-prn1.lx3.lgn.dfs.de net-prn1 #
-192.168.33.177 net-prn2.lx3.lgn.dfs.de net-prn2 #
-192.168.33.178 net-prn3.lx3.lgn.dfs.de net-prn3 #
-192.168.33.179 aman1.lx3.lgn.dfs.de aman1 #
-192.168.33.180 aman2.lx3.lgn.dfs.de aman2 #
-192.168.33.181 aman3.lx3.lgn.dfs.de aman3 #
-#
-# unused adresses start at 182
-#
-# DHCP adresses start at 200
-#
-# Default gateway adresses is 250
