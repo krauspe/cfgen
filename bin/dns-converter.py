@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# Is now compatible for Python 2.x AND 3.x !!
+
 # - Loop ueber die Liste von fqdns und ueber hostnamen feststellen was ein installierbarer Host ist und classe
 #   feststellen -> OK
 # - Nicht installierbare Hosts als DNS Entrys festhalten ...? -> OK noch keine Gen von Lines oder Output
@@ -42,13 +44,13 @@
 #             },
 
 from __future__ import print_function
-import os
+import os, sys
 import socket
 from collections import defaultdict, Mapping
 import argparse
 import json
 import yaml
-import pretty as pp
+import prettyprint as pp
 import re
 import netaddr
 #from netaddr import *
@@ -93,8 +95,8 @@ deploydir_default_base = os.path.join(basedir, "deployment")
 # deploydir_default      = os.path.join(deploydir_default_base, "lx3.lgn.dfs.de")
 # hosts_file_default     = os.path.join(dnsdir, "lx3.lgn.dfs.de.hosts")
 
-deploydir_default      = os.path.join(deploydir_default_base, "te3.lgn.dfs.de")
-hosts_file_default     = os.path.join(dnsdir, "te3.lgn.dfs.de.hosts")
+deploydir_default      = os.path.join(deploydir_default_base, "vx1.lgn.dfs.de")
+hosts_file_default     = os.path.join(dnsdir, "vx1.lgn.dfs.de.hosts")
 
 
 tempfile = os.path.join(deploydir_default, "temp_out.txt")
@@ -161,7 +163,13 @@ if not os.path.exists(infile):
     exit()
 
 def update_nested_dict(d, u):
-    for k, v in u.iteritems():
+    #for k, v in u.iteritems():A python 2.x
+    if sys.version_info.major == 2:
+        Items = u.iteritems()
+    else:
+        Items = u.items()
+
+    for k, v in Items:
         if isinstance(d, Mapping):
             if isinstance(v, Mapping):
                 r = update_nested_dict(d.get(k, {}), v)
