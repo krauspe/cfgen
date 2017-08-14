@@ -50,6 +50,7 @@ import json
 import yaml
 import pretty as pp
 import re
+import netaddr
 #from netaddr import *
 
 ##usage: pp(content) # where content is json
@@ -92,8 +93,8 @@ deploydir_default_base = os.path.join(basedir, "deployment")
 # deploydir_default      = os.path.join(deploydir_default_base, "lx3.lgn.dfs.de")
 # hosts_file_default     = os.path.join(dnsdir, "lx3.lgn.dfs.de.hosts")
 
-deploydir_default      = os.path.join(deploydir_default_base, "te2.lgn.dfs.de")
-hosts_file_default     = os.path.join(dnsdir, "te2.lgn.dfs.de.hosts")
+deploydir_default      = os.path.join(deploydir_default_base, "te3.lgn.dfs.de")
+hosts_file_default     = os.path.join(dnsdir, "te3.lgn.dfs.de.hosts")
 
 
 tempfile = os.path.join(deploydir_default, "temp_out.txt")
@@ -219,6 +220,13 @@ def getEntryClassification(fqdn):
         entry_type = 'interface'
 
     return entry_type, main_class, sub_class
+
+def getSubnet(ip, netmask):
+    ip_int = ip.split('.')
+    netmask_int = netmask.split('.')
+    subnet = '.'.join([str(int(ip_int[n]) & int(netmask_int[n])) for n in range(0,4)])
+    return subnet
+
 
 # is mal so eine idee fuer ein objekt :-))
 
@@ -370,7 +378,7 @@ def getDhcpConfig(fqdn):
     # TODO: generate subnet address
     # TODO: USE IT :-)
     #dn = '.'.join(fqdn.split('.'))
-    subnet = "x.x.x.0"
+    subnet = getSubnet(IP[fqdn], SN[fqdn])
     data = {
       'netmask': SN[fqdn],
       'subnet':  "{}".format(subnet),
