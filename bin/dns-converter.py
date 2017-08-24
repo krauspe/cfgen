@@ -1,9 +1,26 @@
 #!/usr/bin/env python
 
-#TODO: check which entrys are real (installable) entrys: derive from hostname
-#TODO: insert 'net' obove 'nic' tree (maybe ...?)
-#TODO: create 'classes' tree and fill with values (each host or global ??)
-#TODO: make a second loop to collect all hn entrys of each line and add nic entrys to each host
+# Is now compatible for Python 2.x AND 3.x !!
+
+# - Loop ueber die Liste von fqdns und ueber hostnamen feststellen was ein installierbarer Host ist und classe
+#   feststellen -> OK
+# - Nicht installierbare Hosts als DNS Entrys festhalten ...? -> OK noch keine Gen von Lines oder Output
+# - Suche nach 2step-cc Eintrag: hieraus Defaults bereitstellen -> OK
+# - Neue Liste aus installierbaren Hosts -> OK
+# - Neue Liste aus uebrigen Hosts  -> OK
+# - Loop ueber die HN_ENTRYS jedes installaierbaren host:
+#    - check ob ein DN[fqdn] existiert, wenn nein, Default einsetzen -> OK
+#    - Dictionary (oder object ?) fuer jeden installierbaren Host mit
+#       allen seinen Eintraegen aus HN_ENTRYS un deren IPs, sn. dv etc -> OK (dict bis jetzt)
+# - TODO: Eintraege aus HN_ENTRYS aus Liste uebriger Hosts entfernen und als DNS-Eintraege dem Host.Dictionary (oder object) zuordnen ->
+
+# OUTPUT:
+# - Loop ueber alle alle installierbaren hosts und Output files fuer Puppet (yaml) erzeugen -> OK
+# - TODO: Aus allen DNS-Eintraegen der installierbaren hosts und der reduzierten Liste neue HOSTS Datei fuer DNS bauen
+# - TODO: diese sollte keine Text-Records fuer interface Konfig enthalten , jedoch ggfs Eintraege wie "rnsc" ??
+
+# moegliche Struktur fuer allgemeine Zwecke, jedoch erst mal nur nur fuer yaml und dns output, daher siehe unten
+# --------------------------------------------------------------------------------------------------------------
 # "cwp10-s1": {
 #                 "classes": {
 #                     "main": [
@@ -27,53 +44,80 @@
 #             },
 
 from __future__ import print_function
-import os
+import os, sys
 import socket
-from  collections import defaultdict, Mapping
+from collections import defaultdict, Mapping
 import argparse
 import json
 import yaml
-from prettyprint import pp
+import prettyprint as pp
 import re
+import netaddr
+#from netaddr import *
 
 ##usage: pp(content) # where content is json
 
 pydir =  os.path.dirname(os.path.abspath(__file__))
 basedir = os.path.dirname(pydir)
-confdir = os.path.join(basedir,"config")
-dnsdir = os.path.join(confdir,"dns_hosts")
-#tpldir = os.path.join(basedir,"tpl")
-deploydir_default_base = os.path.join(basedir, "deployment")
+confdir = os.path.join(basedir, "config")
+domain_default = "lx3.lgn.dfs.de"
+deploydir_base_default = os.path.join(basedir, "deployment", "hieradata")
 
-# deploydir_default      = os.path.join(deploydir_default_base, "mu1.muc.dfs.de")
-# hosts_file_default     = os.path.join(dnsdir, "mu1.muc.dfs.de.hosts")
+if os.path.exists('/mnt/puppet/hieradata'):
+    puppet_dir = '/mnt/puppet'
+elif os.path.exists('/opt/export/puppet-master/hieradata'):
+    puppet_dir = '/opt/export/puppet-master'
+else:
+    puppet_dir = None
 
-deploydir_default      = os.path.join(deploydir_default_base, "ka1.krl.dfs.de")
-hosts_file_default     = os.path.join(dnsdir, "ka1.krl.dfs.de.hosts")
+# /opt/export/puppet-master/modules/dns_server_config/files/data
+# /mnt/puppet/modules/dns_server_config/files/data
 
-# deploydir_default      = os.path.join(deploydir_default_base, "br1.bre.dfs.de")
-# hosts_file_default     = os.path.join(dnsdir, "br1.bre.dfs.de.hosts")
-
-# deploydir_default      = os.path.join(deploydir_default_base, "lx3.lgn.dfs.de")
-# hosts_file_default     = os.path.join(dnsdir, "lx3.lgn.dfs.de.hosts")
-
-
-tempfile = os.path.join(deploydir_default, "temp_out.txt")
+tempfile = os.path.join(deploydir_base_default, "temp_out.txt")
 
 # parse args
 formats = ['json',]
 
 parser = argparse.ArgumentParser(description="convert dns hosts entrys with txt records to json")
-parser.add_argument("--hosts", type=str, required=False, default=hosts_file_default, help="hosts file")
+parser.add_argument("-d", "--domain", type=str, required=False, default=domain_default, help="DNS Domain")
 parser.add_argument("-f", "--format" , type=str, required=False, default='yaml', choices=formats, help="output format")
-parser.add_argument("-d", "--deploydir" , type=str, required=False, default=deploydir_default, choices=formats, help="output format")
+parser.add_argument("-b", "--deploybase", type=str, required=False, default=deploydir_base_default, choices=formats, help="basedir for deployment")
 args = parser.parse_args()
 
-infile = args.hosts
+domain = args.domain
 format = args.format
-deploydir = args.deploydir
+deploydir_base = args.deploybase
 
-host_outfile = defaultdict(str)
+def ensure_dir(f):
+    if not os.path.exists(f):
+        os.makedirs(f)
+
+
+dnsdir_default = os.path.join(confdir, "dns_hosts")
+dnsdir_puppet = os.path.join(puppet_dir, "modules", "dns_server_config", "files", "data")
+hosts_default = os.path.join(dnsdir_default,domain+'.'+'hosts' )
+hosts_puppet = os.path.join(dnsdir_puppet,domain+'.'+'hosts' )
+
+if os.path.exists(hosts_default):
+    dnsdir = dnsdir_default
+    infile = hosts_default
+    print("Using test file {}".format(infile))
+else:
+    if puppet_dir:
+        dnsdir = dnsdir_puppet
+        infile = hosts_puppet
+        print("Using PRODUCTION file {}".format(infile))
+    else:
+        print("NO default hosts file {} exists".format(hosts_default))
+        print("No PRODIUCTION hosts file {} exists, exiting".format(hosts_puppet))
+
+deploydir = os.path.join(deploydir_base, domain)
+ensure_dir(deploydir)
+
+#dns_hosts_outfile = os.path.join(deploydir, args.hosts.split('/')[-1].rstrip('.hosts') + '.' + format)
+dns_hosts_outfile = os.path.join(deploydir, domain, domain+'.'+format)
+
+#host_outfile = defaultdict(str)
 
 HN = defaultdict(str)
 DN = defaultdict(str)
@@ -82,6 +126,7 @@ MAIN_CLASS = defaultdict(str)
 SUB_CLASS = defaultdict(str)
 NIC_ENTRYS = defaultdict(str)
 MAC = defaultdict(str)
+NS = defaultdict(str)
 IP = defaultdict(str)
 DV = defaultdict(str)
 SN = defaultdict(str)
@@ -89,25 +134,20 @@ GW = defaultdict(str)
 SY = defaultdict(str)
 DESCRIPTION = defaultdict(str)
 HN_ENTRYS = defaultdict(list)
+IF_ENTRYS = defaultdict(list)
 
 FQDNS = set([])
 INSTALLABLE_FQDNS = set([])
 
 installable_prefixes = ['psp', 'cwp', 'adc', 'sup', 'dap', 'siu', 'sim', 'iss']
 installable_suffixes = ['s1', 's2']
-DNS_ENTRY_LINES = set([])
+DNS_ENTRYS = []
+DNS_ENTRY_LINES = []
 
-def ensure_dir(f):
-    if not os.path.exists(f):
-        os.makedirs(f)
+nss_default_subclass = 'light'
 
-ensure_dir(deploydir)
 
-outfile = os.path.join(deploydir, args.hosts.split('/')[-1].rstrip('.hosts') + '.' + format)
-
-print('hosts file: {} '.format(args.hosts))
 print("\ninput  file: %s" % infile)
-print("output file: %s" % outfile)
 print("output format: %s\n" % format)
 
 # functions
@@ -117,7 +157,13 @@ if not os.path.exists(infile):
     exit()
 
 def update_nested_dict(d, u):
-    for k, v in u.iteritems():
+    #for k, v in u.iteritems():A python 2.x
+    if sys.version_info.major == 2:
+        Items = u.iteritems()
+    else:
+        Items = u.items()
+
+    for k, v in Items:
         if isinstance(d, Mapping):
             if isinstance(v, Mapping):
                 r = update_nested_dict(d.get(k, {}), v)
@@ -146,6 +192,7 @@ def getEntryClassification(fqdn):
             dns         : use for DNS only (all additional DNS entrys for one domain (or site)
 
         main_class, sub_class: puppet/hiera parameters which control installation
+
     '''
     # get hostname from fqdn
     hn = fqdn.split('.')[0]
@@ -167,14 +214,23 @@ def getEntryClassification(fqdn):
             entry_type = 'installable'
             main_class = 'nsc'
             sub_class  = pre
-    elif pre == "2step" and suf == 'cc':
-        entry_type = 'defaults'
-        main_class = None
-        sub_class = None
+        elif pre == "2step" and suf == 'cc':
+            entry_type = 'defaults'
+            main_class = None
+            sub_class = None
     elif DV[fqdn] and DV[fqdn] != DV[getDefaultKey(fqdn)]:
         entry_type = 'interface'
 
     return entry_type, main_class, sub_class
+
+def getSubnet(ip, netmask):
+    ip_int = ip.split('.')
+    netmask_int = netmask.split('.')
+    subnet = '.'.join([str(int(ip_int[n]) & int(netmask_int[n])) for n in range(0,4)])
+    return subnet
+
+
+# is mal so eine idee fuer ein objekt :-))
 
 # class NicEntry(object):
 #     def __init__(self,nic_id,hn,**kwargs):
@@ -189,6 +245,8 @@ def getEntryClassification(fqdn):
 #     def set_hn(self,hn):
 #         self.nic_entry[[self.nic_name]]['hn'] = hn
 
+# READ input file
+
 lines = [line.rstrip('\n') for line in open(infile) if not line.startswith('#')]
 lines = list(line for line in lines if line) # only non blank lines
 for line in lines:
@@ -200,14 +258,14 @@ for line in lines:
         ip, fqdn, hn = l[:3]
         IP[fqdn] = ip
         HN[fqdn] = hn
-        if hn != '2step-cc': FQDNS.add(fqdn)
+        FQDNS.add(fqdn)
     else:
         continue
 
-#    host_outfile = os.path.join(deploydir, hn + '.' + format)
+    # host_outfile = os.path.join(deploydir, hn + '.' + format)
     # Create a new entry and an host_entrys_update to update host_entrys dict
-#    new_entry = {}
-#    host_entrys_update = {}
+    # new_entry = {}
+    # host_entrys_update = {}
     description = ""
 
 
@@ -250,37 +308,39 @@ for line in lines:
                 SN[fqdn] = val
             elif key == 'gw':
                 GW[fqdn] = val
+            elif key == 'ns':
+                NS[fqdn] = val
             elif key == 'mac':
                 MAC[fqdn] = val
             elif key == 'sy':
                 SY[fqdn] = val
 
-# for fqdn in FQDNS:
-#     print("-----\n")
-#     print(HN_ENTRYS[fqdn])
-#
-# exit()
 # classify fqdn entrys and set defaults for missing values from 2step-cc entry
 
 for fqdn in FQDNS:
     entry_type, main_class, sub_class = getEntryClassification(fqdn)
+    #print("{}: ENTRY TYPE: {}".format(fqdn, entry_type))
     ENTRY_TYPE[fqdn], MAIN_CLASS[fqdn], SUB_CLASS[fqdn] = entry_type, main_class, sub_class
 
     if entry_type == 'installable' or entry_type == 'interface':
-        INSTALLABLE_FQDNS.add(fqdn)
         # set default for dv after classification
         dn_default = getDefaultKey(fqdn)
         if not DN[fqdn]:
             DN[fqdn] = DN[dn_default]
         if not SN[fqdn]:
-            SN[fqdn] = SN[dn_default]
+            if SN[dn_default]:
+                SN[fqdn] = SN[dn_default]
+            else:
+                print("Warning: NO NETMASK (and NO default) found for {} !!".format(fqdn))
+        if not NS[fqdn]:
+            NS[fqdn] = NS[dn_default]
         if not GW[fqdn]:
             GW[fqdn] = GW[dn_default]
         if not DV[fqdn]:
            DV[fqdn] = DV[dn_default]
 
-        print("{}:\t {}\tclasses:{}.{}\t dv={}".format(fqdn, entry_type, main_class, sub_class, DV[fqdn]))
-        # get list of entrys which can be used as configuration data for installable hosts
+        #print("{}:\t {}\tclasses:{}.{}\t dv={}".format(fqdn, entry_type, main_class, sub_class, DV[fqdn]))
+        # Use for configuration data for installable hosts
         if entry_type == 'installable':
             INSTALLABLE_FQDNS.add(fqdn)
             for hn_entry in HN_ENTRYS[fqdn]:
@@ -288,63 +348,140 @@ for fqdn in FQDNS:
                     fqdn_entry = "{}.{}".format(hn_entry, DN[fqdn])
                 else:
                     fqdn_entry = hn_entry
-
-                print ("\t{}\tdv={}".format(fqdn_entry,DV[fqdn_entry]))
+                IF_ENTRYS[fqdn].append(fqdn_entry)
+                #print ("\t{}\tdv={}".format(fqdn_entry,DV[fqdn_entry]))
 
     else:
-        print("{}:\t {}\t".format(fqdn, entry_type))
+        # Use as DNS entry only
+        #print("{}:\t {}\t".format(entry_type, fqdn))
+        DNS_ENTRYS.append(fqdn)
 
 
-# - Loop ueber die Liste von fqdns und ueber hostnamen feststellen was ein installierbarer Host ist und classe
-#   feststellen
-# - Nicht installierbare Hosts als DNS Entrys festhalten ...??
-# - Suche nach 2step-cc Eintrag: hieraus Defaults bereitstellen
-# - Neue Liste aus installierbaren Hosts
-# - Neue Liste aus uebrigen Hosts
-# - Loop ueber die HN_ENTRYS jedes installaierbaren host:
-#    - check ob ein DN[fqdn] existiert, wenn nein, Default einsetzen
-#    - Dictionary (oder object ?) fuer jeden installierbaren Host mit allen seinen Eintraegen aus HN_ENTRYS un deren IPs, sn. dv etc
-# - Eintraege aus HN_ENTRYS aus Liste uebriger Hosts entfernen und als DNS-Eintraege dem Host.Dictionary (oder object) zuordnen
+def getHostClasses(fqdn):
+    hn = fqdn.split('.')[0]
+    main = ''; sub = ''
 
-# OUTPUT:
-# - Loop ueber alle alle installierbaren hosts und Output files fuer Puppet (yaml) erzeugen
-# - Aus allen DNS-Eintraegen der installierbaren hosts und der reduzierten Liste neue HOSTS Datei fuer DNS bauen
-#   diese sollte keine Text-Records fuer interface Konfig enthalten , jedoch ggfs Eintraege wie "rnsc" ??
+    if hn == 'nss':
+        main = 'nss'
+        sub =  nss_default_subclass
+    else:
+        prefix = hn[0:3]
+        if prefix in installable_prefixes:
+            main = 'nsc'
+            sub  = prefix
+
+    host_classes = {
+        'host_classes::main': main,
+        'host_classes::sub': sub,
+    }
+    return host_classes
+
+def getDhcpConfig(fqdn):
+    # TODO: generate subnet address
+    # TODO: USE IT :-)
+    #dn = '.'.join(fqdn.split('.'))
+    subnet = getSubnet(IP[fqdn], SN[fqdn])
+    data = {
+      'netmask': SN[fqdn],
+      'subnet':  "{}".format(subnet),
+      'routers': GW[fqdn],
+      'domain_name_servers': "{}".format(NS[fqdn]),
+      'domain_name':         "{}".format(DN[fqdn]),
+      'range_start':         '200',
+      'range_end':           '239',
+      'default_lease_time':  '3600',
+      'max_lease_time':      '21600',
+      'args':                'eth0',
+      'ensure':              'running',
+      'enable':              True,
+    }
+    dataout = {'dhcpd': data}
+    return dataout
+
+def generateHostDataStruct(main_fqdn):
+    hn = main_fqdn.split('.')[0]
+
+    # get host classes
+    dataout = getHostClasses(main_fqdn)
+    main = dataout['host_classes::main']
+    #sub  = dataout['host_classes']['sub']
+
+    if main in ['nss', 'cis']:
+        dhcpd   = getDhcpConfig(main_fqdn)
+        dataout = update_nested_dict(dataout, dhcpd)
+        ns      = 'localhost'
+    else:
+        ns = NS[main_fqdn]
+    # get network interface config data
+
+    ensure = 'up'
+    peerdns = True
+
+    dv = {
+        'ensure': ensure,
+        'ipaddress': IP[main_fqdn],
+        'netmask': SN[main_fqdn],
+        'gateway': GW[main_fqdn],
+        'dns1': ns,
+        'peerdns': peerdns,
+    }
+    ifdata = {DV[main_fqdn]:dv}
+
+    for fqdn in IF_ENTRYS[main_fqdn]:
+        dv = {
+            'ensure': 'up',
+            'ipaddress': IP[fqdn],
+            'netmask': SN[fqdn],
+            'gateway': GW[fqdn],
+            'dns1': NS[fqdn],
+        }
+        ifdata.update({DV[fqdn]: dv})
+
+    network_if_static = {'network::if_static': ifdata}
+    dataout = update_nested_dict(dataout, network_if_static)
+
+    # get dhcpd config if hn==nss
 
 
 
-#                new_entry[key] = val
-
-#    host_entrys_update[fqdn] = new_entry
+    return dataout
 
 
-    # with open(host_outfile, mode='w') as f:
-    #     print("writing {} file {}".format(format,host_outfile))
+def generateDnsLines(fqdn_list, txt_rec_list):
+    dns_lines = []
+    for fqdn in fqdn_list:
+        hn = fqdn.split('.')[0]
+        dns_lines.append("{}\t{}\t{}".format(hn, fqdn, IP[fqdn]))
+    return dns_lines
+
+# output hiera yaml files
+
+for fqdn in INSTALLABLE_FQDNS:
+    #print("{}".format(fqdn))
+    data = generateHostDataStruct(fqdn)
+    outfile = os.path.join(deploydir, fqdn + '.' + format)
+
+    with open(outfile, mode='w') as f:
+        print("writing {} file {}".format(format,outfile))
+
+        if format == "json":
+                f.write(json.dumps(data, sort_keys=False, indent=2, separators=(',', ': ')))
+        elif format == "yaml":
+                yaml.dump(data, f, default_flow_style=False)
+    #print(data)
+
+
+
+# yaml output (only IFs)
     #
-    #     if format == "json":
-    #             f.write(json.dumps(new_entry, sort_keys=True, indent=2, separators=(',', ': ')))
-    #     elif format == "yaml":
-    #             yaml.dump(new_entry, f, default_flow_style=False)
+    # network::if_static:
+    #   'eth0':
+    #     ensure: up
+    #     ipaddress: 192.168.40.20
+    #     netmask: 255.255.255.0
+    #     gateway: 192.168.40.20
+    #     peerdns: true
+    #     dns1: 192.168.40.10
 
 
-    #host_entrys[fqdn] = new_entry
-#    update_nested_dict(host_entrys,host_entrys_update)
-
-# # Debug ouput file
-# with open(tempfile,mode='w') as f:
-#     for line in lines:
-#         f.write (line + '\n')
-#
-# write output file
-
-# with open(outfile, mode='w') as f:
-#     print("writing single data {} file {}".format(format, outfile))
-#
-#     if format == "json":
-#             f.write(json.dumps(host_entrys, sort_keys=True, indent=2, separators=(',', ': ')))
-#     elif format == "yaml":
-#             yaml.dump(host_entrys, f, default_flow_style=False)
-
-
-#pp(host_entrys)
 

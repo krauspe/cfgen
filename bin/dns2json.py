@@ -54,7 +54,7 @@ parser = argparse.ArgumentParser(description="convert dns hosts entrys with txt 
 parser.add_argument("--hosts", type=str, required=False,default=default_hosts_file ,help="hosts file")
 parser.add_argument("-f", "--format" , type=str, required=False, default='yaml', choices=formats, help="output format")
 #parser.add_argument("-d", "--deploydir" , type=str, required=False, default=deploydir_default, choices=formats, help="output format")
-parser.add_argument("-d", "--deploydir" , type=str, required=False, default=os.path.join(deploydir_default,'lx3.lgn.dfs.de'), choices=formats, help="output format")
+parser.add_argument("-d", "--deploydir" , type=str, required=False, default=os.path.join(deploydir_default,'te3.lgn.dfs.de'), choices=formats, help="output format")
 args = parser.parse_args()
 
 infile = args.hosts
