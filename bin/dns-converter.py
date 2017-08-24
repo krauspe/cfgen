@@ -95,8 +95,8 @@ deploydir_default_base = os.path.join(basedir, "deployment")
 # deploydir_default      = os.path.join(deploydir_default_base, "lx3.lgn.dfs.de")
 # hosts_file_default     = os.path.join(dnsdir, "lx3.lgn.dfs.de.hosts")
 
-deploydir_default      = os.path.join(deploydir_default_base, "vx1.lgn.dfs.de")
-hosts_file_default     = os.path.join(dnsdir, "vx1.lgn.dfs.de.hosts")
+deploydir_default      = os.path.join(deploydir_default_base, "ak7.lgn.dfs.de")
+hosts_file_default     = os.path.join(dnsdir, "ak7.lgn.dfs.de.hosts")
 
 
 tempfile = os.path.join(deploydir_default, "temp_out.txt")
