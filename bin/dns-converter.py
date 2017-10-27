@@ -60,7 +60,8 @@ import netaddr
 pydir =  os.path.dirname(os.path.abspath(__file__))
 basedir = os.path.dirname(pydir)
 confdir = os.path.join(basedir, "config")
-dnsdir_default = os.path.join(confdir, "dns_hosts")
+domain_default = "te2.lgn.dfs.de"
+deploydir_base_default = os.path.join(basedir, "deployment", "hieradata")
 
 if os.path.exists('/mnt/puppet/hieradata'):
     puppet_dir = '/mnt/puppet'
@@ -69,50 +70,52 @@ elif os.path.exists('/opt/export/puppet-master/hieradata'):
 else:
     puppet_dir = None
 
-
-if puppet_dir != None:
-    dnsdir_puppet = os.path.join(puppet_dir, "modules", "dns_server_config", "files", "data")
-    if os.path.exists(dnsdir_puppet):
-        dnsdir = dnsdir_puppet
-    else:
-        print("Warning: Production hosts dir {} does not exist !".format(dnsdir_puppet))
-        print("         Using {}".format(dnsdir_default))
-        dnsdir = dnsdir_default
-else:
-    dnsdir = dnsdir_default
-    print("Notice: Using {}".format(dnsdir_default))
-
 # /opt/export/puppet-master/modules/dns_server_config/files/data
 # /mnt/puppet/modules/dns_server_config/files/data
 
-#tpldir = os.path.join(basedir,"tpl")
-deploydir_default_base = os.path.join(basedir, "deployment")
-
-
-# deploydir_default      = os.path.join(deploydir_default_base, "br1.bre.dfs.de")
-# hosts_file_default     = os.path.join(dnsdir, "br1.bre.dfs.de.hosts")
-
-# deploydir_default      = os.path.join(deploydir_default_base, "lx3.lgn.dfs.de")
-# hosts_file_default     = os.path.join(dnsdir, "lx3.lgn.dfs.de.hosts")
-
-deploydir_default      = os.path.join(deploydir_default_base, "ak7.lgn.dfs.de")
-hosts_file_default     = os.path.join(dnsdir, "ak7.lgn.dfs.de.hosts")
-
-
-tempfile = os.path.join(deploydir_default, "temp_out.txt")
+tempfile = os.path.join(deploydir_base_default, "temp_out.txt")
 
 # parse args
 formats = ['json',]
 
 parser = argparse.ArgumentParser(description="convert dns hosts entrys with txt records to json")
-parser.add_argument("--hosts", type=str, required=False, default=hosts_file_default, help="hosts file")
+parser.add_argument("-d", "--domain", type=str, required=False, default=domain_default, help="DNS Domain")
 parser.add_argument("-f", "--format" , type=str, required=False, default='yaml', choices=formats, help="output format")
-parser.add_argument("-d", "--deploydir" , type=str, required=False, default=deploydir_default, choices=formats, help="output format")
+parser.add_argument("-b", "--deploybase", type=str, required=False, default=deploydir_base_default, choices=formats, help="basedir for deployment")
 args = parser.parse_args()
 
-infile = args.hosts
+domain = args.domain
 format = args.format
-deploydir = args.deploydir
+deploydir_base = args.deploybase
+
+def ensure_dir(f):
+    if not os.path.exists(f):
+        os.makedirs(f)
+
+
+dnsdir_default = os.path.join(confdir, "dns_hosts")
+dnsdir_puppet = os.path.join(puppet_dir, "modules", "dns_server_config", "files", "data")
+hosts_default = os.path.join(dnsdir_default,domain+'.'+'hosts' )
+hosts_puppet = os.path.join(dnsdir_puppet,domain+'.'+'hosts' )
+
+if os.path.exists(hosts_default):
+    dnsdir = dnsdir_default
+    infile = hosts_default
+    print("Using test file {}".format(infile))
+else:
+    if puppet_dir:
+        dnsdir = dnsdir_puppet
+        infile = hosts_puppet
+        print("Using PRODUCTION file {}".format(infile))
+    else:
+        print("NO default hosts file {} exists".format(hosts_default))
+        print("No PRODIUCTION hosts file {} exists, exiting".format(hosts_puppet))
+
+deploydir = os.path.join(deploydir_base, domain)
+ensure_dir(deploydir)
+
+#dns_hosts_outfile = os.path.join(deploydir, args.hosts.split('/')[-1].rstrip('.hosts') + '.' + format)
+dns_hosts_outfile = os.path.join(deploydir, domain, domain+'.'+format)
 
 #host_outfile = defaultdict(str)
 
@@ -143,17 +146,10 @@ DNS_ENTRY_LINES = []
 
 nss_default_subclass = 'light'
 
-def ensure_dir(f):
-    if not os.path.exists(f):
-        os.makedirs(f)
 
-ensure_dir(deploydir)
 
-dns_hosts_outfile = os.path.join(deploydir, args.hosts.split('/')[-1].rstrip('.hosts') + '.' + format)
 
-print('hosts file: {} '.format(args.hosts))
 print("\ninput  file: %s" % infile)
-#print("output file: %s" % outfile)
 print("output format: %s\n" % format)
 
 # functions
@@ -235,6 +231,16 @@ def getSubnet(ip, netmask):
     subnet = '.'.join([str(int(ip_int[n]) & int(netmask_int[n])) for n in range(0,4)])
     return subnet
 
+
+def get_if_dynamic_entry(dv):
+    entry='''
+    #network::if_dynamic:
+    #  {}:
+    #    ensure: up
+    #    peerdns: true
+    '''.format(dv)
+    retval = re.sub('    #','#',entry)
+    return retval
 
 # is mal so eine idee fuer ein objekt :-))
 
@@ -471,10 +477,15 @@ for fqdn in INSTALLABLE_FQDNS:
         print("writing {} file {}".format(format,outfile))
 
         if format == "json":
-                f.write(json.dumps(data, sort_keys=False, indent=2, separators=(',', ': ')))
+            f.write(json.dumps(data, sort_keys=False, indent=2, separators=(',', ': ')))
         elif format == "yaml":
-                yaml.dump(data, f, default_flow_style=False)
-    #print(data)
+            yaml.dump(data, f, default_flow_style=False)
+
+        if re.match('^psp',fqdn):
+        #with open(outfile, mode='w+') as f:
+            f.write(get_if_dynamic_entry('eth0'))
+
+        #print(data)
 
 
 
