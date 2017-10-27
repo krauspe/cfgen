@@ -6,7 +6,7 @@
 #
 0.0.0.0 2step-cc.lx3.lgn.dfs.de 2step-cc # sy='NEWSIM LGNLX3' dv=eth0 sn=255.255.255.0 gw=192.168.33.1 ns=192.168.33.10 dn=lx3.lgn.dfs.de
 192.168.33.10  nss.lx3.lgn.dfs.de       nss     # hn=lgnlx3 dn=se.dfs.de hcl=nss
-10.232.250.232 lgnlx3.se.dfs.de lgnlx3 # dv=eth1 ns=10.232.250.190
+10.232.250.232 lgnlx3.se.dfs.de lgnlx3 # dv=eth1 ns=10.232.250.190 sn=255.255.254.0
 
 
 192.168.33.10 is01.lx3.lgn.dfs.de is01
