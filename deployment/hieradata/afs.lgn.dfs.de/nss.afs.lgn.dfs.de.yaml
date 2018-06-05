@@ -1,0 +1,31 @@
+dhcpd:
+  args: eth0
+  default_lease_time: '3600'
+  domain_name: afs.lgn.dfs.de
+  domain_name_servers: 10.232.225.10
+  enable: true
+  ensure: running
+  max_lease_time: '21600'
+  netmask: 255.255.255.0
+  range_end: '239'
+  range_start: '200'
+  routers: 10.232.225.253
+  subnet: 10.232.225.0
+host_classes::main: nss
+host_classes::sub: centos
+network::if_static:
+  ? ''
+  : ensure: up
+    ipaddress: ''
+    netmask: ''
+  eth0:
+    dns1: localhost
+    ensure: up
+    gateway: 10.232.225.253
+    ipaddress: 10.232.225.10
+    netmask: 255.255.255.0
+    peerdns: true
+  eth1:
+    ensure: up
+    ipaddress: 10.50.65.130
+    netmask: 255.255.252.0

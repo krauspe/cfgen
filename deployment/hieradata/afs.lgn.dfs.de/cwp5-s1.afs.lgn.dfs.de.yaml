@@ -1,0 +1,14 @@
+host_classes::main: nsc
+host_classes::sub: cwp
+network::if_static:
+  eth0:
+    dns1: 10.232.225.10
+    ensure: up
+    gateway: 10.232.225.253
+    ipaddress: 10.232.225.24
+    netmask: 255.255.255.0
+    peerdns: true
+  eth1:
+    ensure: up
+    ipaddress: 10.50.65.5
+    netmask: 255.255.252.0

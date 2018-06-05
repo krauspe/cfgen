@@ -1,0 +1,48 @@
+host_classes::main: nss
+host_classes::sub: centos
+
+dhcpd:
+  args: eth0
+  default_lease_time: '3600'
+  domain_name: br1.bre.dfs.de
+  domain_name_servers: 10.232.197.10
+  enable: true
+  ensure: running
+  max_lease_time: '21600'
+  netmask: 255.255.255.0
+  range_end: '239'
+  range_start: '200'
+  routers: 10.232.197.250
+  subnet: 10.232.197.0
+
+network::if_static:
+  eth0:
+    ensure: up
+    gateway: 10.232.197.250
+    ipaddress: 10.232.197.10
+    netmask: 255.255.255.0
+    dns1: localhost
+    peerdns: true
+  eth1:
+    ensure: up
+    ipaddress: 10.232.196.12
+    netmask: 255.255.255.0
+  eth3:
+    ensure: up
+    ipaddress: 10.232.251.139
+    netmask: 255.255.254.0
+    peerdns: false
+
+network::if_dynamic:
+  eth2:
+    ensure: up
+    peerdns: false
+
+network::route:
+  eth1:
+    ipaddress:
+      - 10.70.82.14
+    netmask:
+      - 255.255.255.255
+    gateway:
+      - 10.232.196.254

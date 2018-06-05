@@ -60,7 +60,11 @@ import netaddr
 pydir =  os.path.dirname(os.path.abspath(__file__))
 basedir = os.path.dirname(pydir)
 confdir = os.path.join(basedir, "config")
-domain_default = "te2.lgn.dfs.de"
+#domain_default = "ka1.krl.dfs.de"
+domain_default = "br1.bre.dfs.de"
+#domain_default = "afs.lgn.dfs.de"
+nss_default_subclass = 'centos'
+#domain_default = "mu1.muc.dfs.de"
 deploydir_base_default = os.path.join(basedir, "deployment", "hieradata")
 
 if os.path.exists('/mnt/puppet/hieradata'):
@@ -82,6 +86,7 @@ parser = argparse.ArgumentParser(description="convert dns hosts entrys with txt 
 parser.add_argument("-d", "--domain", type=str, required=False, default=domain_default, help="DNS Domain")
 parser.add_argument("-f", "--format" , type=str, required=False, default='yaml', choices=formats, help="output format")
 parser.add_argument("-b", "--deploybase", type=str, required=False, default=deploydir_base_default, choices=formats, help="basedir for deployment")
+parser.add_argument("-s", "--nss-subclass", type=str, required=False, default=nss_default_subclass, choices=formats, help="sub_class for nss")
 args = parser.parse_args()
 
 domain = args.domain
@@ -143,9 +148,6 @@ installable_prefixes = ['psp', 'cwp', 'adc', 'sup', 'dap', 'siu', 'sim', 'iss']
 installable_suffixes = ['s1', 's2']
 DNS_ENTRYS = []
 DNS_ENTRY_LINES = []
-
-nss_default_subclass = 'light'
-
 
 
 
@@ -220,9 +222,15 @@ def getEntryClassification(fqdn):
             entry_type = 'defaults'
             main_class = None
             sub_class = None
-    elif DV[fqdn] and DV[fqdn] != DV[getDefaultKey(fqdn)]:
+        else:
+            entry_type = 'unknown1'
+            main_class = None
+            sub_class = None
+
+    if DV[fqdn] and DV[fqdn] != DV[getDefaultKey(fqdn)]:
         entry_type = 'interface'
 
+    #print("  getEntryClassification: {} : DV[fqdn]={} DV[getDefaultKey(fqdn)={}".format(fqdn, DV[fqdn], DV[getDefaultKey(fqdn)]))
     return entry_type, main_class, sub_class
 
 def getSubnet(ip, netmask):
@@ -231,16 +239,6 @@ def getSubnet(ip, netmask):
     subnet = '.'.join([str(int(ip_int[n]) & int(netmask_int[n])) for n in range(0,4)])
     return subnet
 
-
-def get_if_dynamic_entry(dv):
-    entry='''
-    #network::if_dynamic:
-    #  {}:
-    #    ensure: up
-    #    peerdns: true
-    '''.format(dv)
-    retval = re.sub('    #','#',entry)
-    return retval
 
 # is mal so eine idee fuer ein objekt :-))
 
@@ -342,6 +340,8 @@ for fqdn in FQDNS:
         if not SN[fqdn]:
             if SN[dn_default]:
                 SN[fqdn] = SN[dn_default]
+                #print("  NETMASK for {} = {}".format(fqdn,SN[fqdn]))
+
             else:
                 print("Warning: NO NETMASK (and NO default) found for {} !!".format(fqdn))
         if not NS[fqdn]:
@@ -351,7 +351,7 @@ for fqdn in FQDNS:
         if not DV[fqdn]:
            DV[fqdn] = DV[dn_default]
 
-        #print("{}:\t {}\tclasses:{}.{}\t dv={}".format(fqdn, entry_type, main_class, sub_class, DV[fqdn]))
+        #print("{}:\t {}\tclasses:{}.{}\t dv={} sn={}".format(fqdn, entry_type, main_class, sub_class, DV[fqdn], SN[fqdn]))
         # Use for configuration data for installable hosts
         if entry_type == 'installable':
             INSTALLABLE_FQDNS.add(fqdn)
@@ -367,6 +367,7 @@ for fqdn in FQDNS:
         # Use as DNS entry only
         #print("{}:\t {}\t".format(entry_type, fqdn))
         DNS_ENTRYS.append(fqdn)
+    #print("{}:\tentry_type={} dv={} dev_default={} sn={}".format(fqdn, entry_type, DV[fqdn], DV[getDefaultKey(fqdn)], SN[fqdn]))
 
 
 def getHostClasses(fqdn):
@@ -426,11 +427,11 @@ def generateHostDataStruct(main_fqdn):
         ns = NS[main_fqdn]
     # get network interface config data
 
-    ensure = 'up'
+
     peerdns = True
 
     dv = {
-        'ensure': ensure,
+        'ensure': 'up',
         'ipaddress': IP[main_fqdn],
         'netmask': SN[main_fqdn],
         'gateway': GW[main_fqdn],
@@ -444,8 +445,6 @@ def generateHostDataStruct(main_fqdn):
             'ensure': 'up',
             'ipaddress': IP[fqdn],
             'netmask': SN[fqdn],
-            'gateway': GW[fqdn],
-            'dns1': NS[fqdn],
         }
         ifdata.update({DV[fqdn]: dv})
 
@@ -460,6 +459,7 @@ def generateHostDataStruct(main_fqdn):
 
 
 def generateDnsLines(fqdn_list, txt_rec_list):
+    '''NOT USED yet !!'''
     dns_lines = []
     for fqdn in fqdn_list:
         hn = fqdn.split('.')[0]
@@ -477,15 +477,10 @@ for fqdn in INSTALLABLE_FQDNS:
         print("writing {} file {}".format(format,outfile))
 
         if format == "json":
-            f.write(json.dumps(data, sort_keys=False, indent=2, separators=(',', ': ')))
+                f.write(json.dumps(data, sort_keys=False, indent=2, separators=(',', ': ')))
         elif format == "yaml":
-            yaml.dump(data, f, default_flow_style=False)
-
-        if re.match('^psp',fqdn):
-        #with open(outfile, mode='w+') as f:
-            f.write(get_if_dynamic_entry('eth0'))
-
-        #print(data)
+                yaml.dump(data, f, default_flow_style=False)
+    #print(data)
 
 
 
