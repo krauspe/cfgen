@@ -60,10 +60,15 @@ import netaddr
 pydir =  os.path.dirname(os.path.abspath(__file__))
 basedir = os.path.dirname(pydir)
 confdir = os.path.join(basedir, "config")
+domain_default = "am.muc.dfs.de"
 #domain_default = "ka1.krl.dfs.de"
-domain_default = "br1.bre.dfs.de"
+#domain_default = "atg2.lgn.dfs.de"
+#domain_default = "atg2.lgn.dfs.de"
+#domain_default = "te3.lgn.dfs.de"
+#domain_default = "ak2.lgn.dfs.de"
 #domain_default = "afs.lgn.dfs.de"
-nss_default_subclass = 'centos'
+#domain_default = "lx3.lgn.dfs.de"
+nss_default_subclass = 'light'
 #domain_default = "mu1.muc.dfs.de"
 deploydir_base_default = os.path.join(basedir, "deployment", "hieradata")
 
@@ -144,7 +149,7 @@ IF_ENTRYS = defaultdict(list)
 FQDNS = set([])
 INSTALLABLE_FQDNS = set([])
 
-installable_prefixes = ['psp', 'cwp', 'adc', 'sup', 'dap', 'siu', 'sim', 'iss']
+installable_prefixes = ['psp', 'cwp', 'adc', 'sup', 'dap', 'siu', 'sim', 'iss', 'gen', 'hmi']
 installable_suffixes = ['s1', 's2']
 DNS_ENTRYS = []
 DNS_ENTRY_LINES = []
@@ -212,9 +217,21 @@ def getEntryClassification(fqdn):
         entry_type = 'installable'
         main_class = 'nss'
         sub_class = None
+    elif len(pre_suf) == 1 and pre == 'ams':
+        entry_type = 'installable'
+        main_class = 'ams'
+        sub_class = 'centos'
+    elif len(pre_suf) == 1 and pre == 'hmi':
+        entry_type = 'installable'
+        main_class = 'amc'
+        sub_class = 'hmi'
+    elif len(pre_suf) == 1 and pre == 'gen':
+        entry_type = 'installable'
+        main_class = 'amc'
+        sub_class = 'gen'
     elif len(pre_suf) == 2:
         suf = pre_suf[1]
-        if pre in installable_prefixes and suf in installable_suffixes:
+        if pre in installable_prefixes and suf in installable_suffixes :
             entry_type = 'installable'
             main_class = 'nsc'
             sub_class  = pre
@@ -374,19 +391,30 @@ def getHostClasses(fqdn):
     hn = fqdn.split('.')[0]
     main = ''; sub = ''
 
-    if hn == 'nss':
-        main = 'nss'
-        sub =  nss_default_subclass
-    else:
-        prefix = hn[0:3]
-        if prefix in installable_prefixes:
-            main = 'nsc'
-            sub  = prefix
+    # if hn == 'nss':
+    #     main = 'nss'
+    #     sub =  nss_default_subclass
+    # else:
+    #     prefix = hn[0:3]
+    #     if prefix in installable_prefixes:
+    #         main = 'nsc'
+    #         sub  = prefix
+    #
+    # host_classes = {
+    #     'host_classes::main': main,
+    #     'host_classes::sub': sub,
+    # }
+
+    entry_type, main_class, sub_class = getEntryClassification(fqdn)
+
+    if main_class in ['nss', 'ams'] and sub_class == None:
+        sub_class = nss_default_subclass
 
     host_classes = {
-        'host_classes::main': main,
-        'host_classes::sub': sub,
+        'host_classes::main': main_class,
+        'host_classes::sub': sub_class,
     }
+
     return host_classes
 
 def getDhcpConfig(fqdn):
@@ -419,7 +447,7 @@ def generateHostDataStruct(main_fqdn):
     main = dataout['host_classes::main']
     #sub  = dataout['host_classes']['sub']
 
-    if main in ['nss', 'cis']:
+    if main in ['nss', 'cis', 'ams']:
         dhcpd   = getDhcpConfig(main_fqdn)
         dataout = update_nested_dict(dataout, dhcpd)
         ns      = 'localhost'
@@ -429,6 +457,12 @@ def generateHostDataStruct(main_fqdn):
 
 
     peerdns = True
+
+    dv_dhcp = {
+        'ensure': 'up',
+        'peerdns': 'false',
+    }
+    ifdata_dhcp = {}
 
     dv = {
         'ensure': 'up',
@@ -440,16 +474,26 @@ def generateHostDataStruct(main_fqdn):
     }
     ifdata = {DV[main_fqdn]:dv}
 
+    dhcp_if_count = 0
+
     for fqdn in IF_ENTRYS[main_fqdn]:
-        dv = {
-            'ensure': 'up',
-            'ipaddress': IP[fqdn],
-            'netmask': SN[fqdn],
-        }
-        ifdata.update({DV[fqdn]: dv})
+        if IP[fqdn] == '0.0.0.0':
+            ifdata_dhcp.update({DV[fqdn]: dv_dhcp})
+            dhcp_if_count += 1
+        else:
+            dv = {
+                'ensure': 'up',
+                'ipaddress': IP[fqdn],
+                'netmask': SN[fqdn],
+            }
+            ifdata.update({DV[fqdn]: dv})
 
     network_if_static = {'network::if_static': ifdata}
     dataout = update_nested_dict(dataout, network_if_static)
+
+    if dhcp_if_count > 0:
+        network_if_dynamic = {'network::if_dynamic': ifdata_dhcp}
+        dataout = update_nested_dict(dataout, network_if_dynamic)
 
     # get dhcpd config if hn==nss
 
