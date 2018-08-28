@@ -1,0 +1,28 @@
+host_classes::main: nss
+host_classes::sub: light
+dhcpd:
+  args: eth0
+  default_lease_time: '3600'
+  domain_name: ak3.lgn.dfs.de
+  domain_name_servers: 10.232.155.10
+  enable: true
+  ensure: running
+  max_lease_time: '21600'
+  netmask: 255.255.255.0
+  range_end: '239'
+  range_start: '200'
+  routers: 10.232.155.250
+  subnet: 10.232.155.0
+network::if_static:
+  eth0:
+    ensure: up
+    ipaddress: 10.232.155.10
+    netmask: 255.255.255.0
+    gateway: 10.232.155.250
+    dns1: localhost
+    peerdns: true
+network::if_dynamic:
+  eth1:
+    ensure: up
+    peerdns: false
+

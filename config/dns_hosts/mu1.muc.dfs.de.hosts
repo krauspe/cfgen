@@ -1,56 +1,42 @@
 0.0.0.0 2step-cc.mu1.muc.dfs.de 2step-cc # sy='SIMSYS MUCMU1' dv=eth0 sn=255.255.255.0 gw=10.232.174.250 ns=10.232.175.10 dn=mu1.muc.dfs.de
+10.232.175.10 is01.mu1.muc.dfs.de is01
+10.232.175.10 cis01.mu1.muc.dfs.de cis01
+10.232.175.10 timesrv.mu1.muc.dfs.de timesrv
+10.232.175.10 nss.mu1.muc.dfs.de       nss      # hn=nss-mgt dn=mu1.muc.dfs.de
+10.232.174.12 nss-mgt.mu1.muc.dfs.de   nss-mgt  # dv=eth1
+
 10.232.174.200 timesrv1.mu1.muc.dfs.de timesrv1
 10.232.174.201 timesrv2.mu1.muc.dfs.de timesrv2
 
-10.232.175.181	siu1-s1.mu1.muc.dfs.de      siu1-s1      # hn=siu1-s1-p1.mu1.muc.dfs.de  hn=siu1-s1-fbs.mu1.muc.dfs.de hcl=nsc.siu
-10.40.32.55 siu1-s1-p1.mu1.muc.dfs.de siu1-s1-p1 # Anbindung an P1 Core Lan # dv=eth1 sn=255.255.248.0 bc=10.40.39.255
-10.40.3.200 siu1-s1-fbs.mu1.muc.dfs.de siu1-s1-fbs # Anbindung an FBS Com Lan # dv=eth2 sn=255.255.255.0 bc=10.40.3.255
+10.232.175.181	siu1-s1.mu1.muc.dfs.de      siu1-s1      # hn=siu1-s1-p1.mu1.muc.dfs.de hn=siu1-s1-fbs.mu1.muc.dfs.de hcl=nsc.siu
+10.40.32.56 siu1-s1-p1.mu1.muc.dfs.de siu1-s1-p1 # Anbindung an P2 Core Lan # dv=eth1 sn=255.255.248.0 bc=10.40.39.255
+10.40.3.120 siu1-s1-fbs.mu1.muc.dfs.de siu1-s1-fbs # Anbindung an FBS Com Lan # dv=eth2 sn=255.255.255.0 bc=10.40.3.255
 
-10.232.175.182	siu2-s1.mu1.muc.dfs.de      siu2-s1      # hn=siu2-s1-p1 dn=mu1.muc.dfs.de hcl=nsc.siu
-10.40.32.56 siu2-s1-p1.mu1.muc.dfs.de siu2-s1-p1 # Anbindung an P1 Core Lan # dv=eth1 sn=255.255.248.0 bc=10.40.39.255
+10.232.175.182  siu2-s1.mu1.muc.dfs.de      siu2-s1      # hn=siu2-s1-p1.mu1.muc.dfs.de hn=siu2-s1-fbs.mu1.muc.dfs.de hcl=nsc.siu
+10.40.32.56 siu2-s1-p1.mu1.muc.dfs.de siu2-s1-p1 # Anbindung an P2 Core Lan # dv=eth1 sn=255.255.248.0 bc=10.40.39.255
+10.40.3.120 siu2-s1-fbs.mu1.muc.dfs.de siu2-s1-fbs # Anbindung an FBS Com Lan # dv=eth2 sn=255.255.255.0 bc=10.40.3.255
 
-10.232.175.183	siu3-s1.mu1.muc.dfs.de      siu3-s1      # hn=siu3-s1-p1 dn=mu1.muc.dfs.de hcl=nsc.siu
-10.40.32.57 siu3-s1-p1.mu1.muc.dfs.de siu3-s1-p1 # Anbindung an P1 Core Lan # dv=eth1 sn=255.255.248.0 bc=10.40.39.255
+10.232.175.183	siu3-s1.mu1.muc.dfs.de      siu3-s1      # hn=siu3-s1-p1.mu1.muc.dfs.de hn=siu3-s1-fbs.mu1.muc.dfs.de hcl=nsc.siu
+10.40.32.56 siu3-s1-p1.mu1.muc.dfs.de siu3-s1-p1 # Anbindung an P2 Core Lan # dv=eth1 sn=255.255.248.0 bc=10.40.39.255
+10.40.3.120 siu3-s1-fbs.mu1.muc.dfs.de siu3-s1-fbs # Anbindung an FBS Com Lan # dv=eth2 sn=255.255.255.0 bc=10.40.3.255
 
-10.232.175.184	siu4-s1.mu1.muc.dfs.de      siu4-s1      # hn=siu4-s1-p1.mu1.muc.dfs.de hn=siu4-s1-fbs.mu1.muc.dfs.de hcl=nsc.siu
-10.40.32.56 siu4-s1-p1.mu1.muc.dfs.de siu4-s1-p1 # Anbindung an P2 Core Lan # dv=eth1 sn=255.255.248.0 bc=10.40.39.255
-10.40.3.56 siu4-s1-fbs.mu1.muc.dfs.de siu4-s1-fbs # Anbindung an FBS Com Lan # dv=eth2 sn=255.255.255.0 bc=10.40.3.255
+10.232.175.184	siu4-s1.mu1.muc.dfs.de      siu4-s1      # hn=siu4-s1-icas.mu1.muc.dfs.de hn=siu4-s1-isws.mu1.muc.dfs.de hcl=nsc.siu
+10.20.52.161 siu4-s1-icas.mu1.muc.dfs.de siu4-s1-icas # Anbindung an ICAS Core Lan # dv=eth1 sn=255.255.252.0 bc=10.20.55.255
+10.20.80.161 siu4-s1-isws.mu1.muc.dfs.de siu4-s1-isws # Anbindung an ICAS SWS Lan # dv=eth2 sn=255.255.252.0 bc=10.20.83.255
 
-10.232.175.185	siu5-s1.mu1.muc.dfs.de      siu5-s1      # hn=siu5-s1-icas dn=mu1.muc.dfs.de hcl=nsc.siu
-10.20.54.55 siu5-s1-icas.mu1.muc.dfs.de siu5-s1-icas # Anbindung an ICAS Core Lan # dv=eth1 sn=255.255.252.0 bc=10.20.55.255
+10.232.175.185	siu5-s1.mu1.muc.dfs.de      siu5-s1      # hn=siu5-s1-icas.mu1.muc.dfs.de hn=siu5-s1-isws.mu1.muc.dfs.de hcl=nsc.siu
+10.20.52.161 siu5-s1-icas.mu1.muc.dfs.de siu5-s1-icas # Anbindung an ICAS Core Lan # dv=eth1 sn=255.255.252.0 bc=10.20.55.255
+10.20.80.162 siu5-s1-isws.mu1.muc.dfs.de siu5-s1-isws # Anbindung an ICAS SWS Lan # dv=eth2 sn=255.255.252.0 bc=10.20.83.255
 
-10.232.175.186  siu6-s1.mu1.muc.dfs.de      siu6-s1      # hn=siu6-s1-icas dn=mu1.muc.dfs.de hcl=nsc.siu
-10.20.54.56 siu6-s1-icas.mu1.muc.dfs.de siu6-s1-icas # Anbindung an ICAS Core Lan # dv=eth1 sn=255.255.252.0 bc=10.20.55.255
-
-10.232.175.187  siu7-s1.mu1.muc.dfs.de      siu7-s1      # hn=siu7-s1-p1.mu1.muc.dfs.de  hn=siu7-s1-fbs.mu1.muc.dfs.de hcl=nsc.siu
-10.40.32.56 siu7-s1-p1.mu1.muc.dfs.de siu7-s1-p1 # Anbindung an P2 Core Lan # dv=eth1 sn=255.255.248.0 bc=10.40.39.255
-10.40.3.56 siu7-s1-fbs.mu1.muc.dfs.de siu7-s1-fbs # Anbindung an FBS Com Lan # dv=eth2 sn=255.255.255.0 bc=10.40.3.255
-
-10.40.32.1 atorda01.mu1.muc.dfs.de atorda01 # RDPS A in SimSys-EG String 1
-10.40.32.1 rdps_a.mu1.muc.dfs.de rdps_a # RDPS A in SimSys-EG String 1
-
-10.40.32.2 atordb01.mu1.muc.dfs.de atordb01 # RDPS B in SimSys-EG String 1
-10.40.32.2 rdps_b.mu1.muc.dfs.de rdps_b # RDPS B in SimSys-EG String 1
-
-10.40.32.3 atofda01.mu1.muc.dfs.de atofda01 # FDPS A in SimSys-EG String 1
-10.40.32.3 fdps_a.mu1.muc.dfs.de fdps_a # FDPS A in SimSys-EG String 1
-
-10.40.32.4 atofdb01.mu1.muc.dfs.de atofdb01 # FDPS B in SimSys-EG String 1
-10.40.32.4 fdps_b.mu1.muc.dfs.de fdps_b # FDPS B in SimSys-EG String 1
-
-10.40.32.50 atotds01.mu1.muc.dfs.de atotds01 # TDG IP in SimSys-EG String 1
-10.40.32.50 tdg.mu1.muc.dfs.de tdg # TDG IP in SimSys-EG String 1
-
-10.40.32.16 atordc01.mu1.muc.dfs.de atordc01 # RDPS C
-10.40.32.17 atofdc01.mu1.muc.dfs.de atofdc01 # FDPS C
-
-10.232.175.190 odos1108.mu1.muc.dfs.de odos1108 # ATCISS Standalone SimSys OG
+10.232.175.186  siu6-s1.mu1.muc.dfs.de      siu6-s1      # hn=siu6-s1-icas.mu1.muc.dfs.de hn=siu6-s1-isws.mu1.muc.dfs.de hcl=nsc.siu
+10.20.52.161 siu6-s1-icas.mu1.muc.dfs.de siu6-s1-icas # Anbindung an ICAS Core Lan # dv=eth1 sn=255.255.252.0 bc=10.20.55.255
+10.20.80.163 siu6-s1-isws.mu1.muc.dfs.de siu6-s1-isws # Anbindung an ICAS SWS Lan # dv=eth2 sn=255.255.252.0 bc=10.20.83.255
 
 ## <REMOTE-PILOTING-START> ##
-10.232.175.132        psp101-s1.mu1.muc.dfs.de       psp101-s1 # mac=00:D0:C9:C4:3D:25 rnsc=1 hcl=nsc.psp
-10.232.175.133        psp102-s1.mu1.muc.dfs.de       psp102-s1 # mac=00:d0:c9:c4:2c:57 rnsc=1 hcl=nsc.psp
-10.232.175.134        psp103-s1.mu1.muc.dfs.de       psp103-s1 # mac=00:d0:c9:c4:2f:f9 rnsc=1 hcl=nsc.psp
-10.232.175.135        psp104-s1.mu1.muc.dfs.de       psp104-s1 # mac=00:d0:c9:c4:22:e7 rnsc=1 hcl=nsc.psp
+10.232.175.132        psp101-s1.mu1.muc.dfs.de       psp101-s1 # rnsc=1 hcl=nsc.psp
+10.232.175.133        psp102-s1.mu1.muc.dfs.de       psp102-s1 # rnsc=1 hcl=nsc.psp
+10.232.175.134        psp103-s1.mu1.muc.dfs.de       psp103-s1 # rnsc=1 hcl=nsc.psp
+10.232.175.135        psp104-s1.mu1.muc.dfs.de       psp104-s1 # rnsc=1 hcl=nsc.psp
 10.232.175.136        psp105-s1.mu1.muc.dfs.de       psp105-s1 # rnsc=1 hcl=nsc.psp
 10.232.175.137        psp106-s1.mu1.muc.dfs.de       psp106-s1 # rnsc=1 hcl=nsc.psp
 10.232.175.151        psp107-s1.mu1.muc.dfs.de       psp107-s1 # rnsc=1 hcl=nsc.psp
@@ -105,9 +91,6 @@
 10.232.175.33   cwp14-s1.mu1.muc.dfs.de  cwp14-s1                   # hn=cwp14-s1-mgt hcl=nsc.cwp
 10.40.65.133 cwp14-s1-mgt.mu1.muc.dfs.de cwp14-s1-mgt # dv=eth1 sn=255.255.252.0
 #
-10.232.175.10 is01.mu1.muc.dfs.de is01
-10.232.175.10 timesrv.mu1.muc.dfs.de timesrv
-10.232.175.10	nss.mu1.muc.dfs.de	nss	# hcl=nss
 #
 # Client adresses start at 20
 10.232.175.34	cwp15-s1.mu1.muc.dfs.de	cwp15-s1	# hcl=nsc.cwp
@@ -224,8 +207,10 @@
 #
 # Server adresses start at 180
 10.232.175.180	iss1-s1.mu1.muc.dfs.de	iss1-s1	# hcl=nsc.iss
+10.232.175.187	siu7-s1.mu1.muc.dfs.de	siu7-s1	# hcl=nsc.siu
 10.232.175.188	sim1-s1.mu1.muc.dfs.de	sim1-s1	# hcl=nsc.sim
 10.232.175.189	sim2-s1.mu1.muc.dfs.de	sim2-s1	# hcl=nsc.sim
+10.232.175.190	sim3-s1.mu1.muc.dfs.de	sim3-s1	# hcl=nsc.sim
 10.232.175.191	sim4-s1.mu1.muc.dfs.de	sim4-s1	# hcl=nsc.sim
 10.232.175.192 tst1.mu1.muc.dfs.de tst1 #
 #

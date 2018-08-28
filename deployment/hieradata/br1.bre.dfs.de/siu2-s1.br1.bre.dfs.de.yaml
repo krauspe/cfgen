@@ -1,0 +1,18 @@
+host_classes::main: nsc
+host_classes::sub: siu
+network::if_static:
+  eth0:
+    dns1: 10.232.197.10
+    ensure: up
+    gateway: 10.232.197.250
+    ipaddress: 10.232.197.152
+    netmask: 255.255.255.0
+    peerdns: true
+  eth1:
+    ensure: up
+    ipaddress: 10.70.32.51
+    netmask: 255.255.248.0
+  eth2:
+    ensure: up
+    ipaddress: 10.70.3.5
+    netmask: 255.255.255.0

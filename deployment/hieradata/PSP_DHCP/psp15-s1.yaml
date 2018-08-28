@@ -1,0 +1,7 @@
+host_classes::main: nsc
+host_classes::sub: psp
+
+network::if_dynamic:
+  eth0:
+    ensure: up
+    peerdns: true

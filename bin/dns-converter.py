@@ -60,7 +60,8 @@ import netaddr
 pydir =  os.path.dirname(os.path.abspath(__file__))
 basedir = os.path.dirname(pydir)
 confdir = os.path.join(basedir, "config")
-domain_default = "te2.lgn.dfs.de"
+dnsdir_default = os.path.join(confdir, "dns_hosts")
+domain_default = "lgn1.lgn.dfs.de"
 deploydir_base_default = os.path.join(basedir, "deployment", "hieradata")
 
 if os.path.exists('/mnt/puppet/hieradata'):
@@ -69,6 +70,7 @@ elif os.path.exists('/opt/export/puppet-master/hieradata'):
     puppet_dir = '/opt/export/puppet-master'
 else:
     puppet_dir = None
+
 
 # /opt/export/puppet-master/modules/dns_server_config/files/data
 # /mnt/puppet/modules/dns_server_config/files/data
@@ -81,35 +83,43 @@ formats = ['json',]
 parser = argparse.ArgumentParser(description="convert dns hosts entrys with txt records to json")
 parser.add_argument("-d", "--domain", type=str, required=False, default=domain_default, help="DNS Domain")
 parser.add_argument("-f", "--format" , type=str, required=False, default='yaml', choices=formats, help="output format")
-parser.add_argument("-b", "--deploybase", type=str, required=False, default=deploydir_base_default, choices=formats, help="basedir for deployment")
+parser.add_argument("-b", "--deploybase", type=str, required=False, default=deploydir_base_default, help="basedir for deployment")
+parser.add_argument("-H", "--dnsdir", type=str, required=False, help="dnsdir where to find your hosts file dirs ")
+#parser.add_argument("-H", "--dnsdir", type=str, required=False, default=dnsdir_default, help="dnsdir where to find your hosts file dirs")
 args = parser.parse_args()
 
 domain = args.domain
 format = args.format
 deploydir_base = args.deploybase
 
+dnsdir_puppet = os.path.join(puppet_dir, "modules", "dns_server_config", "files", "data")
+hosts_default = os.path.join(dnsdir_default,domain+'.'+'hosts' )
+hosts_puppet = os.path.join(dnsdir_puppet,domain+'.'+'hosts' )
+
 def ensure_dir(f):
     if not os.path.exists(f):
         os.makedirs(f)
 
 
-dnsdir_default = os.path.join(confdir, "dns_hosts")
-dnsdir_puppet = os.path.join(puppet_dir, "modules", "dns_server_config", "files", "data")
-hosts_default = os.path.join(dnsdir_default,domain+'.'+'hosts' )
-hosts_puppet = os.path.join(dnsdir_puppet,domain+'.'+'hosts' )
-
-if os.path.exists(hosts_default):
-    dnsdir = dnsdir_default
-    infile = hosts_default
-    print("Using test file {}".format(infile))
+if args.dnsdir and os.path.exists(args.dnsdir):
+    dnsdir_opt = args.dnsdir
+    hosts_opt = os.path.join(dnsdir_opt,domain+'.'+'hosts' )
+    dnsdir = dnsdir_opt
+    infile = hosts_opt
+    print("Using generated file {}".format(infile))
 else:
-    if puppet_dir:
-        dnsdir = dnsdir_puppet
-        infile = hosts_puppet
-        print("Using PRODUCTION file {}".format(infile))
+    if os.path.exists(hosts_default):
+        dnsdir = dnsdir_default
+        infile = hosts_default
+        print("Using test file {}".format(infile))
     else:
-        print("NO default hosts file {} exists".format(hosts_default))
-        print("No PRODIUCTION hosts file {} exists, exiting".format(hosts_puppet))
+        if puppet_dir:
+            dnsdir = dnsdir_puppet
+            infile = hosts_puppet
+            print("Using PRODUCTION file {}".format(infile))
+        else:
+            print("NO default hosts file {} exists".format(hosts_default))
+            print("No PRODIUCTION hosts file {} exists, exiting".format(hosts_puppet))
 
 deploydir = os.path.join(deploydir_base, domain)
 ensure_dir(deploydir)

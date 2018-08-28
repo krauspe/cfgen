@@ -1,0 +1,54 @@
+host_classes::main: nss
+host_classes::sub: centos
+
+dhcpd:
+  args: eth0
+  default_lease_time: '3600'
+  domain_name: ka1.krl.dfs.de
+  domain_name_servers: 10.232.182.10
+  enable: true
+  ensure: running
+  max_lease_time: '21600'
+  netmask: 255.255.255.0
+  range_end: '239'
+  range_start: '200'
+  routers: 10.232.182.250
+  subnet: 10.232.182.0
+
+network::if_static:
+  eth0:
+    ensure: up
+    ipaddress: 10.232.182.10
+    netmask: 255.255.255.0
+    gateway: 10.232.182.250
+    dns1: localhost
+    peerdns: true
+  eth1:
+    ensure: up
+    ipaddress: 10.232.181.12
+    netmask: 255.255.255.0
+    gateway: 10.232.181.250
+  eth2:
+    ensure: up
+    ipaddress: 10.80.120.21
+    netmask: 255.255.252.0
+  eth4:
+    ensure: up
+    ipaddress: 10.232.251.137
+    netmask: 255.255.254.0
+    peerdns: false
+
+network::if_dynamic:
+  eth3:
+    ensure: up
+    peerdns: false
+
+network::route:
+  eth2:
+    ipaddress:
+      - 10.80.80.0
+    netmask:
+      - 255.255.252.0
+    gateway:
+      - 10.80.120.21
+

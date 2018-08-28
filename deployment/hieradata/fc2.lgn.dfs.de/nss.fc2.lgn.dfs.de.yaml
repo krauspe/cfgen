@@ -1,0 +1,27 @@
+host_classes::main: nss
+host_classes::sub: light
+dhcpd:
+  args: eth0
+  default_lease_time: '3600'
+  domain_name: fc2.lgn.dfs.de
+  domain_name_servers: 192.168.64.10
+  enable: true
+  ensure: running
+  max_lease_time: '21600'
+  netmask: 255.255.255.0
+  range_end: '239'
+  range_start: '200'
+  routers: 192.168.64.250
+  subnet: 192.168.64.0
+network::if_static:
+  eth0:
+    ensure: up
+    ipaddress: 192.168.64.10
+    netmask: 255.255.255.0
+    gateway: 192.168.64.250
+    dns1: localhost
+    peerdns: true
+  eth1:
+    ensure: up
+    ipaddress: 192.168.74.10
+    netmask: 255.255.255.0

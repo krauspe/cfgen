@@ -1,0 +1,5 @@
+network::if_dynamic:
+  eth1:
+    ensure: up
+    peerdns: false
+

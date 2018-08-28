@@ -1,0 +1,14 @@
+host_classes::main: nsc
+host_classes::sub: sim
+network::if_static:
+  ? ''
+  : ensure: up
+    ipaddress: ''
+    netmask: ''
+  eth0:
+    dns1: 10.232.225.10
+    ensure: up
+    gateway: 10.232.225.253
+    ipaddress: 10.232.225.161
+    netmask: 255.255.255.0
+    peerdns: true
