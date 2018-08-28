@@ -1,5 +1,3 @@
-host_classes::main: nss
-host_classes::sub: centos
 dhcpd:
   args: eth0
   default_lease_time: '3600'
@@ -13,6 +11,8 @@ dhcpd:
   range_start: '200'
   routers: 10.232.167.250
   subnet: 10.232.167.0
+host_classes::main: nss
+host_classes::sub: light
 network::if_static:
   eth0:
     dns1: localhost

@@ -1,0 +1,10 @@
+host_classes::main: nsc
+host_classes::sub: psp
+network::if_static:
+  eth0:
+    dns1: 192.168.64.10
+    ensure: up
+    gateway: 192.168.64.250
+    ipaddress: 192.168.64.109
+    netmask: 255.255.255.0
+    peerdns: true

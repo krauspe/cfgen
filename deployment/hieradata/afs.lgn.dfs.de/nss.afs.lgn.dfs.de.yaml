@@ -12,7 +12,7 @@ dhcpd:
   routers: 10.232.225.253
   subnet: 10.232.225.0
 host_classes::main: nss
-host_classes::sub: centos
+host_classes::sub: null
 network::if_static:
   ? ''
   : ensure: up

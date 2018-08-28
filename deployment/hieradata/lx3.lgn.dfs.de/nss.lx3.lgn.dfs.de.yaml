@@ -22,8 +22,6 @@ network::if_static:
     netmask: 255.255.255.0
     peerdns: true
   eth1:
-    dns1: 10.232.250.190
     ensure: up
-    gateway: ''
     ipaddress: 10.232.250.232
     netmask: 255.255.254.0

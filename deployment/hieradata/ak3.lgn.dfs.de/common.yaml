@@ -1,0 +1,14 @@
+network::global:
+  dnsdomain: ak3.lgn.dfs.de
+
+#nvidia::version: 375.66
+##nvidia::version: 340xx
+nvidia::version: newest
+
+##yum_config::repolist:
+##  local:
+##   - 'simos'
+##   - 'dfs-apps'
+##   - 'dfs-appsup'
+##   - 'dfs-develop'
+#

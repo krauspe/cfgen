@@ -1,0 +1,13 @@
+network::global:
+  dnsdomain: ka1.krl.dfs.de
+
+#nvidia::version: 340xx
+nvidia::version: newest
+
+##yum_config::repolist:
+##  local:
+##   - 'simos'
+##   - 'dfs-apps'
+##   - 'dfs-appsup'
+##   - 'dfs-develop'
+#
