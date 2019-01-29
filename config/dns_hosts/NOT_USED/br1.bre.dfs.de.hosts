@@ -2,21 +2,23 @@
 #
 10.70.82.14 timesrv1.br1.bre.dfs.de timesrv1
 #
-10.232.197.151  siu1-s1.br1.bre.dfs.de  siu1-s1 siu1-s1-sim siu1-s1-vcs                    # hn=siu1-s1-p11 hn=siu1-s1-phx hcl=nsc.siu
-10.70.32.50 siu1-s1-p11.br1.bre.dfs.de siu1-s1-p11 # Anbindung an P1 String 1 # dv=eth1 sn=255.255.248.0
+10.232.197.151  siu1-s1.br1.bre.dfs.de  siu1-s1		                 	# hn=siu1-s1-p1-a hcl=nsc.siu
+10.70.32.50 siu1-s1-p1-a.br1.bre.dfs.de siu1-s1-p1-a # Anbindung an P1 String A # dv=eth1 sn=255.255.248.0
 
-10.232.197.152  siu2-s1.br1.bre.dfs.de       siu2-s1 siu2-s1-sim siu2-s1-vcs               # hn=siu2-s1-p12 hn=siu2-s1-phx hcl=nsc.siu
-10.70.32.51 siu2-s1-p12.br1.bre.dfs.de siu2-s1-p12 # Anbindung an P1 String 2 # dv=eth1 sn=255.255.248.0
-10.70.3.5 siu2-s1-phx.br1.bre.dfs.de siu2-s1-phx # Anbindung an Phoenix # dv=eth2 sn=255.255.255.0
+10.232.197.152  siu2-s1.br1.bre.dfs.de  siu2-s1 				# hn=siu2-s1-p1-b hn=siu2-s1-phx hcl=nsc.siu
+10.70.32.51 siu2-s1-p1-b.br1.bre.dfs.de siu2-s1-p1-b # Anbindung an P1 String B # dv=eth1 sn=255.255.248.0
+10.70.3.5 siu2-s1-phx.br1.bre.dfs.de siu2-s1-phx # Anbindung an Phoenix         # dv=eth2 sn=255.255.255.0
 
-10.232.197.153  siu3-s1.br1.bre.dfs.de  siu3-s1 siu3-s1-sim siu3-s1-vcs			   # hn=siu3-s1-icas sn=255.255.252.0 hcl=nsc.siu
-10.10.52.161 siu3-s1-icas.br1.bre.dfs.de siu3-s1-icas # Anbindung an ICAS # dv=eth1
+10.232.197.153  siu3-s1.br1.bre.dfs.de  siu3-s1 			        # hn=siu3-s1-ilss hn=siu3-s1-lss hcl=nsc.siu
+10.10.52.161 siu3-s1-ilss.br1.bre.dfs.de siu3-s1-ilss # Anbindung an iLSS       # dv=eth1 sn=255.255.252.0
+10.70.32.50 siu3-s1-lss.br1.bre.dfs.de siu3-s1-lss # Anbindung an LSS           # dv=eth2 sn=255.255.248.0
+
 
 ## <REMOTE-PILOTING-START> ##
-10.232.197.128        psp101-s1.br1.bre.dfs.de       psp101-s1 # mac=00:D0:C9:C4:3D:25 rnsc=1 hcl=nsc.psp
-10.232.197.129        psp102-s1.br1.bre.dfs.de       psp102-s1 # mac=00:d0:c9:c4:2c:57 rnsc=1 hcl=nsc.psp
-10.232.197.130        psp103-s1.br1.bre.dfs.de       psp103-s1 # mac=00:d0:c9:c4:2f:f9 rnsc=1 hcl=nsc.psp
-10.232.197.131        psp104-s1.br1.bre.dfs.de       psp104-s1 # mac=00:d0:c9:c4:22:e7 rnsc=1 hcl=nsc.psp
+10.232.197.128        psp101-s1.br1.bre.dfs.de       psp101-s1 # rnsc=1 hcl=nsc.psp
+10.232.197.129        psp102-s1.br1.bre.dfs.de       psp102-s1 # rnsc=1 hcl=nsc.psp
+10.232.197.130        psp103-s1.br1.bre.dfs.de       psp103-s1 # rnsc=1 hcl=nsc.psp
+10.232.197.131        psp104-s1.br1.bre.dfs.de       psp104-s1 # rnsc=1 hcl=nsc.psp
 10.232.197.132        psp105-s1.br1.bre.dfs.de       psp105-s1 # rnsc=1 hcl=nsc.psp
 10.232.197.133        psp106-s1.br1.bre.dfs.de       psp106-s1 # rnsc=1 hcl=nsc.psp
 10.232.197.134        psp107-s1.br1.bre.dfs.de       psp107-s1 # rnsc=1 hcl=nsc.psp
@@ -26,8 +28,11 @@
 ## <REMOTE-PILOTING-END> ##
 
 10.232.197.10 is01.br1.bre.dfs.de is01
+10.232.197.10 cis01.br1.bre.dfs.de cis01
 10.232.197.10 timesrv.br1.bre.dfs.de timesrv
-10.232.197.10	nss.br1.bre.dfs.de	nss	# hcl=nss
+10.232.197.10 nss.br1.bre.dfs.de       nss      # hn=nss-mgt hn=brebr1.se.dfs.de 
+10.232.196.12 nss-mgt.br1.bre.dfs.de   nss-mgt  # dv=eth1
+10.232.251.139 brebr1.se.dfs.de        brebr1   # dv=eth3 sn=255.255.254.0
 #
 # Client adresses start at 20
 10.232.197.20	cwp1-s1.br1.bre.dfs.de	cwp1-s1	# hcl=nsc.cwp
@@ -173,5 +178,3 @@
 # unused adresses start at 182
 #
 # DHCP adresses start at 200
-#
-# Default gateway adresses is 250

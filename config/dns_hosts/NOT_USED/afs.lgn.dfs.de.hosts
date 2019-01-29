@@ -1,0 +1,292 @@
+0.0.0.0 2step-cc.afs.lgn.dfs.de 2step-cc # sy='AFS TEI' dv=eth0 sn=255.255.255.0 gw=10.232.225.253 ns=10.232.225.10 dn=afs.lgn.dfs.de
+10.232.225.10  nss.afs.lgn.dfs.de        nss        # AFS CC # hn=nss-cc-mgt hn=nss-fe
+#10.232.250.2 timesrv1.afs.lgn.dfs.de timesrv1 # Time Server TEI
+#10.232.225.10 is01.afs.lgn.dfs.de is01
+#10.232.225.10 cis01.afs.lgn.dfs.de cis01
+#10.232.225.10 timesrv.afs.lgn.dfs.de timesrv
+#
+#10.50.65.230   nss-fe-mgt.afs.lgn.dfs.de nss-fe-mgt # dv=eth1 sn=255.255.252.0
+#10.232.250.6   nss-fe.se.dfs.de          nss-fe     # dv=eth2 dn=se.dfs.de sn=255.255.254.0
+#10.50.65.130   nss-cc-mgt.afs.lgn.dfs.de nss-cc-mgt # dv=eth1 sn=255.255.252.0
+#
+10.232.241.111 siu1-tos-ak.afs.lgn.dfs.de siu1-tos-ak # TOSIM AK LAN # dv=eth1
+10.232.144.111 siu1-tos-pdm.afs.lgn.dfs.de siu1-tos-pdm # TOSIM PdM LAN # dv=eth2
+10.50.65.232 siu1-s1-mgt.afs.lgn.dfs.de siu1-s1-mgt # dv=eth3 sn=255.255.252.0
+
+################# hosts mit zweitem interface fuer mgt ###################################
+
+10.232.225.20	cwp1-s1.afs.lgn.dfs.de	cwp1-s1 # hn=cwp1-s1-mgt hcl=nsc.cwp
+10.232.225.21	cwp2-s1.afs.lgn.dfs.de	cwp2-s1 # hn=cwp2-s1-mgt hcl=nsc.cwp
+10.232.225.22	cwp3-s1.afs.lgn.dfs.de	cwp3-s1 # hn=cwp3-s1-mgt hcl=nsc.cwp
+10.232.225.23	cwp4-s1.afs.lgn.dfs.de	cwp4-s1 # hn=cwp4-s1-mgt hcl=nsc.cwp
+10.232.225.24	cwp5-s1.afs.lgn.dfs.de	cwp5-s1 # hn=cwp5-s1-mgt hcl=nsc.cwp
+10.232.225.25	cwp6-s1.afs.lgn.dfs.de	cwp6-s1 # hn=cwp6-s1-mgt hcl=nsc.cwp
+10.232.225.26	cwp7-s1.afs.lgn.dfs.de	cwp7-s1 # hn=cwp7-s1-mgt hcl=nsc.cwp
+10.232.225.27	cwp8-s1.afs.lgn.dfs.de	cwp8-s1 # hn=cwp8-s1-mgt hcl=nsc.cwp
+10.232.225.28	cwp9-s1.afs.lgn.dfs.de	cwp9-s1 # hn=cwp9-s1-mgt hcl=nsc.cwp
+10.232.225.29	cwp10-s1.afs.lgn.dfs.de	cwp10-s1 # hn=cwp10-s1-mgt hcl=nsc.cwp
+10.232.225.30	cwp11-s1.afs.lgn.dfs.de	cwp11-s1 # hn=cwp11-s1-mgt hcl=nsc.cwp
+10.232.225.31	cwp12-s1.afs.lgn.dfs.de	cwp12-s1 # hn=cwp12-s1-mgt hcl=nsc.cwp
+10.232.225.40	cwp21-s1.afs.lgn.dfs.de	cwp21-s1 # hn=cwp21-s1-mgt hcl=nsc.cwp
+10.232.225.41	cwp22-s1.afs.lgn.dfs.de	cwp22-s1 # hn=cwp22-s1-mgt hcl=nsc.cwp
+10.232.225.42	cwp23-s1.afs.lgn.dfs.de	cwp23-s1 # hn=cwp23-s1-mgt hcl=nsc.cwp
+10.232.225.43	cwp24-s1.afs.lgn.dfs.de	cwp24-s1 # hn=cwp24-s1-mgt hcl=nsc.cwp
+10.232.225.44	cwp25-s1.afs.lgn.dfs.de	cwp25-s1 # hn=cwp25-s1-mgt hcl=nsc.cwp
+10.232.225.45	cwp26-s1.afs.lgn.dfs.de	cwp26-s1 # hn=cwp26-s1-mgt hcl=nsc.cwp
+10.232.225.46	cwp27-s1.afs.lgn.dfs.de	cwp27-s1 # hn=cwp27-s1-mgt hcl=nsc.cwp
+10.232.225.47	cwp28-s1.afs.lgn.dfs.de	cwp28-s1 # hn=cwp28-s1-mgt hcl=nsc.cwp
+
+
+10.232.225.112  dap1-s1.afs.lgn.dfs.de  dap1-s1  # hn=dap1-s1-mgt hcl=nsc.dap
+10.232.225.114  dap3-s1.afs.lgn.dfs.de  dap1-s1  # hn=dap3-s1-mgt hcl=nsc.dap
+
+#10.232.225.131 analyse.afs.lgn.dfs.de analyse # Jens Konopka Dell Laptop
+
+10.232.225.150	iss1-s1.afs.lgn.dfs.de	iss1-s1 # hn=iss1-s1-mgt hcl=nsc.iss
+
+10.232.225.151  siu1-s1.afs.lgn.dfs.de  siu1-s1 # hn=siu1-tos-ak hn=siu1-tos-pdm hn=siu1-s1-mgt hcl=nsc.siu
+#10.232.225.151  siu1-s1.afs.lgn.dfs.de siu1-s1  # hn=siu1-s1-mgt hcl=nsc.siu
+10.232.225.152	siu2-s1.afs.lgn.dfs.de	siu2-s1 # hn=siu2-s1-mgt hn=siu2-s1-atcas hn=siu2-s1-phx hcl=nsc.siu
+10.232.225.153	siu3-s1.afs.lgn.dfs.de	siu3-s1 # hn=siu3-s1-mgt hn=siu3-s1-atcas hn=siu3-s1-phx hcl=nsc.siu
+10.232.225.154	siu4-s1.afs.lgn.dfs.de	siu4-s1 # hn=siu4-s1-mgt hn=siu4-s1-atcas hn=siu4-s1-phx hcl=nsc.siu
+10.232.225.155	siu5-s1.afs.lgn.dfs.de	siu5-s1 # hn=siu5-s1-mgt hn=siu5-s1-atcas hn=siu5-s1-phx hcl=nsc.siu
+10.232.225.156	siu6-s1.afs.lgn.dfs.de	siu6-s1 # hn=siu6-s1-mgt hn=siu6-s1-atcas hn=siu6-s1-phx hcl=nsc.siu
+10.232.225.167  siu7-s1.afs.lgn.dfs.de  siu7-s1 # hn=siu7-s1-mgt hn=siu7-s1-atcas hn=siu7-s1-phx hcl=nsc.siu
+10.232.225.168  siu8-s1.afs.lgn.dfs.de  siu8-s1 # hn=siu8-s1-mgt hn=siu8-s1-atcas hn=siu8-s1-phx hcl=nsc.siu
+10.232.225.169  siu9-s1.afs.lgn.dfs.de  siu9-s1 # hn=siu9-s1-mgt hn=siu9-s1-atcas hn=siu9-s1-phx hcl=nsc.siu
+10.232.225.171  siu10-s1.afs.lgn.dfs.de siu10-s1 # hn=siu10-s1-mgt hn=siu10-s1-atcas hn=siu10-s1-phx hcl=nsc.siu
+
+10.232.225.157	sim1-s1.afs.lgn.dfs.de	sim1-s1 # hn=sim1-s1-mgt hcl=nsc.sim
+10.232.225.158	sim2-s1.afs.lgn.dfs.de	sim2-s1 # hn=sim2-s1-mgt hcl=nsc.sim
+10.232.225.159	sim3-s1.afs.lgn.dfs.de	sim3-s1 # hn=sim3-s1-mgt hcl=nsc.sim
+10.232.225.160	sim4-s1.afs.lgn.dfs.de	sim4-s1 # hn=sim4-s1-mgt hcl=nsc.sim
+
+10.232.225.122	sup1-s1.afs.lgn.dfs.de	sup1-s1 # hn=sup1-s1-mgt hcl=nsc.sup
+10.232.225.123	sup2-s1.afs.lgn.dfs.de	sup2-s1 # hn=sup2-s1-mgt hcl=nsc.sup
+10.232.225.124	sup3-s1.afs.lgn.dfs.de	sup3-s1 # hn=sup3-s1-mgt hcl=nsc.sup
+
+10.232.225.80   adc1-s1.afs.lgn.dfs.de adc1-s1  # hn=adc1-s1-mgt hcl=nsc.adc
+10.232.225.176  adc7-s1.afs.lgn.dfs.de adc7-s1  # hcl=nsc.adc
+10.232.225.177  adc8-s1.afs.lgn.dfs.de adc8-s1  # hn=adc8-s1-mgt hcl=nsc.adc
+10.232.225.178  adc9-s1.afs.lgn.dfs.de adc9-s1  # hcl=nsc.adc
+# AMAN
+#10.232.225.170 aman-sup.afs.lgn.dfs.de aman-sup #
+#10.232.225.199 aman-vm-host.afs.lgn.dfs.de aman-vm-host #
+
+################# zugehoerige mgt addressen ##############################################
+
+10.50.65.1 cwp1-s1-mgt.afs.lgn.dfs.de cwp1-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.2 cwp2-s1-mgt.afs.lgn.dfs.de cwp2-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.3 cwp3-s1-mgt.afs.lgn.dfs.de cwp3-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.4 cwp4-s1-mgt.afs.lgn.dfs.de cwp4-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.5 cwp5-s1-mgt.afs.lgn.dfs.de cwp5-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.6 cwp6-s1-mgt.afs.lgn.dfs.de cwp6-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.7 cwp7-s1-mgt.afs.lgn.dfs.de cwp7-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.8 cwp8-s1-mgt.afs.lgn.dfs.de cwp8-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.9 cwp9-s1-mgt.afs.lgn.dfs.de cwp9-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.10 cwp10-s1-mgt.afs.lgn.dfs.de cwp10-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.11 cwp11-s1-mgt.afs.lgn.dfs.de cwp11-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.12 cwp12-s1-mgt.afs.lgn.dfs.de cwp12-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.21 cwp21-s1-mgt.afs.lgn.dfs.de cwp21-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.22 cwp22-s1-mgt.afs.lgn.dfs.de cwp22-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.23 cwp23-s1-mgt.afs.lgn.dfs.de cwp23-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.24 cwp24-s1-mgt.afs.lgn.dfs.de cwp24-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.25 cwp25-s1-mgt.afs.lgn.dfs.de cwp25-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.26 cwp26-s1-mgt.afs.lgn.dfs.de cwp26-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.27 cwp27-s1-mgt.afs.lgn.dfs.de cwp27-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.28 cwp28-s1-mgt.afs.lgn.dfs.de cwp28-s1-mgt # dv=eth1 sn=255.255.252.0
+
+10.50.65.231 sim1-s1-mgt.afs.lgn.dfs.de sim1-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.133 sim2-s1-mgt.afs.lgn.dfs.de sim2-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.134 sim3-s1-mgt.afs.lgn.dfs.de sim3-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.135 sim4-s1-mgt.afs.lgn.dfs.de sim4-s1-mgt # dv=eth1 sn=255.255.252.0
+
+10.50.65.232 siu1-s1-mgt.afs.lgn.dfs.de siu1-s1-mgt # dv=eth3 sn=255.255.252.0
+10.50.65.136 siu2-s1-mgt.afs.lgn.dfs.de siu2-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.137 siu3-s1-mgt.afs.lgn.dfs.de siu3-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.138 siu4-s1-mgt.afs.lgn.dfs.de siu4-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.139 siu5-s1-mgt.afs.lgn.dfs.de siu5-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.140 siu6-s1-mgt.afs.lgn.dfs.de siu6-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.150 siu7-s1-mgt.afs.lgn.dfs.de siu7-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.151 siu8-s1-mgt.afs.lgn.dfs.de siu8-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.152 siu9-s1-mgt.afs.lgn.dfs.de siu9-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.153 siu10-s1-mgt.afs.lgn.dfs.de siu10-s1-mgt # dv=eth1 sn=255.255.252.0
+
+10.50.32.55 siu2-s1-atcas.afs.lgn.dfs.de siu2-s1-atcas # dv=eth2 sn=255.255.248.0
+10.50.32.55 siu3-s1-atcas.afs.lgn.dfs.de siu3-s1-atcas # dv=eth2 sn=255.255.248.0
+10.50.32.55 siu4-s1-atcas.afs.lgn.dfs.de siu4-s1-atcas # dv=eth2 sn=255.255.248.0
+10.50.32.55 siu5-s1-atcas.afs.lgn.dfs.de siu5-s1-atcas # dv=eth2 sn=255.255.248.0
+10.50.32.55 siu6-s1-atcas.afs.lgn.dfs.de siu6-s1-atcas # dv=eth2 sn=255.255.248.0
+10.50.32.55 siu7-s1-atcas.afs.lgn.dfs.de siu7-s1-atcas # dv=eth2 sn=255.255.248.0
+10.50.32.55 siu8-s1-atcas.afs.lgn.dfs.de siu8-s1-atcas # dv=eth2 sn=255.255.248.0
+10.50.32.55 siu9-s1-atcas.afs.lgn.dfs.de siu9-s1-atcas # dv=eth2 sn=255.255.248.0
+10.50.32.55 siu10-s1-atcas.afs.lgn.dfs.de siu10-s1-atcas # dv=eth2 sn=255.255.248.0
+
+10.30.3.55 siu2-s1-phx.afs.lgn.dfs.de siu2-s1-phx # dv=eth3 sn=255.255.255.0
+10.30.3.55 siu3-s1-phx.afs.lgn.dfs.de siu3-s1-phx # dv=eth3 sn=255.255.255.0
+10.30.3.55 siu4-s1-phx.afs.lgn.dfs.de siu4-s1-phx # dv=eth3 sn=255.255.255.0
+10.30.3.55 siu5-s1-phx.afs.lgn.dfs.de siu5-s1-phx # dv=eth3 sn=255.255.255.0
+10.30.3.55 siu6-s1-phx.afs.lgn.dfs.de siu6-s1-phx # dv=eth3 sn=255.255.255.0
+10.30.3.55 siu7-s1-phx.afs.lgn.dfs.de siu7-s1-phx # dv=eth3 sn=255.255.255.0
+10.30.3.55 siu8-s1-phx.afs.lgn.dfs.de siu8-s1-phx # dv=eth3 sn=255.255.255.0
+10.30.3.55 siu9-s1-phx.afs.lgn.dfs.de siu9-s1-phx # dv=eth3 sn=255.255.255.0
+10.30.3.55 siu10-s1-phx.afs.lgn.dfs.de siu10-s1-phx # dv=eth3 sn=255.255.255.0
+
+10.50.65.141 sup1-s1-mgt.afs.lgn.dfs.de sup1-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.142 sup2-s1-mgt.afs.lgn.dfs.de sup2-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.143 sup3-s1-mgt.afs.lgn.dfs.de sup3-s1-mgt # dv=eth1 sn=255.255.252.0
+
+10.50.65.51 adc1-s1-mgt.afs.lgn.dfs.de adc1-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.58 adc8-s1-mgt.afs.lgn.dfs.de adc8-s1-mgt # dv=eth1 sn=255.255.252.0
+
+10.50.65.144 dap1-s1-mgt.afs.lgn.dfs.de dap1-s1-mgt # dv=eth1 sn=255.255.252.0
+10.50.65.146 dap3-s1-mgt.afs.lgn.dfs.de dap3-s1-mgt # dv=eth1 sn=255.255.252.0
+
+10.50.65.233 iss1-s1-mgt.afs.lgn.dfs.de iss1-s1-mgt # dv=eth1 sn=255.255.252.0
+
+###### Tefis IAD ############################################################################
+
+#10.232.225.128 tefis-c.afs.lgn.dfs.de tefis-c
+#10.232.225.129 tefis-p.afs.lgn.dfs.de tefis-p
+#10.232.225.130 tefis-iad.afs.lgn.dfs.de tefis-iad
+###########################
+
+
+#10.232.225.10 is01.afs.lgn.dfs.de is01
+#10.232.225.10 cis01.afs.lgn.dfs.de cis01
+#10.232.225.10 timesrv.afs.lgn.dfs.de timesrv
+#10.232.225.10	nss.afs.lgn.dfs.de	nss	# hcl=nss
+#
+# Client adresses start at 20
+10.232.225.32	cwp13-s1.afs.lgn.dfs.de	cwp13-s1	# hcl=nsc.cwp
+10.232.225.33	cwp14-s1.afs.lgn.dfs.de	cwp14-s1	# hcl=nsc.cwp
+10.232.225.34	cwp15-s1.afs.lgn.dfs.de	cwp15-s1	# hcl=nsc.cwp
+10.232.225.35	cwp16-s1.afs.lgn.dfs.de	cwp16-s1	# hcl=nsc.cwp
+10.232.225.36	cwp17-s1.afs.lgn.dfs.de	cwp17-s1	# hcl=nsc.cwp
+10.232.225.37	cwp18-s1.afs.lgn.dfs.de	cwp18-s1	# hcl=nsc.cwp
+10.232.225.38	cwp19-s1.afs.lgn.dfs.de	cwp19-s1	# hcl=nsc.cwp
+10.232.225.39	cwp20-s1.afs.lgn.dfs.de	cwp20-s1	# hcl=nsc.cwp
+10.232.225.48	cwp29-s1.afs.lgn.dfs.de	cwp29-s1	# hcl=nsc.cwp
+10.232.225.49	cwp30-s1.afs.lgn.dfs.de	cwp30-s1	# hcl=nsc.cwp
+10.232.225.50 cwp1-s2.afs.lgn.dfs.de cwp1-s2 #
+10.232.225.51 cwp2-s2.afs.lgn.dfs.de cwp2-s2 #
+10.232.225.52 cwp3-s2.afs.lgn.dfs.de cwp3-s2 #
+10.232.225.53 cwp4-s2.afs.lgn.dfs.de cwp4-s2 #
+10.232.225.54 cwp5-s2.afs.lgn.dfs.de cwp5-s2 #
+10.232.225.55 cwp6-s2.afs.lgn.dfs.de cwp6-s2 #
+10.232.225.56 cwp7-s2.afs.lgn.dfs.de cwp7-s2 #
+10.232.225.57 cwp8-s2.afs.lgn.dfs.de cwp8-s2 #
+10.232.225.58 cwp9-s2.afs.lgn.dfs.de cwp9-s2 #
+10.232.225.59 cwp10-s2.afs.lgn.dfs.de cwp10-s2 #
+10.232.225.60 cwp11-s2.afs.lgn.dfs.de cwp11-s2 #
+10.232.225.61 cwp12-s2.afs.lgn.dfs.de cwp12-s2 #
+10.232.225.62 cwp13-s2.afs.lgn.dfs.de cwp13-s2 #
+10.232.225.63 cwp14-s2.afs.lgn.dfs.de cwp14-s2 #
+10.232.225.64 cwp15-s2.afs.lgn.dfs.de cwp15-s2 #
+10.232.225.65 cwp16-s2.afs.lgn.dfs.de cwp16-s2 #
+10.232.225.66 cwp17-s2.afs.lgn.dfs.de cwp17-s2 #
+10.232.225.67 cwp18-s2.afs.lgn.dfs.de cwp18-s2 #
+10.232.225.68 cwp19-s2.afs.lgn.dfs.de cwp19-s2 #
+10.232.225.69 cwp20-s2.afs.lgn.dfs.de cwp20-s2 #
+10.232.225.70 cwp21-s2.afs.lgn.dfs.de cwp21-s2 #
+10.232.225.71 cwp22-s2.afs.lgn.dfs.de cwp22-s2 #
+10.232.225.72 cwp23-s2.afs.lgn.dfs.de cwp23-s2 #
+10.232.225.73 cwp24-s2.afs.lgn.dfs.de cwp24-s2 #
+10.232.225.74 cwp25-s2.afs.lgn.dfs.de cwp25-s2 #
+10.232.225.75 cwp26-s2.afs.lgn.dfs.de cwp26-s2 #
+10.232.225.76 cwp27-s2.afs.lgn.dfs.de cwp27-s2 #
+10.232.225.77 cwp28-s2.afs.lgn.dfs.de cwp28-s2 #
+10.232.225.78 cwp29-s2.afs.lgn.dfs.de cwp29-s2 #
+10.232.225.79 cwp30-s2.afs.lgn.dfs.de cwp30-s2 #
+10.232.225.81	adc2-s1.afs.lgn.dfs.de	adc2-s1	# hcl=nsc.adc
+10.232.225.82	adc3-s1.afs.lgn.dfs.de	adc3-s1	# hcl=nsc.adc
+10.232.225.83	adc4-s1.afs.lgn.dfs.de	adc4-s1	# hcl=nsc.adc
+10.232.225.84	adc5-s1.afs.lgn.dfs.de	adc5-s1	# hcl=nsc.adc
+10.232.225.85	adc6-s1.afs.lgn.dfs.de	adc6-s1	# hcl=nsc.adc
+10.232.225.86 adc1-s2.afs.lgn.dfs.de adc1-s2 #
+10.232.225.87 adc2-s2.afs.lgn.dfs.de adc2-s2 #
+10.232.225.88 adc3-s2.afs.lgn.dfs.de adc3-s2 #
+10.232.225.89 adc4-s2.afs.lgn.dfs.de adc4-s2 #
+10.232.225.90 adc5-s2.afs.lgn.dfs.de adc5-s2 #
+10.232.225.91 adc6-s2.afs.lgn.dfs.de adc6-s2 #
+10.232.225.92	psp1-s1.afs.lgn.dfs.de	psp1-s1	# hcl=nsc.psp
+10.232.225.93	psp2-s1.afs.lgn.dfs.de	psp2-s1	# hcl=nsc.psp
+10.232.225.94	psp3-s1.afs.lgn.dfs.de	psp3-s1	# hcl=nsc.psp
+10.232.225.95	psp4-s1.afs.lgn.dfs.de	psp4-s1	# hcl=nsc.psp
+10.232.225.96	psp5-s1.afs.lgn.dfs.de	psp5-s1	# hcl=nsc.psp
+10.232.225.97	psp6-s1.afs.lgn.dfs.de	psp6-s1	# hcl=nsc.psp
+10.232.225.98	psp7-s1.afs.lgn.dfs.de	psp7-s1	# hcl=nsc.psp
+10.232.225.99	psp8-s1.afs.lgn.dfs.de	psp8-s1	# hcl=nsc.psp
+10.232.225.100	psp9-s1.afs.lgn.dfs.de	psp9-s1	# hcl=nsc.psp
+10.232.225.101	psp10-s1.afs.lgn.dfs.de	psp10-s1	# hcl=nsc.psp
+10.232.225.102	psp11-s1.afs.lgn.dfs.de	psp11-s1	# hcl=nsc.psp
+10.232.225.103	psp12-s1.afs.lgn.dfs.de	psp12-s1	# hcl=nsc.psp
+10.232.225.104	psp13-s1.afs.lgn.dfs.de	psp13-s1	# hcl=nsc.psp
+10.232.225.105	psp14-s1.afs.lgn.dfs.de	psp14-s1	# hcl=nsc.psp
+10.232.225.106	psp15-s1.afs.lgn.dfs.de	psp15-s1	# hcl=nsc.psp
+10.232.225.107	psp16-s1.afs.lgn.dfs.de	psp16-s1	# hcl=nsc.psp
+10.232.225.108	psp17-s1.afs.lgn.dfs.de	psp17-s1	# hcl=nsc.psp
+10.232.225.109	psp18-s1.afs.lgn.dfs.de	psp18-s1	# hcl=nsc.psp
+10.232.225.110	psp19-s1.afs.lgn.dfs.de	psp19-s1	# hcl=nsc.psp
+10.232.225.111	psp20-s1.afs.lgn.dfs.de	psp20-s1	# hcl=nsc.psp
+10.232.225.113	dap2-s1.afs.lgn.dfs.de	dap2-s1	# hcl=nsc.dap
+10.232.225.115	dap4-s1.afs.lgn.dfs.de	dap4-s1	# hcl=nsc.dap
+10.232.225.116	dap5-s1.afs.lgn.dfs.de	dap5-s1	# hcl=nsc.dap
+10.232.225.117	dap6-s1.afs.lgn.dfs.de	dap6-s1	# hcl=nsc.dap
+10.232.225.118	dap7-s1.afs.lgn.dfs.de	dap7-s1	# hcl=nsc.dap
+10.232.225.119	dap8-s1.afs.lgn.dfs.de	dap8-s1	# hcl=nsc.dap
+10.232.225.120	dap9-s1.afs.lgn.dfs.de	dap9-s1	# hcl=nsc.dap
+10.232.225.121	dap10-s1.afs.lgn.dfs.de	dap10-s1	# hcl=nsc.dap
+10.232.225.125 sup1-s2.afs.lgn.dfs.de sup1-s2 #
+10.232.225.126 sup2-s2.afs.lgn.dfs.de sup2-s2 #
+10.232.225.127 sup3-s2.afs.lgn.dfs.de sup3-s2 #
+10.232.225.132 atspeak005.afs.lgn.dfs.de atspeak005
+10.232.225.133 atspeak006.afs.lgn.dfs.de atspeak006
+10.232.225.134 atspeak007.afs.lgn.dfs.de atspeak007
+10.232.225.135 atspeak008.afs.lgn.dfs.de atspeak008
+10.232.225.136 atspeak009.afs.lgn.dfs.de atspeak009
+10.232.225.137 atspeak010.afs.lgn.dfs.de atspeak010
+10.232.225.138 atspeak011.afs.lgn.dfs.de atspeak011
+10.232.225.139 atspeak012.afs.lgn.dfs.de atspeak012
+10.232.225.140 atspeak013.afs.lgn.dfs.de atspeak013
+10.232.225.141 atspeak014.afs.lgn.dfs.de atspeak014
+10.232.225.142 atspeak015.afs.lgn.dfs.de atspeak015
+10.232.225.143 atspeak016.afs.lgn.dfs.de atspeak016
+#
+# Server adresses start at 150
+10.232.225.161 fcf1-s1.afs.lgn.dfs.de fcf1-s1 #
+10.232.225.162 fcf2-s1.afs.lgn.dfs.de fcf2-s1 #
+10.232.225.163 fcf3-s1.afs.lgn.dfs.de fcf3-s1 #
+10.232.225.164 fcf4-s1.afs.lgn.dfs.de fcf4-s1 #
+10.232.225.165 fcf5-s1.afs.lgn.dfs.de fcf5-s1 #
+10.232.225.166 fcf6-s1.afs.lgn.dfs.de fcf6-s1 #
+10.232.225.172 dal3.afs.lgn.dfs.de dal3 #
+10.232.225.173 adm1.afs.lgn.dfs.de adm1 #
+10.232.225.174 adm2.afs.lgn.dfs.de adm2 #
+10.232.225.175 adm3.afs.lgn.dfs.de adm3 #
+10.232.225.179 aman1.afs.lgn.dfs.de aman1 #
+10.232.225.180 aman2.afs.lgn.dfs.de aman2 #
+10.232.225.181 aman3.afs.lgn.dfs.de aman3 #
+10.232.225.182 aman4.afs.lgn.dfs.de aman4 #
+10.232.225.183 psp1-s2.afs.lgn.dfs.de psp1-s2 #
+10.232.225.184 psp2-s2.afs.lgn.dfs.de psp2-s2 #
+10.232.225.185 psp3-s2.afs.lgn.dfs.de psp3-s2 #
+10.232.225.186 psp4-s2.afs.lgn.dfs.de psp4-s2 #
+10.232.225.187 psp5-s2.afs.lgn.dfs.de psp5-s2 #
+10.232.225.188 psp6-s2.afs.lgn.dfs.de psp6-s2 #
+10.232.225.189 psp7-s2.afs.lgn.dfs.de psp7-s2 #
+10.232.225.190 psp8-s2.afs.lgn.dfs.de psp8-s2 #
+10.232.225.191 psp9-s2.afs.lgn.dfs.de psp9-s2 #
+10.232.225.192 psp10-s2.afs.lgn.dfs.de psp10-s2 #
+10.232.225.193 psp11-s2.afs.lgn.dfs.de psp11-s2 #
+10.232.225.194 psp12-s2.afs.lgn.dfs.de psp12-s2 #
+10.232.225.195 psp13-s2.afs.lgn.dfs.de psp13-s2 #
+10.232.225.196 psp14-s2.afs.lgn.dfs.de psp14-s2 #
+10.232.225.197 psp15-s2.afs.lgn.dfs.de psp15-s2 #
+10.232.225.198 psp16-s2.afs.lgn.dfs.de psp16-s2 #
+#
+# unused adresses start at 199
+#
+# DHCP adresses start at 200
+#
+# Default gateway adresses is 250

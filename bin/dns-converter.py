@@ -61,7 +61,7 @@ pydir =  os.path.dirname(os.path.abspath(__file__))
 basedir = os.path.dirname(pydir)
 confdir = os.path.join(basedir, "config")
 dnsdir_default = os.path.join(confdir, "dns_hosts")
-domain_default = "lgn1.lgn.dfs.de"
+domain_default = "te1.lgn.dfs.de"
 deploydir_base_default = os.path.join(basedir, "deployment", "hieradata")
 
 if os.path.exists('/mnt/puppet/hieradata'):
@@ -364,6 +364,7 @@ for fqdn in FQDNS:
         #print("{}:\t {}\tclasses:{}.{}\t dv={}".format(fqdn, entry_type, main_class, sub_class, DV[fqdn]))
         # Use for configuration data for installable hosts
         if entry_type == 'installable':
+
             INSTALLABLE_FQDNS.add(fqdn)
             for hn_entry in HN_ENTRYS[fqdn]:
                 if hn_entry == hn_entry.split('.')[0]:
@@ -428,24 +429,22 @@ def generateHostDataStruct(main_fqdn):
     main = dataout['host_classes::main']
     #sub  = dataout['host_classes']['sub']
 
-    if main in ['nss', 'cis']:
+    if main in ['nss', 'cis', 'ams']:
         dhcpd   = getDhcpConfig(main_fqdn)
         dataout = update_nested_dict(dataout, dhcpd)
         ns      = 'localhost'
     else:
         ns = NS[main_fqdn]
+
     # get network interface config data
 
-    ensure = 'up'
-    peerdns = True
-
     dv = {
-        'ensure': ensure,
+        'ensure': 'up',
         'ipaddress': IP[main_fqdn],
         'netmask': SN[main_fqdn],
         'gateway': GW[main_fqdn],
         'dns1': ns,
-        'peerdns': peerdns,
+        'peerdns': True,
     }
     ifdata = {DV[main_fqdn]:dv}
 
@@ -454,9 +453,13 @@ def generateHostDataStruct(main_fqdn):
             'ensure': 'up',
             'ipaddress': IP[fqdn],
             'netmask': SN[fqdn],
-            'gateway': GW[fqdn],
-            'dns1': NS[fqdn],
         }
+
+        if GW[fqdn] != '':
+            dv['gateway'] = GW[fqdn]
+        if NS[fqdn] != '':
+            dv['dns1'] = NS[fqdn]
+
         ifdata.update({DV[fqdn]: dv})
 
     network_if_static = {'network::if_static': ifdata}
@@ -469,6 +472,7 @@ def generateHostDataStruct(main_fqdn):
     return dataout
 
 
+# not used yet !!
 def generateDnsLines(fqdn_list, txt_rec_list):
     dns_lines = []
     for fqdn in fqdn_list:
